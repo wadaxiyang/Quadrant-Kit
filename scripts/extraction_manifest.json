@@ -1,0 +1,573 @@
+{
+  "schema_version": 1,
+  "source_commit": "5a2262cd480d639673fa4f5dd406a9c7196361b5",
+  "files": [
+    {
+      "old_path": "ui/gallery/gallery.slint",
+      "new_path": "gallery/ui/gallery.slint",
+      "source_sha256": "eb4f2c4dbfe8723a40b3237fdb0439733f14286e979c6b40ec21235c3bec8fe9",
+      "extracted_sha256": "17e14858f74801497812ca03877e62d936908adc2b39385a47f00efad1c8fc9b",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/controls_page.slint",
+      "new_path": "gallery/ui/pages/controls_page.slint",
+      "source_sha256": "2fae4cfb39ee8137cc6dc74a020e63c5ac533569f034aec6fb7ab48819ec0704",
+      "extracted_sha256": "89c693a1ab8d682bea51bac5a7aa21bbc7b9024ae1bec791087900221916f83f",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/feedback_page.slint",
+      "new_path": "gallery/ui/pages/feedback_page.slint",
+      "source_sha256": "3f30398d7e16e436bd8273a68fb897466fc2b6a8af0ce767a9c4abe6c754de28",
+      "extracted_sha256": "ee7ee787cd6b90b25575eb5b50cc6b055e929517aa9db6a4a88db0beed08fe14",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/icons_page.slint",
+      "new_path": "gallery/ui/pages/icons_page.slint",
+      "source_sha256": "ee504a53ddf3041885ed951c8ac05c1a48bc4ad084ffc9b38cd839235d5bc07f",
+      "extracted_sha256": "969abd48759ed9181d22d9e7b12e1b3c71c0a9b62328ef8d74488ebee50e3af5",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/navigation_page.slint",
+      "new_path": "gallery/ui/pages/navigation_page.slint",
+      "source_sha256": "eed9cc3ac2416a22910252b1febdaff7ddb174be69db8f1681030aa4b1441b6c",
+      "extracted_sha256": "8ed4603a00574e9711152a3fed28e592beac36b5a7020df868272b8e9eca7717",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/overview_page.slint",
+      "new_path": "gallery/ui/pages/overview_page.slint",
+      "source_sha256": "20812c85f37c1c32b62105d890b25aa4b005bc15a1b4cf9739116bc1cde9ed35",
+      "extracted_sha256": "5693c311182ea8fab72ef01b73f7ae53c446d98c7fc19fc2ec502b4dcb65cc36",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/surfaces_page.slint",
+      "new_path": "gallery/ui/pages/surfaces_page.slint",
+      "source_sha256": "40f329070f533c66a12fe434a5430aa6a2843e88b0e81330569b0a55ca642685",
+      "extracted_sha256": "2424b2d774148ee3ecb7f3844fa9113ec71c3d374d15bf1c22fcbc0f0f472011",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/tokens_page.slint",
+      "new_path": "gallery/ui/pages/tokens_page.slint",
+      "source_sha256": "968758ed5d4f31bbe5bfdf4f2c7e5894a64a6940ad29711f5c308e3474bef382",
+      "extracted_sha256": "95ab78aba0fcdaa669b972d99a95f963bbbbf23da0c9b48efecd08ac6bc14e22",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/pages/typography_page.slint",
+      "new_path": "gallery/ui/pages/typography_page.slint",
+      "source_sha256": "1f7d9d5e6b3e6e732385ead16c057e81018ac5d407c524c32e1a465a118883dc",
+      "extracted_sha256": "dc69a0a8324813edd70159008472cb2b8c32d16ef6e2e916cc7bfc3efb9d8f09",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/card_state_sample.slint",
+      "new_path": "gallery/ui/shared/card_state_sample.slint",
+      "source_sha256": "f997ba7cf4d57fb2d173e37bd2a086461aa9490febfcf3b68c4fd2960bd0b7d7",
+      "extracted_sha256": "73ea4ce1ff1cc186865128e0c8ee30c7ba35ce8bc8d5aa8870e36eabd4ceb02f",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/code_sample.slint",
+      "new_path": "gallery/ui/shared/code_sample.slint",
+      "source_sha256": "f21285c282fad7c45c3daf94415ac476d7be471a928242b72131a88c43bde95f",
+      "extracted_sha256": "e7af3f161387bea52208304749d80c24b3b6469167776f4ec9efb8c722d0ad97",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/gallery_catalog.slint",
+      "new_path": "gallery/ui/shared/gallery_catalog.slint",
+      "source_sha256": "f22c1d70875270c2a31aac502b4156e0f3d528524b02a2b49c926217a52c64a4",
+      "extracted_sha256": "f22c1d70875270c2a31aac502b4156e0f3d528524b02a2b49c926217a52c64a4",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/gallery/shared/gallery_label.slint",
+      "new_path": "gallery/ui/shared/gallery_label.slint",
+      "source_sha256": "91b08517860c0f5767ff981a02da47700f87500af741a3b7e5d0499c15a99598",
+      "extracted_sha256": "fc2f3ef2f047ac06a070cea2e566e7a47811c923087d41a52b3400607c194019",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/gallery_page.slint",
+      "new_path": "gallery/ui/shared/gallery_page.slint",
+      "source_sha256": "25d930a40f4c1a8a8d45bbb7e001d008328a78041965c34ded44d7fc7e10067e",
+      "extracted_sha256": "c96cd8e44fda4cf26ceb595caf05c5b173cde220e8bb470c818135a3029632d6",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/modal_text_sample.slint",
+      "new_path": "gallery/ui/shared/modal_text_sample.slint",
+      "source_sha256": "22c254c024bcd647fc8c3258e2017dbd92f67f1c71bc2eb807a196bc5e52b08d",
+      "extracted_sha256": "32984ae1106de03df872ca4615f62d82fcf5cbeedccf135cb59147e6de716acd",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/preview_container.slint",
+      "new_path": "gallery/ui/shared/preview_container.slint",
+      "source_sha256": "c52d5a2f42132e646530cfde8c9b046de12c8bc29ed669d76b034ede3cf57edc",
+      "extracted_sha256": "1c09b48b65c6e84c1a509ff97107c17d492c071f9631ed443b540b5f07e61065",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/property_panel.slint",
+      "new_path": "gallery/ui/shared/property_panel.slint",
+      "source_sha256": "7cb0a2572e8cc24d46174df310d120cc04db9e10272ec0830ab1fd9a39d858a6",
+      "extracted_sha256": "ccab5916a245bf320eddcf17c3d6b961368872f8e87ae2ae3ad47b7f4f813108",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/specimen.slint",
+      "new_path": "gallery/ui/shared/specimen.slint",
+      "source_sha256": "7ac9d547c60112bbfac4923b62256cacd9d8945117b7cc3e248842643cb072fa",
+      "extracted_sha256": "4824d53eaae48d47faec6477e8edb9d14e6594b7fdc82f50c8ede5769c080409",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/gallery/shared/state_specimen.slint",
+      "new_path": "gallery/ui/shared/state_specimen.slint",
+      "source_sha256": "bc217e304eff5123329d0c0ebbfee9fb982c2135da8e940ba1c3a35310b03fcb",
+      "extracted_sha256": "df1a196e811d2bc28bec2eb2c56e7afe8455419c42b3dae808c6cc815bed6394",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/kit/foundation/constants.slint",
+      "new_path": "ui/foundation/constants.slint",
+      "source_sha256": "880cbbbcc4d1255b3e0ece4b516bdff7108b4a73fcf624d09790b265caa9d8e3",
+      "extracted_sha256": "0027b61ef14537cdfa088e906dbb78c880b4ae9aa108b7ce7063922fdb3e5a69",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/kit/foundation/fluent_icons.slint",
+      "new_path": "ui/foundation/fluent_icons.slint",
+      "source_sha256": "d5121d60f1780e44dd08b70798175c7ef717357736ce8c9baba527c79dc07696",
+      "extracted_sha256": "9b161e484ceafafecc702692b9f01762c82f483d00805639bd56b12df6f66d88",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/kit/foundation/theme.slint",
+      "new_path": "ui/foundation/theme.slint",
+      "source_sha256": "c8db74dd24c1fe88a7bcd1fb8a1cf1116ece0a125408907515a6f1b0c7da4633",
+      "extracted_sha256": "4db55b21568c592494ca4019b8cc5a6a3adfc1a90bf830316e7874b7b133976d",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/kit/kit.slint",
+      "new_path": "ui/kit.slint",
+      "source_sha256": "6ac45b76d471c0fced28b61d2123fe7a350650631a2def55bcbac3c965996913",
+      "extracted_sha256": "0d3528abdf04b52c2192b650e00042b1226ea790d4988a234a93527f29147564",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "ui/kit/overlays/modal.slint",
+      "new_path": "ui/overlays/modal.slint",
+      "source_sha256": "1dff8327674097784a15d31081d5462e8b14cbf960fe16dfd94c2bb79b9c6318",
+      "extracted_sha256": "1dff8327674097784a15d31081d5462e8b14cbf960fe16dfd94c2bb79b9c6318",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/overlays/toast.slint",
+      "new_path": "ui/overlays/toast.slint",
+      "source_sha256": "948447b928703a12eda47f593e300fdeef1ca8284f36902198cf35d3d1621395",
+      "extracted_sha256": "948447b928703a12eda47f593e300fdeef1ca8284f36902198cf35d3d1621395",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/patterns/navigation/sidebar_item.slint",
+      "new_path": "ui/patterns/navigation/sidebar_item.slint",
+      "source_sha256": "a3c16b91bba108f75667b4fdb07108142b66a45e884ede3b255486abb57c8f1d",
+      "extracted_sha256": "a3c16b91bba108f75667b4fdb07108142b66a45e884ede3b255486abb57c8f1d",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/patterns/page/empty_state.slint",
+      "new_path": "ui/patterns/page/empty_state.slint",
+      "source_sha256": "56310248df3dbc3603bb544aab9868e05661396c4e22bd06d7bae550558cfbbd",
+      "extracted_sha256": "56310248df3dbc3603bb544aab9868e05661396c4e22bd06d7bae550558cfbbd",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/patterns/page/metric_card.slint",
+      "new_path": "ui/patterns/page/metric_card.slint",
+      "source_sha256": "649695587dadda9bfb27d8b29f0a82cfe394712af5f2915074adfb87a12002a6",
+      "extracted_sha256": "649695587dadda9bfb27d8b29f0a82cfe394712af5f2915074adfb87a12002a6",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/patterns/page/page_header.slint",
+      "new_path": "ui/patterns/page/page_header.slint",
+      "source_sha256": "df3a868ff1c95991706e38bb83015950e8c38ce6d48dbc7cf11fa7c456656f45",
+      "extracted_sha256": "df3a868ff1c95991706e38bb83015950e8c38ce6d48dbc7cf11fa7c456656f45",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/patterns/page/section_header.slint",
+      "new_path": "ui/patterns/page/section_header.slint",
+      "source_sha256": "3f835d5ec196f8c5ad08ae17bd1209319fcd2c9a9cdd27b2a5bbd79abed49cbf",
+      "extracted_sha256": "3f835d5ec196f8c5ad08ae17bd1209319fcd2c9a9cdd27b2a5bbd79abed49cbf",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/patterns/settings/setting_row.slint",
+      "new_path": "ui/patterns/settings/setting_row.slint",
+      "source_sha256": "faa19041e37329c9fa8b9216cc8dfe1284eed3d09f854cff41127377a2f14770",
+      "extracted_sha256": "faa19041e37329c9fa8b9216cc8dfe1284eed3d09f854cff41127377a2f14770",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/patterns/window/window_control_button.slint",
+      "new_path": "ui/patterns/window/window_control_button.slint",
+      "source_sha256": "427ad169ae4b8097e786ed2e3e887723b99f7e6b818897f4994936bdc6cd357b",
+      "extracted_sha256": "427ad169ae4b8097e786ed2e3e887723b99f7e6b818897f4994936bdc6cd357b",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/badge.slint",
+      "new_path": "ui/primitives/badge.slint",
+      "source_sha256": "124d41b41fbb9b5bcc17ca9072249f348b7ddc72cc7a5254f66d578684712136",
+      "extracted_sha256": "124d41b41fbb9b5bcc17ca9072249f348b7ddc72cc7a5254f66d578684712136",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/fluent_button.slint",
+      "new_path": "ui/primitives/fluent_button.slint",
+      "source_sha256": "1af613b98e7907bc8892470aa635fa0c894490b28ae82880058c7583ac47ae2f",
+      "extracted_sha256": "1af613b98e7907bc8892470aa635fa0c894490b28ae82880058c7583ac47ae2f",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/fluent_icon.slint",
+      "new_path": "ui/primitives/fluent_icon.slint",
+      "source_sha256": "930010791b662e66c65ac28dc541c4fbd8f251ae6cdccec9662b37d24625c328",
+      "extracted_sha256": "930010791b662e66c65ac28dc541c4fbd8f251ae6cdccec9662b37d24625c328",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/icon_button.slint",
+      "new_path": "ui/primitives/icon_button.slint",
+      "source_sha256": "8c326e5689860c8d1143fe3f7b2a50dc46130c59c7eeb3279396f9453140c281",
+      "extracted_sha256": "8c326e5689860c8d1143fe3f7b2a50dc46130c59c7eeb3279396f9453140c281",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/segment_button.slint",
+      "new_path": "ui/primitives/segment_button.slint",
+      "source_sha256": "53fba24b480a078eae1fecc9ccbca4ba13edeadcb606c52ebe6b6177c24598cb",
+      "extracted_sha256": "53fba24b480a078eae1fecc9ccbca4ba13edeadcb606c52ebe6b6177c24598cb",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/surface_card.slint",
+      "new_path": "ui/primitives/surface_card.slint",
+      "source_sha256": "4ab3e1a42a7e4d0a8c7334fdaf041023ba4165de44228ebd9fc942be8dfd88d9",
+      "extracted_sha256": "4ab3e1a42a7e4d0a8c7334fdaf041023ba4165de44228ebd9fc942be8dfd88d9",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/text_area.slint",
+      "new_path": "ui/primitives/text_area.slint",
+      "source_sha256": "8c4645ef257b28397bbb2df20b6970a119308f3201351c761eed07312aed266e",
+      "extracted_sha256": "8c4645ef257b28397bbb2df20b6970a119308f3201351c761eed07312aed266e",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/text_field.slint",
+      "new_path": "ui/primitives/text_field.slint",
+      "source_sha256": "cb8be8b2100501a6c9326156eb1f5e93b97ff862aeffa246466fa991c343e965",
+      "extracted_sha256": "cb8be8b2100501a6c9326156eb1f5e93b97ff862aeffa246466fa991c343e965",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "ui/kit/primitives/tooltip_host.slint",
+      "new_path": "ui/primitives/tooltip_host.slint",
+      "source_sha256": "9e30de05494506594d54846e6e48a73732acb4e4bb7024c75a7931c1accfc0b0",
+      "extracted_sha256": "9e30de05494506594d54846e6e48a73732acb4e4bb7024c75a7931c1accfc0b0",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "LICENSE",
+      "new_path": "LICENSE",
+      "source_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "extracted_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/LICENSE-MIT",
+      "new_path": "assets/icons/LICENSE-MIT",
+      "source_sha256": "69bc45dc42b9acb96a69823adbc6ae538374e3c0bde169b855b32c48eaaef52f",
+      "extracted_sha256": "69bc45dc42b9acb96a69823adbc6ae538374e3c0bde169b855b32c48eaaef52f",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "rust-toolchain.toml",
+      "new_path": "rust-toolchain.toml",
+      "source_sha256": "48a0125e2d9b0115ac7670f8f22afe6fab1357922b3d7fa0db3da2e26e61ebb8",
+      "extracted_sha256": "48a0125e2d9b0115ac7670f8f22afe6fab1357922b3d7fa0db3da2e26e61ebb8",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "crates/quadrant-ui-gallery/src/main.rs",
+      "new_path": "gallery/src/main.rs",
+      "source_sha256": "1e26c30dfc0b59303285de6762dc939ab2e68d3f2815df8f691c1939f1306441",
+      "extracted_sha256": "c2afa7baa0b2110e98eb3c2cf710a3e25745aeb7c5393913f2164bb2d08dd9d1",
+      "status": "content_modified"
+    },
+    {
+      "old_path": "assets/icons/navigation-20-regular.svg",
+      "new_path": "assets/icons/navigation-20-regular.svg",
+      "source_sha256": "d2ee37137ef9157247b8cc9377e3e9eb9a9e10d8d9a105382de15a60e20eb483",
+      "extracted_sha256": "d2ee37137ef9157247b8cc9377e3e9eb9a9e10d8d9a105382de15a60e20eb483",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/settings-20-regular.svg",
+      "new_path": "assets/icons/settings-20-regular.svg",
+      "source_sha256": "63529b51e640f983ee5786c8b7fc47e47c1a4e606650997aaa2bb622fcefe0b3",
+      "extracted_sha256": "63529b51e640f983ee5786c8b7fc47e47c1a4e606650997aaa2bb622fcefe0b3",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/settings-20-filled.svg",
+      "new_path": "assets/icons/settings-20-filled.svg",
+      "source_sha256": "ab7479bb8ea28485718f4933677033ec76cc1e9e4b76d46b5dae6b9c70aa410d",
+      "extracted_sha256": "ab7479bb8ea28485718f4933677033ec76cc1e9e4b76d46b5dae6b9c70aa410d",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/about-20-regular.svg",
+      "new_path": "assets/icons/about-20-regular.svg",
+      "source_sha256": "5cf734ee9a13eea970a2f3d7075e40ddfcbaa00499217ce85e3d9214ea6a5e55",
+      "extracted_sha256": "5cf734ee9a13eea970a2f3d7075e40ddfcbaa00499217ce85e3d9214ea6a5e55",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/about-20-filled.svg",
+      "new_path": "assets/icons/about-20-filled.svg",
+      "source_sha256": "2577912d3141df51ff525f7501928b2f78c40448296b6ef089d4d5f1acf7a44e",
+      "extracted_sha256": "2577912d3141df51ff525f7501928b2f78c40448296b6ef089d4d5f1acf7a44e",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/add-16-regular.svg",
+      "new_path": "assets/icons/add-16-regular.svg",
+      "source_sha256": "a596baa8336f98fcf9fe14abfc049b8e1fc001c827b51f306ccace0ce8df3f55",
+      "extracted_sha256": "a596baa8336f98fcf9fe14abfc049b8e1fc001c827b51f306ccace0ce8df3f55",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/dismiss-16-regular.svg",
+      "new_path": "assets/icons/dismiss-16-regular.svg",
+      "source_sha256": "c3cdc3d5965a821bb207aefaaeca4bb11a19e141c273877698e84eb896e7ad32",
+      "extracted_sha256": "c3cdc3d5965a821bb207aefaaeca4bb11a19e141c273877698e84eb896e7ad32",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/subtract-16-regular.svg",
+      "new_path": "assets/icons/subtract-16-regular.svg",
+      "source_sha256": "e030e93ab049e7b9085c5adfa6c944776571c891c9f882c858e446f15b2c00ce",
+      "extracted_sha256": "e030e93ab049e7b9085c5adfa6c944776571c891c9f882c858e446f15b2c00ce",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/maximize-16-regular.svg",
+      "new_path": "assets/icons/maximize-16-regular.svg",
+      "source_sha256": "5ed682e1a04d5d2df2f63f2f339c280cf11cb43c232b6bce66c59859ec1290a7",
+      "extracted_sha256": "5ed682e1a04d5d2df2f63f2f339c280cf11cb43c232b6bce66c59859ec1290a7",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/restore-window-16-regular.svg",
+      "new_path": "assets/icons/restore-window-16-regular.svg",
+      "source_sha256": "2dcf9a021d92cc66e884d1e81d0301ae92787d06a7c58d63e97d02418ed63d11",
+      "extracted_sha256": "2dcf9a021d92cc66e884d1e81d0301ae92787d06a7c58d63e97d02418ed63d11",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/theme-system-16-regular.svg",
+      "new_path": "assets/icons/theme-system-16-regular.svg",
+      "source_sha256": "2664eebe477535c82bd092ac03c1668d1ce9e26c8e451e407cc2421c2e046f69",
+      "extracted_sha256": "2664eebe477535c82bd092ac03c1668d1ce9e26c8e451e407cc2421c2e046f69",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/theme-light-16-regular.svg",
+      "new_path": "assets/icons/theme-light-16-regular.svg",
+      "source_sha256": "e84fdb488fdd21b05349cda48f37a5e63f950241a8f2a93d66420fc7f5e827f6",
+      "extracted_sha256": "e84fdb488fdd21b05349cda48f37a5e63f950241a8f2a93d66420fc7f5e827f6",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/theme-dark-16-regular.svg",
+      "new_path": "assets/icons/theme-dark-16-regular.svg",
+      "source_sha256": "a8a459ee1b97852bd1abc876d6579099ace273d48f301bcc402f17f5a60309a4",
+      "extracted_sha256": "a8a459ee1b97852bd1abc876d6579099ace273d48f301bcc402f17f5a60309a4",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/delete-16-regular.svg",
+      "new_path": "assets/icons/delete-16-regular.svg",
+      "source_sha256": "c9a052bbf57a046cf8863c81e2f4281e505d0a2851edaa5bb06d8c83d0b46f87",
+      "extracted_sha256": "c9a052bbf57a046cf8863c81e2f4281e505d0a2851edaa5bb06d8c83d0b46f87",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/edit-16-regular.svg",
+      "new_path": "assets/icons/edit-16-regular.svg",
+      "source_sha256": "23871de41f4edc72935cabc5889187a7a152eff48c89f1af747c709ab85bd6f1",
+      "extracted_sha256": "23871de41f4edc72935cabc5889187a7a152eff48c89f1af747c709ab85bd6f1",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/complete-16-regular.svg",
+      "new_path": "assets/icons/complete-16-regular.svg",
+      "source_sha256": "80beb28213fdf9d38798f76112bed86f4117f0f3e46ed7e7386622c39d338d63",
+      "extracted_sha256": "80beb28213fdf9d38798f76112bed86f4117f0f3e46ed7e7386622c39d338d63",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/chevron-up-16-regular.svg",
+      "new_path": "assets/icons/chevron-up-16-regular.svg",
+      "source_sha256": "93bd7a183f2cf8bc4841a31ea924f7aaefd73487801304a02ece74cafdc41e56",
+      "extracted_sha256": "93bd7a183f2cf8bc4841a31ea924f7aaefd73487801304a02ece74cafdc41e56",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/chevron-down-16-regular.svg",
+      "new_path": "assets/icons/chevron-down-16-regular.svg",
+      "source_sha256": "6e5c71e2dea2bb3836349d48d4b5c228f807e4dce7943338f8689e875c18e685",
+      "extracted_sha256": "6e5c71e2dea2bb3836349d48d4b5c228f807e4dce7943338f8689e875c18e685",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/more-horizontal-16-regular.svg",
+      "new_path": "assets/icons/more-horizontal-16-regular.svg",
+      "source_sha256": "53b4bdbb19be7a347e46eb947896a9195e7e4733f1d60d80246f95b7654ebd67",
+      "extracted_sha256": "53b4bdbb19be7a347e46eb947896a9195e7e4733f1d60d80246f95b7654ebd67",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/folder-open-16-regular.svg",
+      "new_path": "assets/icons/folder-open-16-regular.svg",
+      "source_sha256": "19bff097639c7d11a062c99e93105c574c5647989e5ad5d1c79297d09afb6b1c",
+      "extracted_sha256": "19bff097639c7d11a062c99e93105c574c5647989e5ad5d1c79297d09afb6b1c",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/backup-16-regular.svg",
+      "new_path": "assets/icons/backup-16-regular.svg",
+      "source_sha256": "7aa4b48b2a7fe1e6a51ebd3db1b20cd50353d04d31d2d16cb5513cf8f5471ae7",
+      "extracted_sha256": "7aa4b48b2a7fe1e6a51ebd3db1b20cd50353d04d31d2d16cb5513cf8f5471ae7",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/warning-16-regular.svg",
+      "new_path": "assets/icons/warning-16-regular.svg",
+      "source_sha256": "523911a32558186a7c62d15e05c8aa47203faf907f0234fbbb3a460e23058f08",
+      "extracted_sha256": "523911a32558186a7c62d15e05c8aa47203faf907f0234fbbb3a460e23058f08",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/error-16-regular.svg",
+      "new_path": "assets/icons/error-16-regular.svg",
+      "source_sha256": "c560bc48d0cbbb70798b658d0fd56cdffe6f52aea7ead034154c1746326a1b4f",
+      "extracted_sha256": "c560bc48d0cbbb70798b658d0fd56cdffe6f52aea7ead034154c1746326a1b4f",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/info-16-regular.svg",
+      "new_path": "assets/icons/info-16-regular.svg",
+      "source_sha256": "102248862af61955894bec7e74feac961d0e8a2d8ee1af6257bdb1cec90d3b42",
+      "extracted_sha256": "102248862af61955894bec7e74feac961d0e8a2d8ee1af6257bdb1cec90d3b42",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/calendar-16-regular.svg",
+      "new_path": "assets/icons/calendar-16-regular.svg",
+      "source_sha256": "1a71dbafe0a8266303e26de6e3edeb0f6a101c4ff4ba9a3b4287f946ba92ed7b",
+      "extracted_sha256": "1a71dbafe0a8266303e26de6e3edeb0f6a101c4ff4ba9a3b4287f946ba92ed7b",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/clock-16-regular.svg",
+      "new_path": "assets/icons/clock-16-regular.svg",
+      "source_sha256": "dc94885f0b98864706430772b5d75052480596121b26528685b895731588bf6a",
+      "extracted_sha256": "dc94885f0b98864706430772b5d75052480596121b26528685b895731588bf6a",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/recurrence-16-regular.svg",
+      "new_path": "assets/icons/recurrence-16-regular.svg",
+      "source_sha256": "65694bf59772e8ec6311306d64446d342216c6bc466c90f4fbf1e5a116a9ba4b",
+      "extracted_sha256": "65694bf59772e8ec6311306d64446d342216c6bc466c90f4fbf1e5a116a9ba4b",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/heart-16-filled.svg",
+      "new_path": "assets/icons/heart-16-filled.svg",
+      "source_sha256": "794d0c7af2570aadbe1214aa253a15b129ecc891d25b690d33ee7c2859724bac",
+      "extracted_sha256": "794d0c7af2570aadbe1214aa253a15b129ecc891d25b690d33ee7c2859724bac",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/success-24-regular.svg",
+      "new_path": "assets/icons/success-24-regular.svg",
+      "source_sha256": "d9da42c2050cde329e5cbee3839f98bc990010a5fac3dd5b519a33ab91b08d67",
+      "extracted_sha256": "d9da42c2050cde329e5cbee3839f98bc990010a5fac3dd5b519a33ab91b08d67",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/info-24-regular.svg",
+      "new_path": "assets/icons/info-24-regular.svg",
+      "source_sha256": "6393fd90f6f4d006db8c88b0c21c32a6afebc0dfd88352c14b75a220356055b9",
+      "extracted_sha256": "6393fd90f6f4d006db8c88b0c21c32a6afebc0dfd88352c14b75a220356055b9",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/warning-24-regular.svg",
+      "new_path": "assets/icons/warning-24-regular.svg",
+      "source_sha256": "25eacfa5b42d3991651a49f6e5d6750227c0a85986416f46de7ab5da252ff5e9",
+      "extracted_sha256": "25eacfa5b42d3991651a49f6e5d6750227c0a85986416f46de7ab5da252ff5e9",
+      "status": "unchanged"
+    },
+    {
+      "old_path": "assets/icons/error-24-regular.svg",
+      "new_path": "assets/icons/error-24-regular.svg",
+      "source_sha256": "8cd30be89507fb272efe983ec69ba463583b2966e1a61bae6037c530b7db9acd",
+      "extracted_sha256": "8cd30be89507fb272efe983ec69ba463583b2966e1a61bae6037c530b7db9acd",
+      "status": "unchanged"
+    }
+  ],
+  "source_repository": "https://github.com/wadaxiyang/Quadrant-Tasks",
+  "audited_source_commit": "79632ca3dec2decce7f830879575c517f4e2a29e",
+  "new_files": [
+    ".gitattributes",
+    ".gitignore",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "Cargo.lock",
+    "Cargo.toml",
+    "README.md",
+    "THIRD-PARTY-NOTICES.md",
+    "docs/ARCHITECTURE.md",
+    "docs/CONSUMER_GUIDE.md",
+    "docs/GALLERY.md",
+    "docs/PROVENANCE.md",
+    "docs/PUBLIC_API.md",
+    "gallery/Cargo.toml",
+    "gallery/build.rs",
+    "gallery/src/config.rs",
+    "gallery/ui/api_probe.slint",
+    "scripts/asset_manifest.json",
+    "scripts/capture_gallery_baseline.ps1",
+    "scripts/capture_gallery_baseline.py",
+    "scripts/extraction_manifest.json",
+    "scripts/tests/test_capture.py",
+    "scripts/verify_distribution.py",
+    "src/lib.rs"
+  ]
+}

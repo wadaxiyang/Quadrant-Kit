@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Preserve audited SVG bytes; asset hashes must survive Windows checkouts.
+assets/icons/*.svg -text

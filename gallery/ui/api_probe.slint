@@ -1,0 +1,41 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import {
+    Elevation, Motion, Theme, ThemeMode, Typography, UiConstants, FluentIcons,
+    FluentIcon, TooltipHost, SurfaceCard, Badge, BadgeKind, FluentButton, IconButton,
+    SegmentButton, FluentTextField, FluentTextArea, SettingRow, SidebarItem,
+    WindowControlButton, SectionHeader, PageHeader, EmptyState, MetricCard,
+    ToastHost, ToastKind, ModalManager, ModalKind,
+} from "@quadrant-kit";
+
+// Compiled through gallery.slint; normal Gallery startup does not instantiate it.
+export component KitApiProbe inherits Window {
+    in-out property <string> sample_text: "Sample";
+    in-out property <bool> activated: false;
+    in-out property <ThemeMode> mode: ThemeMode.system;
+    out property <duration> motion_duration: Motion.fast;
+    background: Elevation.card_surface;
+    default-font-size: Typography.body;
+    default-font-family: Theme.ui_font_family;
+    VerticalLayout {
+        spacing: UiConstants.space_8;
+        FluentIcon { source: FluentIcons.menu; icon_color: Theme.accent; }
+        TooltipHost { shown: false; text: "Help"; }
+        SurfaceCard { interactive: true; accessible_name: "Sample"; clicked => { root.activated = true; } }
+        Badge { text: "Sample"; kind: BadgeKind.accent; }
+        FluentButton { text: "Apply"; primary: true; clicked => { root.activated = true; } }
+        IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.activated = true; } }
+        SegmentButton { text: "Select"; selected: root.activated; clicked => { root.activated = !root.activated; } }
+        FluentTextField { text <=> root.sample_text; accepted(value) => { root.sample_text = value; } edited(value) => { root.sample_text = value; } }
+        FluentTextArea { text <=> root.sample_text; edited(value) => { root.sample_text = value; } }
+        SettingRow { title: "Preference"; description: "Sample"; }
+        SidebarItem { text: "Preferences"; icon: FluentIcons.settings_regular; clicked => { root.activated = true; } }
+        WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; clicked => { root.activated = false; } }
+        SectionHeader { title: "Section"; badge_text: "New"; badge_kind: BadgeKind.neutral; }
+        PageHeader { title: "Page"; show_action: true; action_text: "Add"; action_clicked => { root.activated = true; } }
+        EmptyState { title: "Empty"; message: "No items"; }
+        MetricCard { label: "Items"; value: "0"; hint: "Sample"; }
+        ToastHost { shown: false; kind: ToastKind.info; message: "Saved"; dismissed => { root.activated = false; } }
+        ModalManager { shown: false; kind: ModalKind.warning; title: "Apply?"; accepted => { root.activated = true; } dismissed => { root.activated = false; } }
+    }
+}
