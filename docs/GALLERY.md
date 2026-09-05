@@ -72,6 +72,26 @@ python -m unittest discover -s scripts/tests -p "test_*.py"
 
 The distribution script validates this package's current static imports, resource ownership and hashes. Full Slint lexical/API/architecture guards, their fixtures, incremental token/SVG checks, Linux/macOS CI, Rust 1.92, remote consumers, and complete native interaction matrices remain later gates.
 
+### Phase 1 local result — 2026-09-06
+
+The final implementation checked is `acad992704b75959f1ae2f51304864e919b5a87b`; this result is recorded by a subsequent documentation-only commit. Environment: native Windows x86_64 MSVC, Rust/Cargo 1.94.1, Python 3.13.15, Slint 1.17.1.
+
+| Check | Result | Local evidence under target/phase1 |
+|---|---|---|
+| fmt / clippy with all targets, all features and warnings denied | PASS | `fmt.log`, `clippy-final.log` |
+| Rust workspace tests | PASS: 1 helper + 4 configuration tests | `tests-final.log` |
+| Python snapshot identity/reuse tests | PASS: 2 tests | `python-tests.log` |
+| Isolated local Git clone, own target directory, Gallery build | PASS; no Tasks checkout or Product packages required | `isolated-build-final.log` |
+| Static closure / package list | PASS: 32 SVGs with matching hashes; required source and license files included | `distribution-final.log` |
+| Source package verification | PASS: 70 files; root helper compiled from the package | `package-final.log` |
+| Eight pages, Light/Dark/System, preview 0/1/2, representative 200%/225% simulated scales | PASS for 12 captured rendering scenes | `native/results.json`; final header fix rechecked in `native-final/result.json` and final Controls smoke |
+| Invalid input and output path handling | PASS: 8 invalid configurations rejected with exit 1; output-as-directory rejected with exit 2 | `native/results.json`, `native/output-error-recheck.log` |
+| Public PowerShell capture entry and matching-scene reuse | PASS | `capture-final.log`, `capture-reuse.log` |
+
+The full eight-page run preceded a final neutral header icon tint correction; final Light Controls and Dark Navigation at 225% were recaptured afterward. The error-case harness initially could not decode a localized Windows error; its output-error case was repeated with explicit UTF-8 and preserved correctly. The Gallery process correctly returned exit 2 on both runs.
+
+This is Gate 1 evidence, not complete migration acceptance. No remote push/CI/consumer build, real OS theme-toggle test, real monitor DPI transition, or complete native keyboard/IME/a11y matrix is claimed. Raw logs/screenshots and the isolated checkout are private local artifacts; the source/manifests/documentation are versioned.
+
 ## Learning order
 
 Start with theme.slint and constants.slint, then FluentIcon / SurfaceCard / Badge. Run Gallery while reading one component's small property/callback surface. Next study buttons and focus/disabled handling, then std-widgets text wrappers, page/navigation/settings composition, and Toast/Modal. Make a small change, build and observe the affected specimen, then restore the experiment or commit an intentional change. Tasks does not need to be open for this workflow.
