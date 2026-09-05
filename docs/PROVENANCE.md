@@ -16,6 +16,8 @@ Extraction source: `https://github.com/wadaxiyang/Quadrant-Tasks` (historical UR
 
 The SPEC records upstream `owu/wsl-dashboard` commit `948589a255a4bd8a3ff9c3de49e2e13109378fcd` (v0.11.0) for derived UI code, and `microsoft/fluentui-system-icons` commit `4d685f77b2cb8f3f412a74ec8d920c8c91149528` (1.1.339) for Microsoft icons. Original source comments and GPL/MIT notices are preserved. No new upstream downloads or independent SVG-to-upstream byte matching were performed; unknown original upstream filenames are not guessed.
 
+SVG bytes include their original trailing whitespace. `.gitattributes` disables text conversion and whitespace diagnostics only for these audited SVG assets, preserving hashes across Windows checkouts rather than rewriting third-party files for formatting. Other text files use LF.
+
 Tasks retains its branding/native icons, task types, database migrations, IPC, Agent, and packaging. During Phase 1 it also retains its embedded Kit as the unchanged build source. That temporary extraction staging is not permission for permanent duplicated Kit maintenance after cutover.
 
 Kit's final own commit SHA is recorded by Git and later by its consumers, not embedded into the same commit. No release reference or remote publication is claimed by this document.

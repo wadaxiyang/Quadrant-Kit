@@ -494,4 +494,3 @@ export component ModalManager inherits Rectangle {
     callback dismissed;
 }
 ```
-
