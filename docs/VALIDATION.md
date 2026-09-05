@@ -57,6 +57,25 @@ The incremental command requires exclusive checkout/build access. It builds Gall
 
 ## Phase 2 local evidence — 2026-09-06
 
-Local evidence is kept under ignored `target/phase2/` and `target/incremental-verification/`; screenshots carry their own source/environment identity. Platform results are recorded at the phase handoff after the final commands. Development Rust remains 1.94.1; dependency versions and Slint renderer defaults were not upgraded.
+Implementation checked: `960373bd30d350699ed29fec667cb69ab3ad77fd`; this evidence is recorded by a subsequent documentation-only commit. Local logs are kept under ignored `target/phase2/` and `target/incremental-verification/`; screenshots carry their own source/environment identity. Development Rust remains 1.94.1; dependency versions and Slint renderer defaults were not upgraded.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Windows fmt, clippy all-targets/all-features with warnings denied, Rust tests | PASS; 5 Rust tests | `fmt.log`, `clippy.log`, `tests.log` |
+| Windows boundary/API/assets/resolved Cargo and Python fixtures | PASS; 28 exports, 32 SVGs, 31 Python tests | `boundaries-final.log`, `python-tests-final.log` |
+| Windows native Gallery + compiled API probe | PASS | `build-final.log` |
+| Rust 1.92.0 Windows MSVC helper and Gallery actual build | PASS; separate MSRV target | `msrv.log` |
+| Linux Ubuntu 24.04 x86_64 under WSL2: fmt, clippy all-targets/all-features, Rust tests, Gallery/probe build | PASS; 5 Rust tests; own Linux target | `linux-fmt.log`, `linux-clippy.log`, `linux-tests.log`, `linux-build.log` |
+| Linux boundary/API/assets/resolved Cargo and Python fixtures | PASS; 31 Python tests | `linux-boundaries-final.log`, `linux-python-tests-final.log` |
+| Independent local Git clone, own target, no Tasks checkout | PASS: boundary guard and Gallery build | `isolated-boundaries.log`, `isolated-build.log` |
+| Source package and actual archive closure | PASS: 72 files packaged; 59 required files byte-checked, including 32 SVGs | `package.log`, `distribution.log` |
+| Deep token and SVG incremental invalidation | PASS: both trigger Gallery build-script rerun and binary change; exact source bytes restored | `incremental-verification/result.json`; verbose logs name the changed token/SVG |
+| Windows and Linux WSLg Controls rendering smoke | PASS: page 4, preview 1, Light, 1040×800, 100%, winit-software | `capture-windows.log`, `capture-linux.log`; source-keyed PNG/JSON pairs under `target/visual-baselines/` |
+| macOS workspace all-targets | NOT_RUN locally: no macOS host/SDK; native CI job prepared | Must run on the published candidate in Phase 3 |
+| Remote CI, retained commit and Git+SHA consumer | NOT_RUN: candidate has not been pushed | Phase 3 |
+
+The Linux first build failed on missing fontconfig development files; the first WSLg render failed on missing libxkbcommon-x11. Both were resolved with Ubuntu packages extracted into a user-owned validation sysroot, with pkg-config and runtime library paths scoped to validation commands. No system package replacement or repository-specific linker override was committed. Initial stale apt indexes also produced 404s, resolved with a private refreshed package index. Linux/Windows screenshots share the same clean source SHA and content hash; fonts differ by platform, so pixel equivalence is not claimed.
+
+**Gate 2 local requirements are satisfied:** Kit can be independently reviewed, built, tested and packaged, the public contract excludes Product APIs and licensing material is present. This is not completion of all platform/publication gates or of the full extraction. macOS and real remote consumption remain mandatory before final migration acceptance.
 
 Native keyboard/IME, real system-theme transitions, real monitor DPI changes and complete accessibility acceptance remain unverified. In particular ModalManager does not yet promise a complete focus trap/restoration contract; text wrappers retain std-widgets behavior but custom control screen-reader/focus coverage remains a P1 follow-up. Phase 1 screenshot evidence is documented separately in GALLERY.md.
