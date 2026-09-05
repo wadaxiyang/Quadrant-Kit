@@ -9,5 +9,7 @@
 - Gallery now has eight neutral pages (0–7). Remove Inbox routing, task specimens, product branding and workflow text; keep controls, previews, and feedback specimens.
 - Reject invalid snapshot configuration before native window creation; explicitly initialize theme/font and follow backend system theme through a separate never-shown host instance.
 - Add a compiled probe covering all 28 public names. Replace snapshot filename-only reuse with source, environment, and scenario manifests.
+- Add the fail-closed lexical boundary/API guard, explicit signature/default baseline, Cargo policy fixtures, shared static-resource scanner and package archive verification.
+- Add incremental token/SVG rebuild verification and push/PR/manual CI for Linux, Windows, macOS and the Rust 1.92 build baseline. Actual execution evidence is tracked separately from workflow presence.
 
-This is not a compatibility-preserving release of the old embedded facade. No stable release tag or verified remote consumption exists at this stage. Required validation and outstanding limitations are tracked in docs/GALLERY.md.
+This is not a compatibility-preserving release of the old embedded facade. No stable release tag or verified remote consumption exists at this stage. Required validation and outstanding limitations are tracked in docs/VALIDATION.md and docs/GALLERY.md.

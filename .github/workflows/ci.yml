@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@1.94.1
+        with:
+          components: clippy,rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - name: Install Linux UI dependencies
+        run: >-
+          sudo apt-get update && sudo apt-get install -y
+          libfontconfig1-dev libx11-xcb-dev xinput libxcursor-dev
+          libxkbcommon-x11-dev libx11-dev
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+      - run: cargo test --workspace --locked
+      - run: python3 scripts/check_ui_boundaries.py
+      - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - run: cargo build --locked -p quadrant-kit-gallery
+      - run: cargo package --locked -p quadrant-kit
+      - run: python3 scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.0.crate
+      - run: python3 scripts/verify_incremental.py
+
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@1.94.1
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --workspace --all-targets --locked
+      - run: python scripts/check_ui_boundaries.py
+      - run: python -m unittest discover -s scripts/tests -p 'test_*.py'
+      - if: runner.os == 'Windows'
+        run: cargo build --locked -p quadrant-kit-gallery
+      - if: runner.os == 'Windows'
+        run: pwsh -NoProfile -File scripts/capture_gallery_baseline.ps1 -Mode Smoke -Page 4 -Preview 1
+      - if: runner.os == 'Windows' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-gallery-smoke
+          path: target/visual-baselines/
+          if-no-files-found: warn
+
+  msrv:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@1.92.0
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: msrv-1.92.0
+      - run: cargo +1.92.0 build --locked -p quadrant-kit -p quadrant-kit-gallery

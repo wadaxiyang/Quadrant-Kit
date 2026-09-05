@@ -14,11 +14,13 @@ Available checks:
 cargo fmt --all --check
 cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
 cargo test --workspace --locked
+python scripts/check_ui_boundaries.py
+python -m unittest discover -s scripts/tests -p "test_*.py"
 cargo build --locked -p quadrant-kit-gallery
-python scripts/verify_distribution.py
+python scripts/verify_distribution.py --package
 cargo package --locked -p quadrant-kit --list
 ```
 
-Read the actual commands and limitations in docs/GALLERY.md and docs/CONSUMER_GUIDE.md. Phase 2 must add the full versioned boundary/API guard and its fixtures; the distribution script is not a complete Slint parser or API compatibility guard. Do not auto-refresh baselines to hide errors.
+Read the actual commands and limitations in docs/VALIDATION.md and docs/CONSUMER_GUIDE.md. The versioned boundary/API guard uses a small fail-closed declaration scanner; Slint compilation and the Gallery probe complement it. Run scripts/verify_incremental.py only with exclusive access to the checkout and build directory because it temporarily changes and restores a token and SVG. Do not auto-refresh baselines to hide errors.
 
 Before editing or Git operations, inspect this repository's status. Keep one writer per checkout; never overwrite unknown changes, change published history, or publish private machine files. Publishing a Kit candidate belongs to the explicitly authorized publication phase. Report unrun checks as NOT_RUN; no fake revisions or invented successful tests.

@@ -4,7 +4,7 @@ Quadrant Kit is a Slint source library compiled by each consumer. The root helpe
 
 ## Candidate status
 
-The target remote is `https://github.com/wadaxiyang/Quadrant-Kit.git`; no published revision has been verified in Phase 1. Do not switch Tasks yet. The following integration describes the eventual contract, not an executable placeholder dependency.
+The target remote is `https://github.com/wadaxiyang/Quadrant-Kit.git`; no published revision has been verified through local Phase 2. Do not switch Tasks yet. The following integration describes the eventual contract, not an executable placeholder dependency.
 
 After publication, add a build dependency named `quadrant-kit` with that Git URL and the verified full 40-character commit SHA to the consumer UI crate. Do not use a sibling checkout, path patch, source replacement, cache copy, or a build script that downloads the library. Keep the adopted commit reachable through a retained reference; review the lockfile and use `--locked` afterward. Gallery's `path = ".."` is legal because it is inside this repository.
 

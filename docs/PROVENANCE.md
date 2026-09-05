@@ -21,3 +21,5 @@ SVG bytes include their original trailing whitespace. `.gitattributes` disables 
 Tasks retains its branding/native icons, task types, database migrations, IPC, Agent, and packaging. During Phase 1 it also retains its embedded Kit as the unchanged build source. That temporary extraction staging is not permission for permanent duplicated Kit maintenance after cutover.
 
 Kit's final own commit SHA is recorded by Git and later by its consumers, not embedded into the same commit. No release reference or remote publication is claimed by this document.
+
+The extraction manifest's `extracted_sha256` values are historical Phase 1 extraction evidence, not a rule forbidding future source changes. Phase 2 guards are newly authored descendants of the Tasks guard's import/layer/cycle/API approach; its regex and line-counting parser is replaced by a standard-library token scanner. Git records subsequent tooling changes. The asset manifest remains a live byte/license baseline, and `kit_api_v1.json` is the separately reviewed public declaration/default baseline. No generic UI or SVG bytes changed in Phase 2.

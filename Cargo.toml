@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 description = "Reusable Fluent-oriented Slint components and build-time source access"
 publish = false
-include = ["Cargo.toml", "src/**", "ui/**", "assets/icons/**", "LICENSE", "README.md", "THIRD-PARTY-NOTICES.md", "docs/**", "scripts/asset_manifest.json", "scripts/extraction_manifest.json"]
+include = ["Cargo.toml", "src/**", "ui/**", "assets/icons/**", "LICENSE", "README.md", "THIRD-PARTY-NOTICES.md", "docs/**", "scripts/asset_manifest.json", "scripts/extraction_manifest.json", "scripts/kit_api_v1.json"]
 
 [workspace]
 members = ["gallery"]

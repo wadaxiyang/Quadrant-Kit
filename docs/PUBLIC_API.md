@@ -2,7 +2,7 @@
 
 `ui/kit.slint` is the only supported Slint entry. All 28 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer.
 
-Signatures below are copied from the candidate sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. The complete machine-checked API baseline and compatibility guard are Phase 2 deliverables and are not claimed here.
+Signatures below are copied from the candidate sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 28 exported names, 217 properties, 13 callbacks and four enum value lists. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
 
 ## Coverage and behavior
 

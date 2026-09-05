@@ -1,0 +1,2332 @@
+{
+  "schema_version": 1,
+  "exports": {
+    "Badge": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "kind": {
+            "kind": "property",
+            "direction": "in",
+            "type": "BadgeKind"
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": null,
+          "expression": ""
+        },
+        "kind": {
+          "binding": ":",
+          "expression": "BadgeKind . neutral"
+        }
+      }
+    },
+    "BadgeKind": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "neutral",
+          "accent",
+          "success",
+          "warning",
+          "danger"
+        ]
+      },
+      "defaults": {}
+    },
+    "Elevation": {
+      "signature": {
+        "kind": "global",
+        "inherits": null,
+        "members": {
+          "card-surface": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-border": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-hover-surface": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-pressed-surface": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-selected-surface": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-selected-border": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-blur": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "card-shadow": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "popup-blur": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "popup-shadow": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "dialog-surface": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "dialog-border": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "dialog-overlay": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "dialog-blur": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "dialog-shadow": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          }
+        }
+      },
+      "defaults": {
+        "card-surface": {
+          "binding": ":",
+          "expression": "Theme . card-bg"
+        },
+        "card-border": {
+          "binding": ":",
+          "expression": "Theme . border-color"
+        },
+        "card-hover-surface": {
+          "binding": ":",
+          "expression": "Theme . card-hover"
+        },
+        "card-pressed-surface": {
+          "binding": ":",
+          "expression": "Theme . selected-bg"
+        },
+        "card-selected-surface": {
+          "binding": ":",
+          "expression": "Theme . selected-bg"
+        },
+        "card-selected-border": {
+          "binding": ":",
+          "expression": "Theme . accent"
+        },
+        "card-blur": {
+          "binding": ":",
+          "expression": "4px"
+        },
+        "card-shadow": {
+          "binding": ":",
+          "expression": "Theme . dark-mode ? # 00000038 : # 00000018"
+        },
+        "popup-blur": {
+          "binding": ":",
+          "expression": "12px"
+        },
+        "popup-shadow": {
+          "binding": ":",
+          "expression": "# 00000044"
+        },
+        "dialog-surface": {
+          "binding": ":",
+          "expression": "Theme . card-bg"
+        },
+        "dialog-border": {
+          "binding": ":",
+          "expression": "Theme . border-color"
+        },
+        "dialog-overlay": {
+          "binding": ":",
+          "expression": "# 00000080"
+        },
+        "dialog-blur": {
+          "binding": ":",
+          "expression": "20px"
+        },
+        "dialog-shadow": {
+          "binding": ":",
+          "expression": "# 00000055"
+        }
+      }
+    },
+    "EmptyState": {
+      "signature": {
+        "kind": "component",
+        "inherits": "SurfaceCard",
+        "members": {
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "message": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "icon": {
+            "kind": "property",
+            "direction": "in",
+            "type": "image"
+          },
+          "milestone": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          }
+        }
+      },
+      "defaults": {
+        "title": {
+          "binding": null,
+          "expression": ""
+        },
+        "message": {
+          "binding": null,
+          "expression": ""
+        },
+        "icon": {
+          "binding": ":",
+          "expression": "Icons . status-info"
+        },
+        "milestone": {
+          "binding": null,
+          "expression": ""
+        }
+      }
+    },
+    "FluentButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "icon": {
+            "kind": "property",
+            "direction": "in",
+            "type": "image"
+          },
+          "show-icon": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "primary": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "accent": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "danger": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-hover": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-pressed": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-focus": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": null,
+          "expression": ""
+        },
+        "icon": {
+          "binding": null,
+          "expression": ""
+        },
+        "show-icon": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "primary": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "accent": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "danger": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "preview-hover": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-pressed": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-focus": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    },
+    "FluentIcon": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "source": {
+            "kind": "property",
+            "direction": "in",
+            "type": "image"
+          },
+          "size": {
+            "kind": "property",
+            "direction": "in",
+            "type": "length"
+          },
+          "icon-color": {
+            "kind": "property",
+            "direction": "in",
+            "type": "brush"
+          },
+          "optical-offset-x": {
+            "kind": "property",
+            "direction": "in",
+            "type": "length"
+          },
+          "optical-offset-y": {
+            "kind": "property",
+            "direction": "in",
+            "type": "length"
+          }
+        }
+      },
+      "defaults": {
+        "source": {
+          "binding": null,
+          "expression": ""
+        },
+        "size": {
+          "binding": ":",
+          "expression": "16px"
+        },
+        "icon-color": {
+          "binding": ":",
+          "expression": "Theme . icon-neutral"
+        },
+        "optical-offset-x": {
+          "binding": ":",
+          "expression": "0px"
+        },
+        "optical-offset-y": {
+          "binding": ":",
+          "expression": "0px"
+        }
+      }
+    },
+    "FluentIcons": {
+      "signature": {
+        "kind": "global",
+        "inherits": null,
+        "members": {
+          "menu": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "settings-regular": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "settings-filled": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "about-regular": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "about-filled": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "add": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "dismiss": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "minimize": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "maximize": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "restore-window": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "theme-system": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "theme-light": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "theme-dark": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "delete": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "edit": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "complete": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "chevron-up": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "chevron-down": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "more-horizontal": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "folder-open": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "backup": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "warning": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "error": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "info": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "calendar": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "clock": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "recurrence": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "heart-filled": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "status-success": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "status-info": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "status-warning": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          },
+          "status-error": {
+            "kind": "property",
+            "direction": "out",
+            "type": "image"
+          }
+        }
+      },
+      "defaults": {
+        "menu": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/navigation-20-regular.svg\" )"
+        },
+        "settings-regular": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/settings-20-regular.svg\" )"
+        },
+        "settings-filled": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/settings-20-filled.svg\" )"
+        },
+        "about-regular": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/about-20-regular.svg\" )"
+        },
+        "about-filled": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/about-20-filled.svg\" )"
+        },
+        "add": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/add-16-regular.svg\" )"
+        },
+        "dismiss": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/dismiss-16-regular.svg\" )"
+        },
+        "minimize": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/subtract-16-regular.svg\" )"
+        },
+        "maximize": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/maximize-16-regular.svg\" )"
+        },
+        "restore-window": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/restore-window-16-regular.svg\" )"
+        },
+        "theme-system": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/theme-system-16-regular.svg\" )"
+        },
+        "theme-light": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/theme-light-16-regular.svg\" )"
+        },
+        "theme-dark": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/theme-dark-16-regular.svg\" )"
+        },
+        "delete": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/delete-16-regular.svg\" )"
+        },
+        "edit": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/edit-16-regular.svg\" )"
+        },
+        "complete": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/complete-16-regular.svg\" )"
+        },
+        "chevron-up": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/chevron-up-16-regular.svg\" )"
+        },
+        "chevron-down": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/chevron-down-16-regular.svg\" )"
+        },
+        "more-horizontal": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/more-horizontal-16-regular.svg\" )"
+        },
+        "folder-open": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/folder-open-16-regular.svg\" )"
+        },
+        "backup": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/backup-16-regular.svg\" )"
+        },
+        "warning": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/warning-16-regular.svg\" )"
+        },
+        "error": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/error-16-regular.svg\" )"
+        },
+        "info": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/info-16-regular.svg\" )"
+        },
+        "calendar": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/calendar-16-regular.svg\" )"
+        },
+        "clock": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/clock-16-regular.svg\" )"
+        },
+        "recurrence": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/recurrence-16-regular.svg\" )"
+        },
+        "heart-filled": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/heart-16-filled.svg\" )"
+        },
+        "status-success": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/success-24-regular.svg\" )"
+        },
+        "status-info": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/info-24-regular.svg\" )"
+        },
+        "status-warning": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/warning-24-regular.svg\" )"
+        },
+        "status-error": {
+          "binding": ":",
+          "expression": "@ image-url ( \"../../assets/icons/error-24-regular.svg\" )"
+        }
+      }
+    },
+    "FluentTextArea": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "string"
+          },
+          "placeholder-text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "edited": {
+            "kind": "callback",
+            "arguments": [
+              "string"
+            ],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": null,
+          "expression": ""
+        },
+        "placeholder-text": {
+          "binding": null,
+          "expression": ""
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        }
+      }
+    },
+    "FluentTextField": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "string"
+          },
+          "placeholder-text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "error-text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "preview-focus": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "accepted": {
+            "kind": "callback",
+            "arguments": [
+              "string"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "edited": {
+            "kind": "callback",
+            "arguments": [
+              "string"
+            ],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": null,
+          "expression": ""
+        },
+        "placeholder-text": {
+          "binding": null,
+          "expression": ""
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "error-text": {
+          "binding": null,
+          "expression": ""
+        },
+        "preview-focus": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    },
+    "IconButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "icon": {
+            "kind": "property",
+            "direction": "in",
+            "type": "image"
+          },
+          "tooltip": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "danger": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-hover": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-pressed": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-focus": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "icon": {
+          "binding": null,
+          "expression": ""
+        },
+        "tooltip": {
+          "binding": null,
+          "expression": ""
+        },
+        "danger": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "preview-hover": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-pressed": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-focus": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    },
+    "MetricCard": {
+      "signature": {
+        "kind": "component",
+        "inherits": "SurfaceCard",
+        "members": {
+          "label": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "value": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "hint": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          }
+        }
+      },
+      "defaults": {
+        "label": {
+          "binding": null,
+          "expression": ""
+        },
+        "value": {
+          "binding": ":",
+          "expression": "\"—\""
+        },
+        "hint": {
+          "binding": null,
+          "expression": ""
+        }
+      }
+    },
+    "ModalKind": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "info",
+          "warning",
+          "danger"
+        ]
+      },
+      "defaults": {}
+    },
+    "ModalManager": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "shown": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "message": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "primary-text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "secondary-text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "show-secondary": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "kind": {
+            "kind": "property",
+            "direction": "in",
+            "type": "ModalKind"
+          },
+          "danger-primary": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "accepted": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "dismissed": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "shown": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "title": {
+          "binding": null,
+          "expression": ""
+        },
+        "message": {
+          "binding": null,
+          "expression": ""
+        },
+        "primary-text": {
+          "binding": ":",
+          "expression": "\"OK\""
+        },
+        "secondary-text": {
+          "binding": ":",
+          "expression": "\"Cancel\""
+        },
+        "show-secondary": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "kind": {
+          "binding": ":",
+          "expression": "ModalKind . info"
+        },
+        "danger-primary": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    },
+    "Motion": {
+      "signature": {
+        "kind": "global",
+        "inherits": null,
+        "members": {
+          "fast": {
+            "kind": "property",
+            "direction": "out",
+            "type": "duration"
+          },
+          "standard": {
+            "kind": "property",
+            "direction": "out",
+            "type": "duration"
+          },
+          "slow": {
+            "kind": "property",
+            "direction": "out",
+            "type": "duration"
+          }
+        }
+      },
+      "defaults": {
+        "fast": {
+          "binding": ":",
+          "expression": "100ms"
+        },
+        "standard": {
+          "binding": ":",
+          "expression": "160ms"
+        },
+        "slow": {
+          "binding": ":",
+          "expression": "200ms"
+        }
+      }
+    },
+    "PageHeader": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "subtitle": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "show-action": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "action-text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "action-clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "title": {
+          "binding": null,
+          "expression": ""
+        },
+        "subtitle": {
+          "binding": null,
+          "expression": ""
+        },
+        "show-action": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "action-text": {
+          "binding": null,
+          "expression": ""
+        }
+      }
+    },
+    "SectionHeader": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "description": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "badge-text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "badge-kind": {
+            "kind": "property",
+            "direction": "in",
+            "type": "BadgeKind"
+          }
+        }
+      },
+      "defaults": {
+        "title": {
+          "binding": null,
+          "expression": ""
+        },
+        "description": {
+          "binding": null,
+          "expression": ""
+        },
+        "badge-text": {
+          "binding": null,
+          "expression": ""
+        },
+        "badge-kind": {
+          "binding": ":",
+          "expression": "BadgeKind . neutral"
+        }
+      }
+    },
+    "SegmentButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "selected": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-hover": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-pressed": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-focus": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": null,
+          "expression": ""
+        },
+        "selected": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "preview-hover": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-pressed": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-focus": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    },
+    "SettingRow": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "description": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          }
+        }
+      },
+      "defaults": {
+        "title": {
+          "binding": null,
+          "expression": ""
+        },
+        "description": {
+          "binding": null,
+          "expression": ""
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        }
+      }
+    },
+    "SidebarItem": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "icon": {
+            "kind": "property",
+            "direction": "in",
+            "type": "image"
+          },
+          "selected-icon": {
+            "kind": "property",
+            "direction": "in",
+            "type": "image"
+          },
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "icon-color": {
+            "kind": "property",
+            "direction": "in",
+            "type": "color"
+          },
+          "selected": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "collapsed": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "icon": {
+          "binding": null,
+          "expression": ""
+        },
+        "selected-icon": {
+          "binding": ":",
+          "expression": "root . icon"
+        },
+        "text": {
+          "binding": null,
+          "expression": ""
+        },
+        "icon-color": {
+          "binding": ":",
+          "expression": "Theme . icon-neutral"
+        },
+        "selected": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "collapsed": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    },
+    "SurfaceCard": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "interactive": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "elevated": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "selected": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-hover": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-pressed": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "preview-focus": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "accessible-name": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "interactive": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "elevated": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "selected": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "preview-hover": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-pressed": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "preview-focus": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "accessible-name": {
+          "binding": null,
+          "expression": ""
+        }
+      }
+    },
+    "Theme": {
+      "signature": {
+        "kind": "global",
+        "inherits": null,
+        "members": {
+          "mode": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "ThemeMode"
+          },
+          "system-dark": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "bool"
+          },
+          "ui-font-family": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "string"
+          },
+          "dark-mode": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "background": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "content-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "sidebar-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-bg-muted": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "text-primary": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "text-secondary": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "text-tertiary": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "border-color": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "divider": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "main-color": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "hover-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "selected-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "card-hover": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "accent": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "accent-foreground": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "accent-hover": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "accent-pressed": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "focus-ring": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "control-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "control-bg-hover": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "input-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "input-border": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "danger": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "danger-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "success": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "warning": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-neutral": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "scrollbar-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "scrollbar-thumb": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "scrollbar-thumb-hover": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-color-navigation": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-color-success": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-color-info": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-color-indigo": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-color-orange": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-color-emerald": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "icon-color-slate": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          }
+        }
+      },
+      "defaults": {
+        "mode": {
+          "binding": ":",
+          "expression": "ThemeMode . system"
+        },
+        "system-dark": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "ui-font-family": {
+          "binding": ":",
+          "expression": "\"\""
+        },
+        "dark-mode": {
+          "binding": ":",
+          "expression": "mode == ThemeMode . dark || ( mode == ThemeMode . system && system-dark )"
+        },
+        "background": {
+          "binding": ":",
+          "expression": "dark-mode ? # 202020 : # f3f3f3"
+        },
+        "content-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 1e 1e 1e : # ffffff"
+        },
+        "sidebar-bg": {
+          "binding": ":",
+          "expression": "transparent"
+        },
+        "card-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 2d 2d 30 : # ffffff"
+        },
+        "card-bg-muted": {
+          "binding": ":",
+          "expression": "dark-mode ? # 27272a : # fafafa"
+        },
+        "text-primary": {
+          "binding": ":",
+          "expression": "dark-mode ? # eeeeee : # 1a 1a 1a"
+        },
+        "text-secondary": {
+          "binding": ":",
+          "expression": "dark-mode ? # bbbbbb : # 666666"
+        },
+        "text-tertiary": {
+          "binding": ":",
+          "expression": "dark-mode ? # 9d 9d 9d : # 707070"
+        },
+        "border-color": {
+          "binding": ":",
+          "expression": "dark-mode ? # 3e 3e 42 : # e6e8eb"
+        },
+        "divider": {
+          "binding": ":",
+          "expression": "dark-mode ? # 38383c : # e8e8e8"
+        },
+        "main-color": {
+          "binding": ":",
+          "expression": "dark-mode ? # 55555a : # c6c6c6"
+        },
+        "hover-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 2a 2d 2e : # eaeaea"
+        },
+        "selected-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 37373d : # e6e6e6"
+        },
+        "card-hover": {
+          "binding": ":",
+          "expression": "dark-mode ? # 323237 : # f7f7f7"
+        },
+        "accent": {
+          "binding": ":",
+          "expression": "dark-mode ? # 60cdff : # 005fb 8"
+        },
+        "accent-foreground": {
+          "binding": ":",
+          "expression": "dark-mode ? # 000000 : # ffffff"
+        },
+        "accent-hover": {
+          "binding": ":",
+          "expression": "dark-mode ? # 4cc 2ff : # 005a 9e"
+        },
+        "accent-pressed": {
+          "binding": ":",
+          "expression": "dark-mode ? # 47b 1df : # 004578"
+        },
+        "focus-ring": {
+          "binding": ":",
+          "expression": "dark-mode ? # 60cdff : # 005fb 8"
+        },
+        "control-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 2d 2d 30 : # ffffff"
+        },
+        "control-bg-hover": {
+          "binding": ":",
+          "expression": "dark-mode ? # 35353a : # f7f7f7"
+        },
+        "input-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 252526 : # ffffff"
+        },
+        "input-border": {
+          "binding": ":",
+          "expression": "dark-mode ? # 4b 4b 50 : # d3d3d3"
+        },
+        "danger": {
+          "binding": ":",
+          "expression": "dark-mode ? # ff6b6b : # c42b1c"
+        },
+        "danger-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 5a 1d 1d : # fdf3f2"
+        },
+        "success": {
+          "binding": ":",
+          "expression": "dark-mode ? # 4ade 80 : # 107c 10"
+        },
+        "warning": {
+          "binding": ":",
+          "expression": "dark-mode ? # f5c242 : # 9d 5d 00"
+        },
+        "icon-neutral": {
+          "binding": ":",
+          "expression": "dark-mode ? # c7c7c7 : # 5f 5f 5f"
+        },
+        "scrollbar-bg": {
+          "binding": ":",
+          "expression": "dark-mode ? # 2a 2d 2e : # f0f0f0"
+        },
+        "scrollbar-thumb": {
+          "binding": ":",
+          "expression": "dark-mode ? # 5d 5d 5d : # c1c1c1"
+        },
+        "scrollbar-thumb-hover": {
+          "binding": ":",
+          "expression": "dark-mode ? # 6d 6d 6d : # a8a8a8"
+        },
+        "icon-color-navigation": {
+          "binding": ":",
+          "expression": "dark-mode ? # 38bdf 8 : # 0284c 7"
+        },
+        "icon-color-success": {
+          "binding": ":",
+          "expression": "dark-mode ? # 4ade 80 : # 16a 34a"
+        },
+        "icon-color-info": {
+          "binding": ":",
+          "expression": "dark-mode ? # 60a 5fa : # 2563eb"
+        },
+        "icon-color-indigo": {
+          "binding": ":",
+          "expression": "dark-mode ? # 818cf 8 : # 4f 46e 5"
+        },
+        "icon-color-orange": {
+          "binding": ":",
+          "expression": "dark-mode ? # fb923c : # f97316"
+        },
+        "icon-color-emerald": {
+          "binding": ":",
+          "expression": "dark-mode ? # 34d 399 : # 059669"
+        },
+        "icon-color-slate": {
+          "binding": ":",
+          "expression": "dark-mode ? # 94a 3b 8 : # 475569"
+        }
+      }
+    },
+    "ThemeMode": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "system",
+          "light",
+          "dark"
+        ]
+      },
+      "defaults": {}
+    },
+    "ToastHost": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "shown": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "message": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "kind": {
+            "kind": "property",
+            "direction": "in",
+            "type": "ToastKind"
+          },
+          "auto-dismiss": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "dismissed": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "shown": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "message": {
+          "binding": null,
+          "expression": ""
+        },
+        "kind": {
+          "binding": ":",
+          "expression": "ToastKind . info"
+        },
+        "auto-dismiss": {
+          "binding": ":",
+          "expression": "true"
+        }
+      }
+    },
+    "ToastKind": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "info",
+          "success",
+          "error"
+        ]
+      },
+      "defaults": {}
+    },
+    "TooltipHost": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "shown": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": null,
+          "expression": ""
+        },
+        "shown": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    },
+    "Typography": {
+      "signature": {
+        "kind": "global",
+        "inherits": null,
+        "members": {
+          "caption": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "body": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "body-large": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "subtitle": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "title": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "regular": {
+            "kind": "property",
+            "direction": "out",
+            "type": "int"
+          },
+          "semibold": {
+            "kind": "property",
+            "direction": "out",
+            "type": "int"
+          }
+        }
+      },
+      "defaults": {
+        "caption": {
+          "binding": ":",
+          "expression": "12px"
+        },
+        "body": {
+          "binding": ":",
+          "expression": "14px"
+        },
+        "body-large": {
+          "binding": ":",
+          "expression": "18px"
+        },
+        "subtitle": {
+          "binding": ":",
+          "expression": "20px"
+        },
+        "title": {
+          "binding": ":",
+          "expression": "28px"
+        },
+        "regular": {
+          "binding": ":",
+          "expression": "400"
+        },
+        "semibold": {
+          "binding": ":",
+          "expression": "600"
+        }
+      }
+    },
+    "UiConstants": {
+      "signature": {
+        "kind": "global",
+        "inherits": null,
+        "members": {
+          "space-2": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-4": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-6": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-8": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-10": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-12": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-16": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-20": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-24": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-28": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-32": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "space-40": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "sidebar-collapsed-width": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "sidebar-expanded-width": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "title-bar-height": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "navigation-item-height": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "navigation-item-padding": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "navigation-icon-slot-width": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "navigation-icon-size": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "button-height": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "icon-button-size": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "input-height": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "content-radius": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "control-radius": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "page-padding-wide": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "page-padding-medium": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "page-padding-compact": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "page-padding": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "compact-breakpoint": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "wide-breakpoint": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          }
+        }
+      },
+      "defaults": {
+        "space-2": {
+          "binding": ":",
+          "expression": "2px"
+        },
+        "space-4": {
+          "binding": ":",
+          "expression": "4px"
+        },
+        "space-6": {
+          "binding": ":",
+          "expression": "6px"
+        },
+        "space-8": {
+          "binding": ":",
+          "expression": "8px"
+        },
+        "space-10": {
+          "binding": ":",
+          "expression": "10px"
+        },
+        "space-12": {
+          "binding": ":",
+          "expression": "12px"
+        },
+        "space-16": {
+          "binding": ":",
+          "expression": "16px"
+        },
+        "space-20": {
+          "binding": ":",
+          "expression": "20px"
+        },
+        "space-24": {
+          "binding": ":",
+          "expression": "24px"
+        },
+        "space-28": {
+          "binding": ":",
+          "expression": "28px"
+        },
+        "space-32": {
+          "binding": ":",
+          "expression": "32px"
+        },
+        "space-40": {
+          "binding": ":",
+          "expression": "40px"
+        },
+        "sidebar-collapsed-width": {
+          "binding": ":",
+          "expression": "54px"
+        },
+        "sidebar-expanded-width": {
+          "binding": ":",
+          "expression": "200px"
+        },
+        "title-bar-height": {
+          "binding": ":",
+          "expression": "40px"
+        },
+        "navigation-item-height": {
+          "binding": ":",
+          "expression": "40px"
+        },
+        "navigation-item-padding": {
+          "binding": ":",
+          "expression": "11px"
+        },
+        "navigation-icon-slot-width": {
+          "binding": ":",
+          "expression": "24px"
+        },
+        "navigation-icon-size": {
+          "binding": ":",
+          "expression": "20px"
+        },
+        "button-height": {
+          "binding": ":",
+          "expression": "32px"
+        },
+        "icon-button-size": {
+          "binding": ":",
+          "expression": "32px"
+        },
+        "input-height": {
+          "binding": ":",
+          "expression": "36px"
+        },
+        "content-radius": {
+          "binding": ":",
+          "expression": "8px"
+        },
+        "control-radius": {
+          "binding": ":",
+          "expression": "4px"
+        },
+        "page-padding-wide": {
+          "binding": ":",
+          "expression": "28px"
+        },
+        "page-padding-medium": {
+          "binding": ":",
+          "expression": "20px"
+        },
+        "page-padding-compact": {
+          "binding": ":",
+          "expression": "16px"
+        },
+        "page-padding": {
+          "binding": ":",
+          "expression": "page-padding-wide"
+        },
+        "compact-breakpoint": {
+          "binding": ":",
+          "expression": "680px"
+        },
+        "wide-breakpoint": {
+          "binding": ":",
+          "expression": "960px"
+        }
+      }
+    },
+    "WindowControlButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "icon": {
+            "kind": "property",
+            "direction": "in",
+            "type": "image"
+          },
+          "symbol": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "label": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "close-button": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "icon": {
+          "binding": null,
+          "expression": ""
+        },
+        "symbol": {
+          "binding": null,
+          "expression": ""
+        },
+        "label": {
+          "binding": null,
+          "expression": ""
+        },
+        "close-button": {
+          "binding": ":",
+          "expression": "false"
+        }
+      }
+    }
+  }
+}

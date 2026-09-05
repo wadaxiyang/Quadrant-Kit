@@ -70,7 +70,7 @@ python scripts/verify_distribution.py
 python -m unittest discover -s scripts/tests -p "test_*.py"
 ```
 
-The distribution script validates this package's current static imports, resource ownership and hashes. Full Slint lexical/API/architecture guards, their fixtures, incremental token/SVG checks, Linux/macOS CI, Rust 1.92, remote consumers, and complete native interaction matrices remain later gates.
+Phase 2 adds the lexical API/layer guard, declaration/default baseline, fixtures, archive verification, incremental token/SVG checks and CI jobs. Current evidence and remaining platform/native limits are in [VALIDATION.md](VALIDATION.md). The Phase 1 table below is historical; it does not substitute for later checks.
 
 ### Phase 1 local result — 2026-09-06
 

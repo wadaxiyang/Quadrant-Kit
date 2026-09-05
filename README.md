@@ -25,7 +25,23 @@ The root `quadrant-kit` package is only a build-time source locator. It owns no 
 - [Gallery, snapshots, and learning sequence](docs/GALLERY.md)
 - [Source ownership and licenses](docs/PROVENANCE.md)
 - [Candidate changes](CHANGELOG.md)
+- [Checks, baseline review and platform evidence](docs/VALIDATION.md)
 
 The public facade exports 28 names. Branding, task models, Inbox, task row composition, quadrant colors, product-specific timer/layout tokens, and product navigation aliases belong to Tasks. Generic component behavior and defaults are preserved during extraction.
 
 Code is GPL-3.0-only; the Microsoft SVG assets retain their MIT license. See [LICENSE](LICENSE), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), and [assets/icons/LICENSE-MIT](assets/icons/LICENSE-MIT).
+
+## Validate
+
+```console
+cargo fmt --all --check
+cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+cargo test --workspace --locked
+python scripts/check_ui_boundaries.py
+python -m unittest discover -s scripts/tests -p "test_*.py"
+cargo build --locked -p quadrant-kit-gallery
+cargo package --locked -p quadrant-kit
+python scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.0.crate
+```
+
+Python 3.11 or newer is required for developer checks, not for ordinary Slint consumers. The boundary command checks the 28-name API baseline, defaults, layer/import graph, assets, provenance, Cargo manifests and host-filtered resolved dependencies. CI never rewrites the baseline. See the validation record for actual platform results and checks awaiting publication.

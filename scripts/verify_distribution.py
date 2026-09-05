@@ -3,19 +3,18 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Check this source package's static import/image closure and asset hashes.
 
-This is a scoped distribution check, not the Phase 2 Slint/API boundary parser.
+Uses the same lexical import/resource scanner as the boundary guard.
 """
 import argparse
 import hashlib
 import json
 from pathlib import Path
-import re
 import subprocess
 import sys
+import tarfile
+from slint_contract import images, local_path, parse
 
 ROOT = Path(__file__).resolve().parents[1]
-IMPORT = re.compile(r'(?:import|export)\s*\{[^}]*\}\s*from\s*"([^"\n]+)"', re.S)
-IMAGE = re.compile(r'@image-url\(\s*"([^"\n]+)"\s*\)')
 
 
 def static_closure(root=ROOT):
@@ -32,16 +31,16 @@ def static_closure(root=ROOT):
         if path.suffix != '.slint':
             continue
         text = path.read_text(encoding='utf-8')
-        for source in IMPORT.findall(text):
+        for source, _ in parse(text)['imports']:
             if source == 'std-widgets.slint':
                 continue
             if source.startswith('@') or ':' in source or source.startswith(('/', '\\')):
                 raise ValueError(f'Invalid Kit implementation import in {path}: {source}')
-            pending.append(path.parent / source)
-        for source in IMAGE.findall(text):
+            pending.append(local_path(path, source, root))
+        for source in images(text):
             if ':' in source or source.startswith(('/', '\\')):
                 raise ValueError(f'Invalid static resource in {path}: {source}')
-            pending.append(path.parent / source)
+            pending.append(local_path(path, source, root))
     return {p.relative_to(root).as_posix() for p in required}
 
 
@@ -50,6 +49,8 @@ def verify(root=ROOT, package=False):
     required = static_closure(root)
     manifest = json.loads((root / 'scripts/asset_manifest.json').read_text(encoding='utf-8'))
     assets = {entry['new_path']: entry for entry in manifest['assets']}
+    if len(assets) != len(manifest['assets']):
+        raise ValueError('Duplicate asset manifest path')
     if not assets:
         raise ValueError('Asset manifest is empty')
     for path, entry in assets.items():
@@ -60,10 +61,25 @@ def verify(root=ROOT, package=False):
             raise ValueError(f'Asset hash mismatch: {path}')
         if entry['spdx_license'] != 'MIT':
             raise ValueError(f'Unexpected asset license: {path}')
+        if b'SPDX-License-Identifier: GPL' in actual.read_bytes():
+            raise ValueError(f'MIT asset incorrectly relabeled GPL: {path}')
     if {p for p in required if p.endswith('.svg')} != set(assets):
         raise ValueError('Static SVG closure and asset manifest differ')
+    actual_assets = {p.relative_to(root).as_posix() for p in (root / 'assets/icons').rglob('*') if p.is_file() and p.name != 'LICENSE-MIT'}
+    if actual_assets != set(assets):
+        raise ValueError('Unrecorded or missing asset file')
     required.update(['assets/icons/LICENSE-MIT', 'LICENSE', 'THIRD-PARTY-NOTICES.md',
                      'scripts/asset_manifest.json', 'docs/PROVENANCE.md'])
+    for name in required:
+        if not (root / name).is_file():
+            raise ValueError(f'Missing required distribution file: {name}')
+    for name, markers in {
+        'assets/icons/LICENSE-MIT': ('MIT License', 'Microsoft Corporation', 'Permission is hereby granted'),
+        'LICENSE': ('GNU GENERAL PUBLIC LICENSE', 'Version 3, 29 June 2007'),
+    }.items():
+        text = (root / name).read_text(encoding='utf-8')
+        if not all(marker in text for marker in markers):
+            raise ValueError(f'Missing expected license text: {name}')
     if package:
         output = subprocess.check_output(['cargo', 'package', '--locked', '-p', 'quadrant-kit', '--list'], cwd=root, text=True, encoding='utf-8')
         listed = {line.replace('\\', '/') for line in output.splitlines()}
@@ -72,15 +88,42 @@ def verify(root=ROOT, package=False):
             raise ValueError(f'Package omits dependencies: {sorted(missing)}')
         if any(p.startswith(('gallery/', 'target/', '.vscode/')) for p in listed):
             raise ValueError('Package contains excluded development content')
+        tracked = set(subprocess.check_output(['git', 'ls-files'], cwd=root, text=True, encoding='utf-8').splitlines())
+        if required - tracked:
+            raise ValueError(f'Static closure not tracked by Git: {sorted(required - tracked)}')
     return {'static_files': len(required), 'svg_assets': len(assets), 'package_checked': package}
+
+
+def verify_archive(archive, root=ROOT):
+    """Compare shipped bytes without extracting an untrusted archive."""
+    required = static_closure(root) | {'assets/icons/LICENSE-MIT', 'LICENSE',
+               'THIRD-PARTY-NOTICES.md', 'scripts/asset_manifest.json', 'docs/PROVENANCE.md'}
+    with tarfile.open(archive, 'r:gz') as package:
+        files = {}
+        for member in package.getmembers():
+            parts = Path(member.name).parts
+            if member.issym() or member.islnk() or '..' in parts or member.name.startswith('/'):
+                raise ValueError('Unsafe package archive entry')
+            if member.isfile():
+                relative = '/'.join(parts[1:])
+                if relative in files:
+                    raise ValueError('Duplicate archive entry')
+                files[relative] = member
+        for path in required:
+            if path not in files or package.extractfile(files[path]).read() != (root / path).read_bytes():
+                raise ValueError(f'Missing/changed archived dependency: {path}')
+    return {'archive_checked': str(archive), 'verified_files': len(required)}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--package', action='store_true', help='also compare cargo package --list')
+    parser.add_argument('--archive', type=Path, help='verify an already built .crate archive byte for byte')
     args = parser.parse_args()
     try:
         print(json.dumps(verify(package=args.package), indent=2))
+        if args.archive:
+            print(json.dumps(verify_archive(args.archive), indent=2))
     except (ValueError, OSError, subprocess.CalledProcessError) as error:
         print(f'Distribution check failed: {error}', file=sys.stderr)
         return 1
