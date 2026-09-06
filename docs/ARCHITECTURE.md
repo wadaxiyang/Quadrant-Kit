@@ -21,3 +21,25 @@ Theme.mode, Theme.system_dark, and Theme.ui_font_family are host inputs. dark_mo
 Static SVG references resolve within the package and are embedded by the consumer build. Images supplied dynamically by consumers are not Kit-owned assets. Keep Microsoft MIT assets separate from GPL source attribution; see PROVENANCE.md.
 
 ModalManager currently has a single shown/title/message/action state and accepted/dismissed callbacks. Escape and Return handling exists. Complete Tab containment, focus restoration, nested modal stacks, and screen-reader behavior are not established. Preserve and document these limits rather than expanding the modal framework during extraction.
+
+## Read a token and a component
+
+`UiConstants.space_4` in `ui/foundation/constants.slint` is an `out` length
+property whose value is 4 logical pixels. `Badge` imports that global directly
+inside the implementation layer; consumers import Badge through the facade.
+Badge's `in` text/kind properties let a caller choose content and semantic color,
+while its Text child binds to them. The component has no business model or
+callback. See the [Gallery exercise](GALLERY.md#first-exercise-token-to-badge-to-gallery)
+for a reversible change to its internal corner radius.
+
+The public baseline protects explicit properties/defaults, callbacks, enums and
+bases. An internal rectangle style can change while that baseline still passes;
+visual/behavioral review is required as well. The compiled probe catches type
+integration, but is not an exhaustive runtime state or accessibility test.
+
+If the entire built checkout is relocated, old helper rlibs can retain the
+previous manifest path. From the new Kit root run
+`cargo clean -p quadrant-kit -p quadrant-kit-gallery`, then the locked Gallery
+build. This rebuilds local package artifacts without replacing source or removing
+historical QA directories. Consumer builds resolve the published package in Cargo
+storage and must never persist the helper path as a runtime resource setting.

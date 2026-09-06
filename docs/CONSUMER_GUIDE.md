@@ -4,7 +4,22 @@ Quadrant Kit is a Slint source library compiled by each consumer. The root helpe
 
 ## Candidate status
 
-The target remote is `https://github.com/wadaxiyang/Quadrant-Kit.git`. Local Phase 2 did not publish a revision. Phase 3 publishes and verifies a specific candidate; require its retained reference, same-SHA CI and remote-consumer report before switching Tasks. The following integration describes the contract, not an executable placeholder dependency.
+The public remote is `https://github.com/wadaxiyang/Quadrant-Kit.git`. The adopted
+0.1.0 extraction source is `838ecfbead2d0a1966907ddd742cb6f34516d3f6`, retained by
+`refs/tags/candidate/extraction-838ecfbead2d`. Its annotated tag object is
+`aa736b6873652d0c8dd8ea55df6d16bb5cec9f39`; use the peeled commit for Cargo.
+Same-SHA CI and anonymous remote-consumer evidence are linked in
+[VALIDATION.md](VALIDATION.md). Later documentation commits do not implicitly
+change any consumer's adopted source. This is a retained candidate, not a stable
+release tag.
+
+An executable build dependency for that verified source is:
+
+```toml
+[build-dependencies]
+quadrant-kit = { git = "https://github.com/wadaxiyang/Quadrant-Kit.git", rev = "838ecfbead2d0a1966907ddd742cb6f34516d3f6" }
+slint-build = "=1.17.1"
+```
 
 After publication, add a build dependency named `quadrant-kit` with that Git URL and the verified full 40-character commit SHA to the consumer UI crate. Do not use a sibling checkout, path patch, source replacement, cache copy, or a build script that downloads the library. Keep the adopted commit reachable through a retained reference; review the lockfile and use `--locked` afterward. Gallery's `path = ".."` is legal because it is inside this repository.
 

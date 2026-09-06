@@ -12,4 +12,24 @@
 - Add the fail-closed lexical boundary/API guard, explicit signature/default baseline, Cargo policy fixtures, shared static-resource scanner and package archive verification.
 - Add incremental token/SVG rebuild verification and push/PR/manual CI for Linux, Windows, macOS and the Rust 1.92 build baseline. Actual execution evidence is tracked separately from workflow presence.
 
-This is not a compatibility-preserving release of the old embedded facade. No stable release tag or verified remote consumption exists at this stage. Required validation and outstanding limitations are tracked in docs/VALIDATION.md and docs/GALLERY.md.
+This is not a compatibility-preserving release of the old embedded facade.
+The extraction candidate has now been published, retained and remotely consumed;
+no stable release tag is claimed. Source/CI references and outstanding limitations
+are tracked in docs/VALIDATION.md and docs/CONSUMER_GUIDE.md.
+
+## Documentation handoff — 2026-09-06
+
+- Align candidate publication, consumer setup and Gallery ownership with the
+  implemented repositories. Add an executable dependency example using the
+  qualified retained source, without changing Tasks' adoption.
+- Add the completed token → Badge → Gallery exercise and relocation cache
+  recovery. The trial visual change was fully restored; no public API/default,
+  asset, runtime behavior, Slint version or MSRV changed in this handoff.
+- Keep native accessibility/focus/IME limitations explicit. Documentation
+  handoff is not a new component release or a waiver of those follow-ups.
+
+For future changes, document compatible fixes and reviewed visual impact in a
+patch; record compatible additions with facade/docs/probe coverage. Breaking
+names/types/callbacks or important behavior require the next minor (for example
+0.1.x → 0.2.0) and consumer migration instructions. Review toolchain/Slint/backend
+changes separately. Git SHA pinning does not make all pre-1.0 versions compatible.

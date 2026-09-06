@@ -15,7 +15,9 @@ The Gallery is a development, verification, and learning application with no Pro
 | 6 | Feedback: Toast and single confirmation Modal |
 | 7 | Navigation: generic sidebar, page framing, metrics, empty state, window controls |
 
-The old page 8 and Task patterns filter are removed. Inbox samples remain in the unchanged Tasks source during staging; their eventual Product fixture preservation belongs to cutover. Kit has no Inbox models, product brand, task navigation aliases, or quadrant colors.
+The old page 8 and Task patterns filter are removed. Inbox components and
+Product window probes belong to Tasks after cutover. Kit has no Inbox models,
+product brand, task navigation aliases, or quadrant colors.
 
 Use Light / Dark / System, Compact / Medium / Wide, and the per-page live settings. Existing preview properties remain specimen inputs; they do not assert that real pointer, focus, IME, or assistive-technology paths have been tested. The modal specimen no longer claims a complete Tab trap.
 
@@ -95,3 +97,49 @@ This is Gate 1 evidence, not complete migration acceptance. No remote push/CI/co
 ## Learning order
 
 Start with theme.slint and constants.slint, then FluentIcon / SurfaceCard / Badge. Run Gallery while reading one component's small property/callback surface. Next study buttons and focus/disabled handling, then std-widgets text wrappers, page/navigation/settings composition, and Toast/Modal. Make a small change, build and observe the affected specimen, then restore the experiment or commit an intentional change. Tasks does not need to be open for this workflow.
+
+## First exercise: token to Badge to Gallery
+
+Open only the Kit Git root. Start with a clean `ui/primitives/badge.slint` and
+preserve any existing work before experimenting. No Tasks process or source is
+required for any of the following steps.
+
+1. Read `UiConstants.space_4: 4px` in `ui/foundation/constants.slint` and the
+   `Theme`/`Typography` bindings in `ui/foundation/theme.slint`. These are Slint
+   globals; each host component instance owns its initialization.
+2. Run `cargo run --locked -p quadrant-kit-gallery`. Overview (page 0) shows
+   neutral/accent badges; Controls (page 4) also shows five semantic kinds.
+   Inspect Badge's two public input properties and Text child, then close Gallery
+   before rebuilding the executable on Windows.
+3. Capture the starting state:
+
+   ```console
+   python scripts/capture_gallery_baseline.py --mode Smoke --page 0 --preview 1 --output-directory target/learning/before
+   ```
+
+4. In `ui/primitives/badge.slint`, temporarily replace only
+   `border-radius: 12px;` with `border-radius: UiConstants.space_4;`. The component
+   already imports UiConstants. Leave the global token and public baseline alone.
+
+   ```console
+   python scripts/check_ui_boundaries.py
+   python scripts/capture_gallery_baseline.py --mode Smoke --page 0 --preview 1 --output-directory target/learning/modified
+   ```
+
+   The capture command builds and runs Gallery. Compare the two PNGs: pill-shaped
+   badges become rounded rectangles. The guard passes because no declared public
+   signature/default changed; that does not approve the visual change for users.
+5. Restore exactly that line to `12px` (or restore your saved original bytes).
+   Run the guard and capture with `--output-directory target/learning/restored`.
+   Verify `git diff -- ui/primitives/badge.slint` is empty relative to your starting
+   state. If keeping a deliberate improvement instead, review it, add appropriate
+   coverage/changelog notes and commit Kit separately before proposing adoption.
+
+On 2026-09-06 this exercise was executed from Kit at
+`838ecfbead2d0a1966907ddd742cb6f34516d3f6`: native Windows, Rust 1.94.1,
+Slint 1.17.1, winit-software, Light, 1040×800, 100%, page 0/preview 1.
+All three guards and build/capture commands exited 0. The modified image was
+visually checked and had a different hash. Restored source bytes and the restored
+PNG matched their starting hashes. Logs, source/scenario manifests and PNGs are
+retained in ignored `target/phase7/learning/`; the experiment was not committed.
+This demonstrates the learning loop, not an additional IME/DPI/a11y test.

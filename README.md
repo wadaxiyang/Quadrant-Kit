@@ -44,4 +44,9 @@ cargo package --locked -p quadrant-kit
 python scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.0.crate
 ```
 
-Python 3.11 or newer is required for developer checks, not for ordinary Slint consumers. The boundary command checks the 28-name API baseline, defaults, layer/import graph, assets, provenance, Cargo manifests and host-filtered resolved dependencies. CI never rewrites the baseline. See the validation record for actual platform results and checks awaiting publication.
+Python 3.11 or newer is required for developer checks, not for ordinary Slint consumers. The boundary command checks the 28-name API baseline, defaults, layer/import graph, assets, provenance, Cargo manifests and host-filtered resolved dependencies. CI never rewrites the baseline. See the validation record for the published source's actual CI/remote-consumer results and remaining native/a11y limits.
+
+For a first exercise follow [the Badge walkthrough](docs/GALLERY.md#first-exercise-token-to-badge-to-gallery).
+It needs only this checkout. The candidate retained at
+`candidate/extraction-838ecfbead2d` has passed publication/consumer verification;
+read [the consumer guide](docs/CONSUMER_GUIDE.md) for the exact adopted source.

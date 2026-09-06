@@ -1,6 +1,10 @@
 # Validation and boundary contracts
 
-The architecture authority is the extraction SPEC v2. Phase 2 retains the original Tasks guard's import, dependency, cycle and frozen-API checks, with a new small Python standard-library scanner for Kit. Tasks still uses its unchanged embedded Kit and guard until the Phase 4 cutover.
+The architecture authority is the extraction SPEC v2. Kit's Python standard-library
+scanner checks its own import, dependency, cycle, API and asset contracts. Tasks
+has completed its separate cutover and owns its Product/runtime guards. Kit can
+be built, checked and learned without opening Tasks. Historical phase results
+below retain their original scope; publication is summarized at the end.
 
 ## Guard scope
 
@@ -83,3 +87,28 @@ Native keyboard/IME, real system-theme transitions, real monitor DPI changes and
 ## Phase 3 publication verification
 
 The distribution command now supports anonymous retained-reference verification and a generated Git+SHA consumer with fresh cache/target/source directories. Its additional fixtures cover request validation, inherited source/credential isolation, manifest generation and resolved source/path mismatches. See CONSUMER_GUIDE.md for parameters. Publication evidence belongs to the actual remote run/report and the Tasks migration ledger, not to a self-referential SHA inside this candidate. Historical NOT_RUN entries above describe Phase 2.
+
+### Published source and acceptance evidence
+
+The adopted source `838ecfbead2d0a1966907ddd742cb6f34516d3f6` passed all four jobs
+in [candidate CI](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34003620362),
+[retained-tag CI](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34004051391)
+and [main CI](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34004053852).
+These are actual completed runs at that exact source, covering Linux quality,
+package/archive and incremental checks, Windows native Gallery/screenshot,
+macOS all-targets/guards and actual Rust 1.92 helper/Gallery builds. The suite
+contains 35 Python fixtures and five Rust tests at this source.
+
+The protected retained tag and peeled source are listed in CONSUMER_GUIDE.md.
+Independent anonymous fetch, a neutral Git+SHA consumer with fresh Cargo/target
+directories, and Light/Dark consumer rendering passed. Private reports are under
+`target/phase3/`; the externally recorded integration evidence is in the
+[Tasks ledger](https://github.com/wadaxiyang/Quadrant-Tasks/blob/codex/kit-product-cutover/docs/migrations/kit-extraction-v2.md).
+Tasks does not need to be present to run any Kit check. Documentation added after
+the adopted source is validated at its own commit; it does not retarget consumers.
+
+Phase 7 also executed the reversible Badge exercise documented in GALLERY.md.
+Remaining P1 work includes complete native keyboard/IME/screen-reader coverage,
+modal Tab containment/restoration and the full state/size/backend matrix. These
+are explicit coverage limits. Product's user-accepted tray/reminder/DPI scenarios
+do not certify every Kit component or operating-system theme transition.
