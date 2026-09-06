@@ -79,3 +79,7 @@ The Linux first build failed on missing fontconfig development files; the first 
 **Gate 2 local requirements are satisfied:** Kit can be independently reviewed, built, tested and packaged, the public contract excludes Product APIs and licensing material is present. This is not completion of all platform/publication gates or of the full extraction. macOS and real remote consumption remain mandatory before final migration acceptance.
 
 Native keyboard/IME, real system-theme transitions, real monitor DPI changes and complete accessibility acceptance remain unverified. In particular ModalManager does not yet promise a complete focus trap/restoration contract; text wrappers retain std-widgets behavior but custom control screen-reader/focus coverage remains a P1 follow-up. Phase 1 screenshot evidence is documented separately in GALLERY.md.
+
+## Phase 3 publication verification
+
+The distribution command now supports anonymous retained-reference verification and a generated Git+SHA consumer with fresh cache/target/source directories. Its additional fixtures cover request validation, inherited source/credential isolation, manifest generation and resolved source/path mismatches. See CONSUMER_GUIDE.md for parameters. Publication evidence belongs to the actual remote run/report and the Tasks migration ledger, not to a self-referential SHA inside this candidate. Historical NOT_RUN entries above describe Phase 2.

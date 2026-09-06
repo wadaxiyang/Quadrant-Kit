@@ -2,7 +2,7 @@
 
 Reusable Fluent-oriented Slint source components, with a Gallery for development and learning. This is an independent Cargo workspace; Quadrant Tasks is not needed to build it.
 
-Version **0.1.0 is an unpublished extraction candidate**. No release tag or remotely consumable Kit commit has been verified yet. The source was extracted from Quadrant at `5a2262cd480d639673fa4f5dd406a9c7196361b5`; see [provenance](docs/PROVENANCE.md).
+Version **0.1.0 is an extraction candidate**. Candidate publication is separate from stable release and consumer adoption. Require same-SHA CI, a retained reference and actual remote-consumer evidence before adoption; see [validation](docs/VALIDATION.md). The source was extracted from Quadrant at `5a2262cd480d639673fa4f5dd406a9c7196361b5`; see [provenance](docs/PROVENANCE.md).
 
 ## Run
 

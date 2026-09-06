@@ -119,12 +119,26 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--package', action='store_true', help='also compare cargo package --list')
     parser.add_argument('--archive', type=Path, help='verify an already built .crate archive byte for byte')
+    parser.add_argument('--remote', action='store_true', help='verify an anonymous retained reference and isolated Git+SHA consumer')
+    parser.add_argument('--kit-url')
+    parser.add_argument('--rev')
+    parser.add_argument('--retained-ref')
+    parser.add_argument('--run-gui', action='store_true', help='also run neutral consumer Light/Dark PNG smoke')
+    parser.add_argument('--result', type=Path, help='write remote verification report here and in the retained temporary work directory')
     args = parser.parse_args()
     try:
+        if args.remote:
+            if not all((args.kit_url, args.rev, args.retained_ref)) or args.package or args.archive:
+                raise ValueError('Remote mode requires --kit-url, --rev, --retained-ref and no local package/archive options')
+            from verify_remote import verify_remote
+            print(json.dumps(verify_remote(args.kit_url, args.rev, args.retained_ref, args.run_gui, args.result), indent=2))
+            return 0
+        if any((args.kit_url, args.rev, args.retained_ref, args.run_gui, args.result)):
+            raise ValueError('Remote options require --remote')
         print(json.dumps(verify(package=args.package), indent=2))
         if args.archive:
             print(json.dumps(verify_archive(args.archive), indent=2))
-    except (ValueError, OSError, subprocess.CalledProcessError) as error:
+    except (ValueError, OSError, subprocess.SubprocessError) as error:
         print(f'Distribution check failed: {error}', file=sys.stderr)
         return 1
     return 0

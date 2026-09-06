@@ -4,7 +4,7 @@ Quadrant Kit is a Slint source library compiled by each consumer. The root helpe
 
 ## Candidate status
 
-The target remote is `https://github.com/wadaxiyang/Quadrant-Kit.git`; no published revision has been verified through local Phase 2. Do not switch Tasks yet. The following integration describes the eventual contract, not an executable placeholder dependency.
+The target remote is `https://github.com/wadaxiyang/Quadrant-Kit.git`. Local Phase 2 did not publish a revision. Phase 3 publishes and verifies a specific candidate; require its retained reference, same-SHA CI and remote-consumer report before switching Tasks. The following integration describes the contract, not an executable placeholder dependency.
 
 After publication, add a build dependency named `quadrant-kit` with that Git URL and the verified full 40-character commit SHA to the consumer UI crate. Do not use a sibling checkout, path patch, source replacement, cache copy, or a build script that downloads the library. Keep the adopted commit reachable through a retained reference; review the lockfile and use `--locked` afterward. Gallery's `path = ".."` is legal because it is inside this repository.
 
@@ -39,3 +39,13 @@ For `slint.libraryPaths`, map `quadrant-kit` to the resolved package's `ui/kit.s
 Before adopting a release, require a retained remote commit, CI for that SHA, a fresh Git+SHA smoke consumer, and a no-sibling consumer build. Check package imports/assets, licenses, generated API, every window instance, and native runtime resources. Phase 1 local Gallery success is not evidence that any remote consumer already passes.
 
 Code remains GPL-3.0-only and the SVGs retain MIT. Preserve attribution and assess distribution obligations for the actual combined application; being a build dependency is not a license exemption.
+
+## Remote verification command
+
+`python scripts/verify_distribution.py --remote` requires `--kit-url` (the exact public URL above), `--rev` (the verified full commit SHA) and `--retained-ref` (the explicit `refs/tags/candidate/extraction-…` reference). Use values from actual Git/CI evidence. Add `--run-gui` on a supported display host to capture Light/Dark scenes and `--result` to choose the report path.
+
+The command fetches and peels the retained tag anonymously before generating a neutral consumer. It creates a new work directory, CARGO_HOME and target, disables personal/system Git configuration and credential helpers, rejects ancestor Cargo configuration, and excludes inherited Cargo/source/compiler overrides. Explicit OS/network proxy configuration is preserved without logging credentials. A fresh lockfile is generated intentionally, then metadata/build use `--locked`; the expected Git source, commit and fresh-cache manifest location are all checked.
+
+The consumer uses Theme/ThemeMode, FluentButton, FluentIcons/FluentIcon, ModalManager and ToastHost through the file-mapped facade with EmbedFiles. GUI smoke runs a copied binary from an empty runtime directory; this does not claim the build cache was removed or prove the full Tasks runtime package. Build-only runs report runtime NOT_RUN. Reports, lockfile, logs and generated source are retained in the temporary directory for audit, including failures; no automatic deletion hides evidence.
+
+Candidate tags are retention references, not stable releases. Preserve published `candidate/extraction-*` tags with update/deletion protection, never move an adopted tag, and create a new candidate commit/tag after a fix. The migration ledger records the actual retained SHA and CI/consumer results; a commit cannot embed its own final SHA.
