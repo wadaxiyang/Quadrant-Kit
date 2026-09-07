@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Palette, ScrollView } from "std-widgets.slint";
+import { Palette } from "std-widgets.slint";
 import { FluentIcon, FluentIcons, ModalKind, ModalManager, SegmentButton, NavigationView, NavigationPaneMode, Theme, ThemeMode, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryNavigation } from "shared/gallery_catalog.slint";
 import { OverviewPage } from "pages/overview_page.slint";
@@ -112,35 +112,28 @@ export component DesignGalleryWindow inherits Window {
                     }
                     SegmentButton { text: "Clear search"; clicked => { GalleryNavigation.query_edited(""); } }
                 }
-                ScrollView {
-                    width: 100%;
-                    vertical-stretch: 1;
-                    viewport-width: self.width;
-
-                    VerticalLayout {
-                        min-width: 0px;
-                        padding: parent.width < UiConstants.compact_breakpoint ? UiConstants.page_padding_compact : UiConstants.page_padding_medium;
-                        spacing: UiConstants.space_20;
-
-                        if root.gallery_page == 0: OverviewPage { }
-                        if root.gallery_page == 1: TokensPage { }
-                        if root.gallery_page == 2: TypographyPage { }
-                        if root.gallery_page == 3: IconsPage { }
-                        if root.gallery_page == 4: ControlsPage {
-                            preview_mode: root.preview_mode;
-                            sample_text <=> root.sample_text;
-                            sample_switch <=> root.sample_switch;
-                        }
-                        if root.gallery_page == 5: SurfacesPage { preview_mode: root.preview_mode; }
-                        if root.gallery_page == 6: FeedbackPage {
-                            preview_mode: root.preview_mode;
-                            modal_requested(kind) => {
-                                root.sample_modal_kind = kind;
-                                root.sample_modal_visible = true;
-                            }
-                        }
-                        if root.gallery_page == 7: NavigationPage { preview_mode: root.preview_mode; }
+                Rectangle {
+                    vertical-stretch: 1; min-width: 0px; min-height: 0px;
+                    if root.gallery_page == 0: OverviewPage { width: 100%; height: 100%; }
+                    if root.gallery_page == 1: TokensPage { width: 100%; height: 100%; }
+                    if root.gallery_page == 2: TypographyPage { width: 100%; height: 100%; }
+                    if root.gallery_page == 3: IconsPage { width: 100%; height: 100%; }
+                    if root.gallery_page == 4: ControlsPage {
+                        width: 100%; height: 100%;
+                        preview_mode: root.preview_mode;
+                        sample_text <=> root.sample_text;
+                        sample_switch <=> root.sample_switch;
                     }
+                    if root.gallery_page == 5: SurfacesPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
+                    if root.gallery_page == 6: FeedbackPage {
+                        width: 100%; height: 100%;
+                        preview_mode: root.preview_mode;
+                        modal_requested(kind) => {
+                            root.sample_modal_kind = kind;
+                            root.sample_modal_visible = true;
+                        }
+                    }
+                    if root.gallery_page == 7: NavigationPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
                 }
             }
         }

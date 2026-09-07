@@ -16,6 +16,7 @@ export component NavigationFoundationSpecimen inherits Specimen {
     private property <NavigationContentSurfaceMode> surface_mode: NavigationContentSurfaceMode.fluent;
 
     specimen_title: "Navigation foundations";
+    source_code: "import { NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface } from \"@quadrant-kit\";\n\nNavigationBackButton { enabled: true; clicked => { /* Pop host history. */ } }\nNavigationPaneToggleButton { clicked => { /* Change host pane mode. */ } }\nNavigationContentSurface { Text { text: \"Host content\"; } }";
     specimen_description: "Standalone controls and content framing. The host owns visibility and pane mode.";
     keyboard_info: "Tab focuses enabled buttons; Enter/Space invokes once. Hidden controls leave no row or gap.";
     accessibility_info: "Buttons expose names and enabled state; the pane toggle reports expanded state. Surface content belongs to the host.";

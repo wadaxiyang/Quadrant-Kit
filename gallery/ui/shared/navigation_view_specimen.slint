@@ -34,6 +34,7 @@ export component NavigationViewSpecimen inherits Specimen {
     private property <int> submits: 0;
     private property <string> last: "None";
     specimen_title: "NavigationView · controlled hierarchy";
+    source_code: "import { NavigationView, NavigationEntryKind } from \"@quadrant-kit\";\n\nexport component Example inherits NavigationView {\n    private property <string> selection: \"button\";\n    items: [{ id: \"button\", text: \"Button\", kind: NavigationEntryKind.destination, enabled: true }];\n    selected_id: selection;\n    show_pane_toggle: false;\n    item_invoked(id) => { selection = id; }\n    Text { text: \"Host-owned content\"; }\n}";
     specimen_description: "The host accepts or declines requests. Invalid fixtures reject both menus; content and optional controls remain usable.";
     keyboard_info: "Tab / Shift+Tab; Enter / Space. Destination-group labels navigate; their separate chevrons expand. Hidden descendants leave traversal.";
     accessibility_info: "Named buttons, selection and expansion state. Disabled parents do not disable their children. Full screen-reader behavior remains unverified.";

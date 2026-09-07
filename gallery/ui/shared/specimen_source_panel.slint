@@ -1,0 +1,49 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { SegmentButton, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { CodeSample } from "code_sample.slint";
+
+export component SpecimenSourcePanel inherits Rectangle {
+    in property <string> title: "Example";
+    in property <string> source_code;
+    in property <string> keyboard_info;
+    in property <string> accessibility_info;
+    in property <bool> show_toggle: true;
+    in-out property <bool> expanded: false;
+    preferred-height: panel_layout.preferred-height;
+    vertical-stretch: 0;
+    min-width: 0px;
+    background: Theme.card_bg_muted;
+    border-radius: UiConstants.content_radius - 1px;
+    panel_layout := VerticalLayout {
+        spacing: 0px;
+        if root.show_toggle: VerticalLayout {
+            spacing: 0px;
+            Rectangle { height: 1px; background: Theme.border_color; }
+            HorizontalLayout {
+                height: 48px; padding: 8px;
+                SegmentButton {
+                    text: root.expanded ? "Hide source & details" : "Show source & details";
+                    accessible-label: self.text + " · " + root.title;
+                    accessible-expandable: true; accessible-expanded: root.expanded;
+                    selected: root.expanded;
+                    clicked => { self.focus(); root.expanded = !root.expanded; }
+                }
+            }
+        }
+        // Conditional construction removes the body and its Tab stops completely.
+        if root.expanded: VerticalLayout {
+            padding: UiConstants.space_16; spacing: UiConstants.space_12;
+            if root.source_code != "": CodeSample { code: root.source_code; caption: root.title + " · illustrative source"; }
+            if root.keyboard_info != "": Text {
+                text: "Keyboard · " + root.keyboard_info; color: Theme.text_secondary;
+                font-size: Typography.caption; wrap: word-wrap;
+            }
+            if root.accessibility_info != "": Text {
+                text: "Accessibility · " + root.accessibility_info; color: Theme.text_secondary;
+                font-size: Typography.caption; wrap: word-wrap;
+            }
+        }
+    }
+}

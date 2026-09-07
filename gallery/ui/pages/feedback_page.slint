@@ -5,7 +5,6 @@ import { FluentButton, FluentTextField, SegmentButton, ToastHost, ToastKind, UiC
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
 import { PropertyPanel } from "../shared/property_panel.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 import { PreviewContainer } from "../shared/preview_container.slint";
 import { ModalTextSample } from "../shared/modal_text_sample.slint";
 
@@ -17,9 +16,11 @@ export component FeedbackPage inherits GalleryPage {
 
     page_title: "Feedback";
     page_description: "Toast communicates transient outcomes; Modal owns focused decisions that require explicit acceptance or dismissal.";
+    page_source: "import { ModalManager, ToastHost, ToastKind } from \"@quadrant-kit\";\n\nToastHost { shown: true; kind: ToastKind.success; message: \"Saved\"; }";
 
     Specimen {
         specimen_title: "Toast · interactive";
+        source_code: "import { ToastHost, ToastKind } from \"@quadrant-kit\";\n\nToastHost { shown: true; kind: ToastKind.success; message: \"Saved\"; }";
         specimen_description: "Change semantic kind and content while preserving the shared width, wrapping, status icon, and dismiss behavior.";
         keyboard_info: "Dismiss IconButton enters Tab order and activates with Enter or Space; hover pauses auto-dismiss.";
         accessibility_info: "Status icon is semantic decoration; visible message and labeled dismiss action remain available.";
@@ -57,6 +58,7 @@ export component FeedbackPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Toast content boundaries";
+        source_code: "import { ToastHost } from \"@quadrant-kit\";\n\nToastHost { shown: true; message: \"A long outcome message wraps within the available toast width.\"; }";
         specimen_description: "Short, normal, and deliberately long messages verify content-driven height and constrained width.";
         specimen_kind: "Boundaries";
         keyboard_info: "Dismiss actions use the same keyboard contract in every semantic variant.";
@@ -81,6 +83,7 @@ export component FeedbackPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Modal decisions";
+        source_code: "import { ModalManager } from \"@quadrant-kit\";\n\nModalManager { shown: true; title: \"Apply changes?\"; message: \"Review the change before continuing.\"; primary_text: \"Continue\"; accepted => { /* The host closes the overlay. */ } }";
         specimen_description: "Info, warning, and destructive confirmation share one overlay, focus scope, and content-driven surface.";
         keyboard_info: "Enter accepts the primary action; Escape dismisses; focus containment and restoration require further verification.";
         accessibility_info: "Semantic icon, title, message, labeled actions, and danger hierarchy describe the decision.";
@@ -95,14 +98,14 @@ export component FeedbackPage inherits GalleryPage {
 
         GridLayout {
             spacing: UiConstants.space_12;
-            Row {
-                ModalTextSample { sample_title: "Short confirmation"; sample_message: "Save these changes?"; }
-                ModalTextSample { sample_title: "Long wrapped confirmation"; sample_message: "This longer modal copy demonstrates content-driven height when a decision needs enough context to remain clear without clipping or relying on a fixed dialog height."; }
+            ModalTextSample { row: 0; col: 0; sample_title: "Short confirmation"; sample_message: "Save these changes?"; }
+            ModalTextSample {
+                row: parent.width < 500px ? 1 : 0;
+                col: parent.width < 500px ? 0 : 1;
+                sample_title: "Long wrapped confirmation";
+                sample_message: "This longer modal copy demonstrates content-driven height when a decision needs enough context to remain clear without clipping or relying on a fixed dialog height.";
             }
         }
     }
 
-    CodeSample {
-        code: "import { ModalManager, ToastHost, ToastKind } from \"@quadrant-kit\";\n\nToastHost { shown: true; kind: ToastKind.success; message: \"Saved\"; }";
-    }
 }

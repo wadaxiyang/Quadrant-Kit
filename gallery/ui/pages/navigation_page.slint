@@ -4,7 +4,6 @@
 import { EmptyState, FluentIcons, IconButton, MetricCard, NavigationView, PageHeader, Theme, Typography, UiConstants, WindowControlButton } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 import { PreviewContainer } from "../shared/preview_container.slint";
 import { NavigationFoundationSpecimen } from "../shared/navigation_foundation_specimen.slint";
 import { NavigationViewSpecimen } from "../shared/navigation_view_specimen.slint";
@@ -17,10 +16,12 @@ export component NavigationPage inherits GalleryPage {
 
     page_title: "Navigation & shell";
     page_description: "Reusable navigation, page framing, window controls, empty states, and generic application framing.";
+    page_source: "import { NavigationView, NavigationEntryKind } from \"@quadrant-kit\";\n\nexport component Example inherits NavigationView {\n    private property <string> selection: \"preferences\";\n    items: [{ id: \"preferences\", text: \"Preferences\", kind: NavigationEntryKind.destination, enabled: true }];\n    selected_id: selection;\n    show_pane_toggle: false;\n    item_invoked(id) => { selection = id; }\n    Text { text: \"Host-owned content\"; }\n}";
 
     NavigationViewSpecimen { }
     Specimen {
         specimen_title: "NavigationView · defaults";
+        source_code: "import { NavigationView } from \"@quadrant-kit\";\n\nNavigationView { Text { text: \"Host-owned content\"; } }";
         specimen_description: "No navigation inputs assigned: empty models, expanded 260 px pane, only Toggle visible, Fluent content.";
         NavigationView {
             height: 120px;
@@ -31,6 +32,7 @@ export component NavigationPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "PageHeader and EmptyState";
+        source_code: "import { PageHeader, EmptyState } from \"@quadrant-kit\";\n\nPageHeader { title: \"Preferences\"; show_action: true; action_text: \"Add item\"; }\nEmptyState { title: \"No items yet\"; message: \"New items appear here.\"; }";
         specimen_description: "Both patterns derive height from their content and remain valid in Compact, Medium, and Wide containers.";
         specimen_kind: "Interactive";
         keyboard_info: "PageHeader action follows FluentButton keyboard behavior; EmptyState is not interactive.";
@@ -69,6 +71,7 @@ export component NavigationPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Window controls";
+        source_code: "import { WindowControlButton, FluentIcons } from \"@quadrant-kit\";\n\nWindowControlButton { icon: FluentIcons.dismiss; label: \"Close\"; close_button: true; clicked => { /* The host handles the window action. */ } }";
         specimen_description: "Actions update the result below. The Gallery window stays open so each action can be tested repeatedly.";
         specimen_kind: "Interactive";
         keyboard_info: "Tab focuses; Enter or Space records each window action.";
@@ -90,7 +93,4 @@ export component NavigationPage inherits GalleryPage {
         }
     }
 
-    CodeSample {
-        code: "import { NavigationView, NavigationEntryKind } from \"@quadrant-kit\";\n\nexport component Example inherits NavigationView {\n    private property <string> selection: \"preferences\";\n    items: [{ id: \"preferences\", text: \"Preferences\", kind: NavigationEntryKind.destination, enabled: true }];\n    selected_id: selection;\n    show_pane_toggle: false;\n    item_invoked(id) => { selection = id; }\n    Text { text: \"Host-owned content\"; }\n}";
-    }
 }

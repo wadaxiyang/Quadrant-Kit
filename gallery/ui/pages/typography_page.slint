@@ -4,7 +4,6 @@
 import { Theme, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 
 component TypeRow inherits GridLayout {
     in property <string> token;
@@ -22,9 +21,11 @@ component TypeRow inherits GridLayout {
 export component TypographyPage inherits GalleryPage {
     page_title: "Typography";
     page_description: "A compact desktop scale with two supported weights. Application copy never drops below the 12px caption token.";
+    page_source: "import { Theme, Typography } from \"@quadrant-kit\";\n\nText { color: Theme.text_primary; font-size: Typography.body; font-weight: Typography.regular; }";
 
     Specimen {
         specimen_title: "Type scale";
+        source_code: "import { Typography, Theme } from \"@quadrant-kit\";\n\nText { text: \"Page title\"; font-size: Typography.title; color: Theme.text_primary; }";
         specimen_description: "Use semantic roles instead of selecting arbitrary font sizes per surface.";
         specimen_kind: "Tokens";
         keyboard_info: "Not applicable; type specimens are static reference content.";
@@ -42,6 +43,7 @@ export component TypographyPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Content boundaries";
+        source_code: "import { Typography } from \"@quadrant-kit\";\n\nText { text: \"Long content wraps within its host.\"; wrap: word-wrap; font-size: Typography.body; }";
         specimen_description: "Text wraps instead of clipping and avoids using weight alone to carry meaning.";
         specimen_kind: "Boundaries";
         keyboard_info: "Not applicable.";
@@ -52,7 +54,4 @@ export component TypographyPage inherits GalleryPage {
         Text { text: "Empty strings are not rendered as decorative placeholder content."; color: Theme.text_tertiary; font-size: Typography.caption; wrap: word-wrap; }
     }
 
-    CodeSample {
-        code: "import { Theme, Typography } from \"@quadrant-kit\";\n\nText { color: Theme.text_primary; font-size: Typography.body; font-weight: Typography.regular; }";
-    }
 }

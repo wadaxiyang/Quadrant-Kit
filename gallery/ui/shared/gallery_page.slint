@@ -1,49 +1,63 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Badge, BadgeKind, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { ScrollView } from "std-widgets.slint";
+import { Badge, BadgeKind, SegmentButton, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { GalleryMetrics } from "gallery_metrics.slint";
+import { SpecimenSourcePanel } from "specimen_source_panel.slint";
 
 export component GalleryPage inherits Rectangle {
     in property <string> page_title;
     in property <string> page_description;
     in property <string> stability: "Candidate";
-    preferred-height: page_layout.preferred-height;
-    vertical-stretch: 0;
+    in property <string> page_source;
+    in property <string> documentation: "Use the shell toolbar to choose Theme and preview width. Exercise each live example, then expand its source and details for integration guidance and the recorded keyboard/accessibility limits.";
+    private property <bool> documentation_open: false;
+    private property <bool> source_open: false;
+    min-width: 0px; min-height: 0px;
+    vertical-stretch: 1;
     background: transparent;
 
-    page_layout := VerticalLayout {
-        spacing: UiConstants.space_20;
-
-        HorizontalLayout {
-            spacing: UiConstants.space_16;
-            vertical-stretch: 0;
-
+    // The page fills its host. Only this viewport owns page scrolling/padding.
+    ScrollView {
+        width: 100%; height: 100%;
+        viewport-width: self.width;
+        viewport-height: max(self.height, page_layout.preferred-height);
+        page_layout := VerticalLayout {
+            min-width: 0px; alignment: start;
+            padding-left: root.width < GalleryMetrics.compact_width ? GalleryMetrics.compact_padding : GalleryMetrics.page_padding;
+            padding-right: root.width < GalleryMetrics.compact_width ? GalleryMetrics.compact_padding : GalleryMetrics.page_padding;
+            padding-top: GalleryMetrics.page_top; padding-bottom: GalleryMetrics.page_padding;
+            spacing: GalleryMetrics.section_spacing;
             VerticalLayout {
-                horizontal-stretch: 1;
-                spacing: UiConstants.space_4;
-
-                Text {
-                    text: root.page_title;
-                    color: Theme.text_primary;
-                    font-size: Typography.title;
-                    font-weight: Typography.semibold;
-                    wrap: word-wrap;
+                vertical-stretch: 0; spacing: UiConstants.space_16;
+                HorizontalLayout {
+                    spacing: UiConstants.space_16;
+                    VerticalLayout {
+                        horizontal-stretch: 1; spacing: UiConstants.space_8;
+                        Text { text: root.page_title; color: Theme.text_primary; font-size: Typography.title; font-weight: Typography.semibold; wrap: word-wrap; }
+                        Text { text: root.page_description; color: Theme.text_secondary; font-size: Typography.body; wrap: word-wrap; }
+                    }
+                    if root.stability != "": Badge { text: root.stability; kind: root.stability == "Stable" ? BadgeKind.success : BadgeKind.warning; }
                 }
-
-                Text {
-                    text: root.page_description;
-                    color: Theme.text_secondary;
-                    font-size: Typography.body;
-                    wrap: word-wrap;
+                HorizontalLayout {
+                    spacing: UiConstants.space_8;
+                    if root.documentation != "": SegmentButton {
+                        width: 132px; text: "Documentation"; selected: root.documentation_open;
+                        accessible-expandable: true; accessible-expanded: root.documentation_open;
+                        clicked => { self.focus(); root.documentation_open = !root.documentation_open; }
+                    }
+                    if root.page_source != "": SegmentButton {
+                        width: 88px; text: "Source"; selected: root.source_open;
+                        accessible-expandable: true; accessible-expanded: root.source_open;
+                        clicked => { self.focus(); root.source_open = !root.source_open; }
+                    }
+                    Rectangle { horizontal-stretch: 1; }
                 }
+                if root.documentation_open: Text { text: root.documentation; color: Theme.text_secondary; font-size: Typography.body; wrap: word-wrap; }
+                if root.source_open: SpecimenSourcePanel { title: root.page_title; source_code: root.page_source; show_toggle: false; expanded: true; }
             }
-
-            Badge {
-                text: root.stability;
-                kind: root.stability == "Stable" ? BadgeKind.success : BadgeKind.warning;
-            }
+            @children
         }
-
-        @children
     }
 }

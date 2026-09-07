@@ -4,7 +4,6 @@
 import { Elevation, Motion, SurfaceCard, Theme, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 
 component ColorToken inherits VerticalLayout {
     in property <string> token_name;
@@ -35,9 +34,11 @@ component SpacingToken inherits HorizontalLayout {
 export component TokensPage inherits GalleryPage {
     page_title: "Theme tokens";
     page_description: "Canonical semantic color, spacing, elevation, and motion values. Consumers use names, never copied literals.";
+    page_source: "import { Theme, UiConstants } from \"@quadrant-kit\";\n\nRectangle { background: Theme.card_bg; border-radius: UiConstants.content_radius; }";
 
     Specimen {
         specimen_title: "Semantic colors";
+        source_code: "import { Theme } from \"@quadrant-kit\";\n\nRectangle { background: Theme.card_bg; }";
         specimen_description: "The same token names resolve for Light, Dark, and System theme modes.";
         specimen_kind: "Tokens";
         keyboard_info: "Not applicable; color swatches are reference content.";
@@ -62,6 +63,7 @@ export component TokensPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Spacing and dimensions";
+        source_code: "import { UiConstants } from \"@quadrant-kit\";\n\nHorizontalLayout { spacing: UiConstants.space_12; }";
         specimen_description: "A 4px-centered rhythm supports compact desktop density; 2px and 6px exist for optical corrections.";
         specimen_kind: "Tokens";
         keyboard_info: "Not applicable.";
@@ -86,6 +88,7 @@ export component TokensPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Elevation and motion";
+        source_code: "import { SurfaceCard, Motion } from \"@quadrant-kit\";\n\nSurfaceCard { elevated: true; }";
         specimen_description: "Cards, popups, and dialogs own coherent surface/border/shadow recipes; motion remains restrained.";
         specimen_kind: "Tokens";
         keyboard_info: "Not applicable.";
@@ -105,7 +108,4 @@ export component TokensPage inherits GalleryPage {
         }
     }
 
-    CodeSample {
-        code: "import { Theme, UiConstants } from \"@quadrant-kit\";\n\nRectangle { background: Theme.card_bg; border-radius: UiConstants.content_radius; }";
-    }
 }

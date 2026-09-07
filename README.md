@@ -30,6 +30,7 @@ The root `quadrant-kit` package is only a build-time source locator. It owns no 
 The current local facade exports 35 names, including NavigationView and the navigation
 types, Back button, pane toggle and content surface. Gallery uses NavigationView
 with a hierarchical catalog, title/keyword search and Gallery-owned Back history;
+its unified pages own scrolling and expose collapsible, selectable source/details.
 SidebarItem and its legacy tokens have been removed. These changes are unpublished; the retained
 extraction source still has 28 names. Branding, task models, Inbox, task row
 composition, quadrant colors, product-specific timer/layout tokens, and product

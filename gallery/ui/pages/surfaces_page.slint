@@ -6,7 +6,6 @@ import { SurfaceCard, Theme, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
 import { PropertyPanel } from "../shared/property_panel.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 import { PreviewContainer } from "../shared/preview_container.slint";
 import { CardStateSample } from "../shared/card_state_sample.slint";
 
@@ -19,9 +18,11 @@ export component SurfacesPage inherits GalleryPage {
 
     page_title: "Surfaces";
     page_description: "SurfaceCard supplies the shared surface, border, radius, elevation, selection, and interaction recipes used by higher-level patterns.";
+    page_source: "import { SurfaceCard } from \"@quadrant-kit\";\n\nSurfaceCard { interactive: true; elevated: false; accessible_name: \"Open item\"; clicked => { open(); } }";
 
     Specimen {
         specimen_title: "SurfaceCard · interactive";
+        source_code: "import { SurfaceCard } from \"@quadrant-kit\";\n\nSurfaceCard { interactive: true; accessible_name: \"Open item\"; clicked => { /* Open in the host. */ } }";
         specimen_description: "Adjust live properties and activate the card to toggle selected state.";
         keyboard_info: "When interactive, Tab focuses and Enter or Space invokes clicked.";
         accessibility_info: "Interactive cards expose button role, label, enabled, checkable, and checked state.";
@@ -65,6 +66,7 @@ export component SurfacesPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "SurfaceCard states and variants";
+        source_code: "import { SurfaceCard } from \"@quadrant-kit\";\n\nSurfaceCard { elevated: true; }\nSurfaceCard { selected: true; }";
         specimen_description: "Static preview inputs make hover, pressed, and focus snapshots deterministic without firing business callbacks.";
         specimen_kind: "States";
         keyboard_info: "Only interactive variants enter Tab order; decorative cards are not controls.";
@@ -90,7 +92,4 @@ export component SurfacesPage inherits GalleryPage {
         }
     }
 
-    CodeSample {
-        code: "import { SurfaceCard } from \"@quadrant-kit\";\n\nSurfaceCard { interactive: true; elevated: false; accessible_name: \"Open item\"; clicked => { open(); } }";
-    }
 }

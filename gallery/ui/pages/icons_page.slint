@@ -4,7 +4,6 @@
 import { FluentIcon, FluentIcons, IconButton, Theme, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 import { StateSpecimen } from "../shared/state_specimen.slint";
 
 component IconCatalogItem inherits VerticalLayout {
@@ -23,9 +22,11 @@ export component IconsPage inherits GalleryPage {
     private property <string> last_action: "None";
     page_title: "Icons";
     page_description: "Vendored, cross-platform Microsoft Fluent SVG assets exposed through semantic public names.";
+    page_source: "import { FluentIcon, FluentIcons } from \"@quadrant-kit\";\n\nFluentIcon { source: FluentIcons.calendar; size: 16px; }";
 
     Specimen {
         specimen_title: "IconButton states";
+        source_code: "import { IconButton, FluentIcons } from \"@quadrant-kit\";\n\nIconButton { icon: FluentIcons.add; tooltip: \"Add\"; clicked => { /* Handle the action in the host. */ } }";
         specimen_description: "Activate an icon to update the action count. The disabled icon must leave it unchanged.";
         specimen_kind: "States";
         keyboard_info: "Tab focuses; Enter or Space invokes the default action.";
@@ -54,6 +55,7 @@ export component IconsPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Semantic icon catalog";
+        source_code: "import { FluentIcon, FluentIcons } from \"@quadrant-kit\";\n\nFluentIcon { source: FluentIcons.calendar; size: 20px; }";
         specimen_description: "Regular/Filled navigation, 16px actions, and 24px status icons remain distinct assets.";
         specimen_kind: "Catalog";
         keyboard_info: "Not applicable; catalog glyphs are reference content.";
@@ -112,7 +114,4 @@ export component IconsPage inherits GalleryPage {
         }
     }
 
-    CodeSample {
-        code: "import { FluentIcon, FluentIcons } from \"@quadrant-kit\";\n\nFluentIcon { source: FluentIcons.calendar; size: 16px; }";
-    }
 }

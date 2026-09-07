@@ -4,7 +4,6 @@
 import { Badge, BadgeKind, FluentIcons, FluentIcon, SurfaceCard, Theme, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 
 component OverviewTile inherits SurfaceCard {
     in property <image> tile_icon;
@@ -44,9 +43,11 @@ component OverviewTile inherits SurfaceCard {
 export component OverviewPage inherits GalleryPage {
     page_title: "Overview";
     page_description: "A development-only catalog for choosing, exercising, and integrating the shared Fluent UI Kit.";
+    page_source: "import { FluentButton, Theme } from \"@quadrant-kit\";\n\nFluentButton { text: \"Save\"; primary: true; }";
 
     Specimen {
         specimen_title: "Catalog map";
+        source_code: "import { SurfaceCard, Badge } from \"@quadrant-kit\";\n\nSurfaceCard { Badge { text: \"Candidate\"; } }";
         specimen_description: "Eight pages demonstrate the 35 public exports across Foundation, Controls, Surfaces, Feedback, and Navigation.";
         specimen_kind: "Overview";
         keyboard_info: "Tab through the navigation pane; Enter or Space opens a page.";
@@ -76,6 +77,7 @@ export component OverviewPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Using this tool";
+        source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Try an action\"; primary: true; }";
         specimen_description: "Choose a page, set theme and preview width, adjust live properties, then verify interaction and usage guidance together.";
         specimen_kind: "Workflow";
         keyboard_info: "All controls participate in normal Tab order; component-specific keys are listed in each specimen.";
@@ -89,8 +91,4 @@ export component OverviewPage inherits GalleryPage {
         }
     }
 
-    CodeSample {
-        caption: "Supported public entry";
-        code: "import { FluentButton, Theme } from \"@quadrant-kit\";\n\nFluentButton { text: \"Save\"; primary: true; }";
-    }
 }

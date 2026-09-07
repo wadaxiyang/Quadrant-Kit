@@ -1,5 +1,14 @@
 # Changelog
 
+## Navigation rebuild Phase 5 — local, unpublished
+
+- Transfer all eight destinations atomically to GalleryPage-owned scrolling,
+  responsive page padding and shared header Documentation/Source actions.
+- Unify 23 specimens around live preview cards and keyboard-operable source/details
+  panels with read-only selectable code, retaining input/counter observability.
+- Keep page backgrounds transparent and use Gallery-local documentation metrics;
+  preserve Kit's public API, NavigationView and content surface.
+
 ## Navigation rebuild Phase 4 — local, unpublished
 
 - Organize the eight implemented Gallery pages into a validated hierarchy while

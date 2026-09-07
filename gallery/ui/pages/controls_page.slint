@@ -6,7 +6,6 @@ import { Badge, BadgeKind, FluentButton, FluentIcons, FluentTextArea, FluentText
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
 import { PropertyPanel } from "../shared/property_panel.slint";
-import { CodeSample } from "../shared/code_sample.slint";
 import { PreviewContainer } from "../shared/preview_container.slint";
 import { StateSpecimen } from "../shared/state_specimen.slint";
 
@@ -23,9 +22,11 @@ export component ControlsPage inherits GalleryPage {
 
     page_title: "Controls";
     page_description: "Interactive input and command primitives with deterministic state, variant, content-boundary, keyboard, and accessibility coverage.";
+    page_source: "import { FluentButton, FluentTextField } from \"@quadrant-kit\";\n\nFluentTextField { text <=> title; placeholder_text: \"Task title\"; }\nFluentButton { text: \"Save\"; primary: true; clicked => { save(); } }";
 
     Specimen {
         specimen_title: "FluentButton · interactive";
+        source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Save\"; primary: true; clicked => { /* Save in the host. */ } }";
         specimen_description: "Live properties exercise the same public inputs used by Product surfaces.";
         keyboard_info: "Tab focuses; Enter or Space invokes clicked.";
         accessibility_info: "Role button; text is the label; enabled state and default action are exposed.";
@@ -52,6 +53,8 @@ export component ControlsPage inherits GalleryPage {
                 Row {
                     Switch { text: "Primary"; checked <=> root.button_primary; accessible-label: "Primary button"; }
                     Switch { text: "Danger"; checked <=> root.button_danger; accessible-label: "Danger button"; }
+                }
+                Row {
                     Switch { text: "Enabled"; checked <=> root.button_enabled; accessible-label: "Button enabled"; }
                 }
                 Row {
@@ -64,6 +67,7 @@ export component ControlsPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Button and IconButton states";
+        source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Unavailable\"; enabled: false; }\nFluentButton { text: \"Delete\"; danger: true; primary: true; }";
         specimen_description: "Preview inputs are development-only visual overrides and remain false in Product code.";
         specimen_kind: "States";
         keyboard_info: "Enter and Space activate; pointer hover and press use the same visual hierarchy.";
@@ -97,6 +101,7 @@ export component ControlsPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "TextField and TextArea";
+        source_code: "import { FluentTextField, FluentTextArea } from \"@quadrant-kit\";\n\nFluentTextField { text: \"Editable value\"; placeholder_text: \"Title\"; }\nFluentTextArea { height: 88px; text: \"Notes\"; }";
         specimen_description: "Standard Slint Fluent editors own selection, scrolling, focus, placeholder, and input behavior.";
         keyboard_info: "Tab enters fields; normal platform editing and selection keys apply; Enter accepts TextField.";
         accessibility_info: "Standard editors expose text-entry semantics; errors remain adjacent visible text.";
@@ -123,6 +128,7 @@ export component ControlsPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Segment, Switch, and Badge";
+        source_code: "import { SegmentButton, Badge, BadgeKind } from \"@quadrant-kit\";\nimport { Switch } from \"std-widgets.slint\";\n\nSegmentButton { text: \"All\"; selected: true; }\nSwitch { text: \"Enabled\"; checked: true; }\nBadge { text: \"Ready\"; kind: BadgeKind.success; }";
         specimen_description: "Selection controls expose stable checked state; badges communicate compact non-interactive status.";
         keyboard_info: "Tab focuses segments and Switch; Enter/Space activates segments, Space toggles Switch.";
         accessibility_info: "Segments expose button + checked state; Switch uses native checked semantics; Badge has a visible label.";
@@ -173,7 +179,4 @@ export component ControlsPage inherits GalleryPage {
         }
     }
 
-    CodeSample {
-        code: "import { FluentButton, FluentTextField } from \"@quadrant-kit\";\n\nFluentTextField { text <=> title; placeholder_text: \"Task title\"; }\nFluentButton { text: \"Save\"; primary: true; clicked => { save(); } }";
-    }
 }

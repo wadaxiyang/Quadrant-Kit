@@ -4,7 +4,7 @@ The Gallery is a development, verification, and learning application with no Pro
 
 ## Pages and controls
 
-The Phase 4 shell uses one public NavigationView with eight destinations under
+The shell uses one public NavigationView with eight destinations under
 Overview, Foundation and Components; Surfaces & feedback is a nested group.
 Stable IDs overview/tokens/typography/icons/controls/surfaces/feedback/navigation
 map to the existing snapshot page numbers 0–7. Only implemented pages are linked.
@@ -21,8 +21,10 @@ catalog order. Clicking any result uses the same route table. No matches display
 a non-interactive message and keeps the current page. Clear search restores the
 normal hierarchy and its saved expansion state. In compact mode the search action
 expands the pane. History and search are not Kit runtime responsibilities.
-The existing page ScrollView/padding remains inside the view for Phase 5 transfer.
-[Phase 4 evidence](NAVIGATION_REBUILD_PHASE4.md) records the current checks;
+GalleryPage now owns each page's ScrollView and padding; the shell only fills
+the current destination into its content host.
+[Phase 5 evidence](NAVIGATION_REBUILD_PHASE5.md) records the page/specimen rebuild;
+[Phase 4 evidence](NAVIGATION_REBUILD_PHASE4.md) records history and search;
 [Phase 3 evidence](NAVIGATION_REBUILD_PHASE3.md) records the cutover and removal.
 
 | Page | Content |
@@ -43,6 +45,31 @@ product brand, task navigation aliases, or quadrant colors.
 Use Light / Dark / System, Compact / Medium / Wide, and the per-page live settings. Existing preview properties remain specimen inputs; they do not assert that real pointer, focus, IME, or assistive-technology paths have been tested. The modal specimen no longer claims a complete Tab trap.
 
 ## Observable action specimens
+
+Every destination uses the same transparent GalleryPage. Gallery-local metrics
+provide 40 px horizontal padding (24 px below 700 px of available page width),
+32 px top padding and section spacing, and 40 px bottom padding. Each page fills
+the available viewport and owns one page-level ScrollView. Navigation menus and
+standard text editors retain their independent component-local scrolling.
+
+The common header includes title, description, optional stability, and local
+Documentation/Source actions. Documentation expands usage guidance in place;
+Source reveals the page's integration fragment. Theme and C/M/W remain in the
+shell toolbar. These actions do not open external pages or require named child
+slots. New pages supply page metadata and a single content children slot.
+
+All 23 specimens share a live preview card and a separated Show source & details
+toggle. Details start collapsed with no body height or hidden editor Tab stops.
+The toggle supports Tab, Enter and Space and exposes expanded state. Its body
+contains an illustrative static snippet and the existing keyboard/accessibility
+notes; live counters remain in the preview. The read-only standard TextEdit
+supports selection and normal copy commands; its own scroll area is limited to
+the code viewport. Integration fragments may require host state/callbacks and
+are not generated from the current live preview values.
+
+Expanding/collapsing details leaves the preview mounted and preserves its state.
+Changing destination recreates page-local state as before; host-bound example
+text and switches retain their existing lifetime. No page cache is introduced.
 
 After the NavigationView specimens, the Navigation page retains the Phase 1 foundation specimen. Show Back and
 Show Toggle conditionally mount the controls and their row. Enabled gates both
