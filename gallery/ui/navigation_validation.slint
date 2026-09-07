@@ -1,0 +1,94 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { Palette, Switch } from "std-widgets.slint";
+import { NavigationView, NavigationEntry, NavigationPaneMode, NavigationContentSurfaceMode, Theme, ThemeMode, Typography, FluentIcons, SegmentButton } from "@quadrant-kit";
+
+// Explicit development harness: no catalog route, product behavior or Kit API.
+export component NavigationValidationWindow inherits Window {
+    title: "Quadrant Kit Navigation validation";
+    preferred-width: 1040px; preferred-height: 800px;
+    min-width: 760px; min-height: 520px;
+    background: Theme.background;
+    default-font-family: root.ui_font_family;
+    default-font-size: Typography.body;
+    in-out property <string> ui_font_family <=> Theme.ui_font_family;
+    in-out property <bool> dark: false;
+    in-out property <bool> compact: false;
+    in-out property <int> variant: 0;
+    in-out property <int> scenario: 0;
+    private property <bool> controls_open: true;
+    private property <bool> inputs_open: true;
+    private property <bool> settings_open: true;
+    private property <bool> disable_selected: false;
+    private property <bool> back_enabled: true;
+    private property <bool> footer: true;
+    private property <string> selection: "button";
+    private property <int> invokes: 0;
+    private property <int> expands: 0;
+    private property <int> backs: 0;
+    private property <int> toggles: 0;
+    private property <int> edits: 0;
+    private property <int> submits: 0;
+    pure callback rows(int, bool, bool, bool, bool, bool, image, image) -> [NavigationEntry];
+    public function apply_theme() {
+        Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light;
+        Theme.system_dark = root.dark;
+        Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light;
+    }
+    changed dark => { root.apply_theme(); }
+    VerticalLayout {
+        spacing: 0px;
+        HorizontalLayout {
+            height: 56px; padding: 8px; spacing: 8px;
+            SegmentButton { text: "Light"; selected: !root.dark; clicked => { root.dark = false; } }
+            SegmentButton { text: "Dark"; selected: root.dark; clicked => { root.dark = true; } }
+            Switch { text: "Compact"; checked <=> root.compact; }
+            Switch { text: "Back enabled"; checked <=> root.back_enabled; }
+            Switch { text: "Footer"; checked <=> root.footer; }
+        }
+        nav := NavigationView {
+            vertical-stretch: 1;
+            pane_width: root.variant == 7 ? 180px : 304px;
+            pane_mode: root.compact ? NavigationPaneMode.compact : NavigationPaneMode.expanded;
+            pane_title: root.variant == 4 ? "" : "Navigation validation";
+            show_back_button: root.variant != 1 && root.variant != 4;
+            back_enabled: root.back_enabled;
+            show_search: root.variant != 2 && root.variant != 4;
+            show_pane_toggle: root.variant != 4;
+            show_top_separator: true;
+            content_surface_mode: root.variant == 5 ? NavigationContentSurfaceMode.flat : root.variant == 6 ? NavigationContentSurfaceMode.transparent : NavigationContentSurfaceMode.fluent;
+            items: root.rows(root.scenario, false, root.controls_open, root.inputs_open, root.settings_open, root.disable_selected, FluentIcons.settings_regular, FluentIcons.settings_filled);
+            footer_items: root.footer && root.variant != 3 && root.variant != 4 ? root.rows(root.scenario, true, root.controls_open, root.inputs_open, root.settings_open, false, FluentIcons.about_regular, FluentIcons.about_filled) : [];
+            selected_id: root.selection;
+            item_invoked(id) => { root.invokes += 1; root.selection = id; }
+            expansion_requested(id, expanded) => {
+                root.expands += 1;
+                if (id == "controls") { root.controls_open = expanded; }
+                if (id == "inputs") { root.inputs_open = expanded; }
+                if (id == "settings") { root.settings_open = expanded; }
+            }
+            back_requested => { root.backs += 1; }
+            pane_toggle_requested => { root.toggles += 1; root.compact = !root.compact; }
+            search_changed(value) => { root.edits += 1; }
+            search_submitted(value) => { root.submits += 1; }
+            VerticalLayout {
+                padding: 24px; spacing: 12px; alignment: start;
+                Text { text: "Public NavigationView input/render harness"; color: Theme.text_primary; font-size: Typography.subtitle; wrap: word-wrap; }
+                Text { text: "Invoke " + root.invokes + " · Expand " + root.expands + " · Back " + root.backs + " · Toggle " + root.toggles + " · Edit " + root.edits + " · Submit " + root.submits; color: Theme.text_primary; wrap: word-wrap; }
+                Text { text: "Selected: " + root.selection; color: Theme.text_primary; wrap: word-wrap; }
+                Text { text: "Tab / Shift+Tab traverse controls. Enter / Space activate. Right expands; Left collapses or focuses an enabled ancestor. Up / Down use standard scrolling, not item selection."; color: Theme.text_secondary; wrap: word-wrap; }
+                Switch { text: "Disable button destination"; checked <=> root.disable_selected; }
+                Switch { text: "Controls expanded"; checked <=> root.controls_open; }
+                Switch { text: "Inputs expanded"; checked <=> root.inputs_open; }
+                HorizontalLayout {
+                    SegmentButton { text: "Fluent"; clicked => { root.variant = 0; } }
+                    SegmentButton { text: "Flat"; clicked => { root.variant = 5; } }
+                    SegmentButton { text: "Transparent"; clicked => { root.variant = 6; } }
+                }
+                SegmentButton { text: "Hide optional regions"; clicked => { root.variant = 4; } }
+                SegmentButton { text: "Empty model"; clicked => { root.scenario = 16; } }
+            }
+        }
+    }
+}

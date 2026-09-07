@@ -22,6 +22,8 @@ export component NavigationItemRow inherits Rectangle {
     private property <bool> interactive: root.entry.kind != NavigationEntryKind.header && root.entry.kind != NavigationEntryKind.separator;
     private property <bool> active: root.presented && root.entry.enabled && root.interactive;
     private property <bool> focus_memory: false;
+    private property <bool> label_focused: false;
+    private property <bool> arrow_focused: false;
     private property <length> inset: root.compact ? 2px : UiConstants.navigation_item_padding + root.entry.depth * UiConstants.navigation_item_indent;
     private property <length> arrow_width: root.entry.has_children ? (root.compact ? 22px : 32px) : 0px;
     visible: root.presented;
@@ -30,7 +32,12 @@ export component NavigationItemRow inherits Rectangle {
     border-radius: UiConstants.control_radius;
     background: !root.interactive ? transparent : root.selected ? Theme.navigation_item_selected_bg : label_touch.has-hover || arrow_touch.has-hover ? Theme.navigation_item_hover_bg : transparent;
     animate background { duration: Motion.fast; }
-    changed presented => { if (!root.presented && root.focus_memory) { root.focus_memory = false; root.recover(); } }
+    changed active => {
+        if (!root.active) {
+            root.label_focused = false; root.arrow_focused = false;
+            if (root.focus_memory) { root.focus_memory = false; root.recover(); }
+        }
+    }
     changed recovery_epoch => { if (root.recovery_id == root.entry.id && root.active) { label_focus.focus(); } }
 
     if root.entry.kind == NavigationEntryKind.separator: Rectangle {
@@ -66,7 +73,7 @@ export component NavigationItemRow inherits Rectangle {
         x: 0px;
         width: max(0px, parent.width - root.arrow_width); height: 100%;
         border-radius: UiConstants.control_radius;
-        border-width: label_focus.has-focus && root.active ? 2px : 0px; border-color: Theme.focus_ring;
+        border-width: root.label_focused && root.active ? 2px : 0px; border-color: Theme.focus_ring;
         visible: root.interactive && root.presented;
         accessible-role: button;
         accessible-label: root.context_label;
@@ -82,10 +89,11 @@ export component NavigationItemRow inherits Rectangle {
         }
         label_focus := FocusScope {
             enabled: root.active; focus-on-click: false;
-            focus-gained => { root.focus_memory = true; }
-            focus-lost => { if (root.presented) { root.focus_memory = false; } }
+            focus-gained => { root.label_focused = true; root.focus_memory = true; }
+            focus-lost => { root.label_focused = false; if (root.active) { root.focus_memory = false; } }
             key-pressed(event) => {
                 if (root.active && (event.text == Key.Return || event.text == Key.Space)) { root.activate-label(); return accept; }
+                if (root.active && root.direction(event.text)) { return accept; }
                 return reject;
             }
         }
@@ -93,7 +101,7 @@ export component NavigationItemRow inherits Rectangle {
     arrow_region := Rectangle {
         x: parent.width - root.arrow_width; width: root.arrow_width; height: 100%;
         border-radius: UiConstants.control_radius;
-        border-width: chevron_focus.has-focus && root.active ? 2px : 0px; border-color: Theme.focus_ring;
+        border-width: root.arrow_focused && root.active ? 2px : 0px; border-color: Theme.focus_ring;
         visible: root.entry.has_children && root.presented;
         accessible-role: button;
         accessible-label: (root.entry.expanded ? "Collapse " : "Expand ") + root.context_label;
@@ -117,16 +125,31 @@ export component NavigationItemRow inherits Rectangle {
         }
         chevron_focus := FocusScope {
             enabled: root.active && root.entry.has_children; focus-on-click: false;
-            focus-gained => { root.focus_memory = true; }
-            focus-lost => { if (root.presented) { root.focus_memory = false; } }
+            focus-gained => { root.arrow_focused = true; root.focus_memory = true; }
+            focus-lost => { root.arrow_focused = false; if (root.active) { root.focus_memory = false; } }
             key-pressed(event) => {
                 if (root.active && root.entry.has_children && (event.text == Key.Return || event.text == Key.Space)) { root.activate-arrow(); return accept; }
+                if (root.active && root.direction(event.text)) { return accept; }
                 return reject;
             }
         }
     }
     // Builtin Tooltip escapes ScrollView clipping without taking row focus.
     Tooltip { TooltipHost { text: root.context_label; shown: true; } }
+    // Left/Right only request expansion or recover to an enabled ancestor.
+    // They never invoke a destination or mutate the host-owned model.
+    function direction(key: string) -> bool {
+        if (key == Key.RightArrow && root.entry.has_children) {
+            if (!root.entry.expanded) { root.expand(); }
+            return true;
+        }
+        if (key == Key.LeftArrow) {
+            if (root.entry.has_children && root.entry.expanded) { root.expand(); }
+            else { root.recover(); }
+            return true;
+        }
+        return false;
+    }
     function activate-label() {
         if (root.active) {
             label_focus.focus();

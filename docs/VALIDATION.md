@@ -25,8 +25,12 @@ The Cargo module also has fixtures for future Tasks Git+full-SHA, alias, workspa
 
 ## Reviewed baselines
 
-Current navigation Phase 6 catalog/route behavior, native evidence and check
-results are recorded in [NAVIGATION_REBUILD_PHASE6.md](NAVIGATION_REBUILD_PHASE6.md).
+Navigation Phase 6 catalog/route behavior is recorded in
+[NAVIGATION_REBUILD_PHASE6.md](NAVIGATION_REBUILD_PHASE6.md). Current keyboard/focus
+polish, the six-command common gate, native input observations and 184 simulated-DPI
+render scenes are recorded in [NAVIGATION_REBUILD_PHASE7.md](NAVIGATION_REBUILD_PHASE7.md).
+Real monitor transitions and unavailable platform/accessibility coverage remain
+separately NOT_RUN; the Phase 8 full distribution gate has not started.
 The unchanged public API was reviewed in [Phase 3](NAVIGATION_REBUILD_PHASE3.md).
 
 `scripts/kit_api_v1.json` schema 1 currently records **35 names, 240 explicitly declared properties, 20 callbacks, seven enums and one ten-field struct**. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 added NavigationView with 15 properties and six callbacks. Phase 3 removes SidebarItem and three legacy sidebar tokens, rebinding two navigation defaults to their identical resolved values; all other surviving contracts are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.

@@ -1,5 +1,16 @@
 # Changelog
 
+## Navigation rebuild Phase 7 — local, unpublished
+
+- Add Left/Right expansion and ancestor focus behavior without changing the
+  host-owned navigation model or public API.
+- Recover focus when a row is disabled; clear disabled IconButton focus and
+  focus rings. Focus the editor after compact search expands the pane.
+- Use popup tooltips for Back and compact search. Clarify reference specimen
+  badges and editor keyboard guidance.
+- Add an opt-in full-viewport navigation validation host and a reproducible
+  simulated-DPI render matrix alongside real Gallery shell scenes.
+
 ## Navigation rebuild Phase 6 — local, unpublished
 
 - Introduce one Gallery catalog for 25 routes, navigation/search and 21 public

@@ -6,6 +6,7 @@ import { Theme, Typography } from "../../foundation/theme.slint";
 import { UiConstants } from "../../foundation/constants.slint";
 import { FluentIcons } from "../../foundation/fluent_icons.slint";
 import { IconButton } from "../../primitives/icon_button.slint";
+import { TooltipHost } from "../../primitives/tooltip_host.slint";
 import { FluentTextField } from "../../primitives/text_field.slint";
 import { NavigationEntry, NavigationEntryKind, NavigationPaneMode, NavigationContentSurfaceMode } from "navigation_types.slint";
 import { NavigationBackButton } from "navigation_back_button.slint";
@@ -48,6 +49,8 @@ export component NavigationView inherits Rectangle {
     changed footer_items => { root.sync-models(); }
     private property <string> recovery_id;
     private property <int> recovery_epoch;
+    private property <bool> search_focus_requested: false;
+    changed show_search => { if (!root.show_search) { root.search_focus_requested = false; } }
     private property <bool> has_header: root.show_back_button || root.show_pane_toggle || root.show_search || (!root.compact && root.pane_title != "");
     min-width: 0px;
     preferred-width: 600px;
@@ -85,7 +88,12 @@ export component NavigationView inherits Rectangle {
                 }
                 if root.show_search: Rectangle {
                     height: 40px;
-                    if !root.compact: FluentTextField {
+                    if !root.compact: search_input := FluentTextField {
+                        Timer {
+                            interval: 1ms;
+                            running: root.search_focus_requested;
+                            triggered => { search_input.focus(); root.search_focus_requested = false; }
+                        }
                         x: 8px; width: max(0px, parent.width - 16px); text <=> root.search_text;
                         placeholder_text: root.search_placeholder;
                         edited(value) => { root.search_changed(value); }
@@ -93,8 +101,9 @@ export component NavigationView inherits Rectangle {
                     }
                     if root.compact: IconButton {
                         x: 7px; width: 40px; height: 40px; icon: FluentIcons.menu;
-                        tooltip: "Expand navigation to search";
-                        clicked => { self.focus(); root.pane_toggle_requested(); }
+                        accessible-label: "Expand navigation to search";
+                        Tooltip { TooltipHost { text: "Expand navigation to search"; shown: true; } }
+                        clicked => { self.focus(); root.search_focus_requested = true; root.pane_toggle_requested(); }
                     }
                 }
                 if root.show_top_separator && root.has_header && root.valid && (root.items.length > 0 || root.footer_items.length > 0): Rectangle {

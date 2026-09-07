@@ -20,9 +20,13 @@ mod catalog;
 mod config;
 mod navigation;
 mod navigation_samples;
+mod navigation_validation;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = config::Config::from_env()?;
+    if config.navigation_validation.is_some() {
+        return navigation_validation::run(&config);
+    }
     let gallery = DesignGalleryWindow::new()?;
     gallery.global::<GalleryNavigationExamples>().on_entries(
         |case, footer, controls, inputs, settings, icon, selected_icon| {

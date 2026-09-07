@@ -4,6 +4,7 @@
 import { Theme } from "../../foundation/theme.slint";
 import { UiConstants } from "../../foundation/constants.slint";
 import { IconButton } from "../../primitives/icon_button.slint";
+import { TooltipHost } from "../../primitives/tooltip_host.slint";
 
 export component NavigationBackButton inherits Rectangle {
     in property <bool> enabled: true;
@@ -19,9 +20,10 @@ export component NavigationBackButton inherits Rectangle {
         width: 100%;
         height: 100%;
         enabled: root.enabled;
-        tooltip: root.accessible_name;
+        accessible-label: root.accessible_name;
         clicked => { if (root.enabled) { button.focus(); root.clicked(); } }
     }
+    Tooltip { TooltipHost { text: root.accessible_name; shown: true; } }
 
     // Original geometric arrow, drawn in source; no font glyph or new asset.
     Path {

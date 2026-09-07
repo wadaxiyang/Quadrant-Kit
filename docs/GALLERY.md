@@ -118,7 +118,45 @@ focused interaction check, not the full keyboard/IME/screen-reader/backend matri
 The disabled check applies to IconButton; PageHeader and WindowControlButton do
 not declare an enabled input. Public component code and API baselines are unchanged.
 
-## Theme host
+## Navigation keyboard and polish verification
+
+Navigation labels and their independent chevrons support Tab/Shift+Tab and
+Enter/Space. Right requests expansion; Left requests collapse, or moves focus
+to a visible enabled ancestor when the row is already collapsed or is a leaf.
+These keys never select a destination. Up/Down/Home/End item traversal is not
+implemented; use Tab/Shift+Tab. Expansion and selection remain host-controlled.
+Disabling a focused row recovers to an enabled ancestor or the pane focus scope;
+disabling an IconButton clears focus and its focus ring. Compact search expands
+the pane and focuses the new editor. Back, toggle, compact search and row tooltips
+use popup presentation to escape pane clipping.
+
+The opt-in native validation window uses the same public NavigationView and the
+Gallery's existing hierarchy fixtures. It is not a catalog destination. Launch
+with `QUADRANT_GALLERY_NAV_VALIDATION=0` for manual input checks; do not supply
+PAGE/DESTINATION, and use Light/Dark (the default is Light). Other validation
+variants are 1=no Back, 2=no Search, 3=no footer, 4=no optional regions,
+5=flat surface, 6=transparent surface, 7=180 px expanded pane. NAV_CASE and
+NAV_COMPACT still select the hierarchy and compact state. Each native host
+initializes its own Theme, Palette and font.
+
+```console
+python scripts/capture_navigation_polish.py
+```
+
+This builds once and captures 184 source/binary-identified scenes: 20 real Gallery
+Home scenes and 164 full-viewport public NavigationView scenes. The matrix covers
+minimum/default sizes, Light/Dark, expanded/compact, simulated 100/125/150/200/225%
+scale, optional regions, three content modes, 180/304 px panes, long branch labels,
+iconless entries, deep selection and one/two/three-level or empty models. Optional
+variants use 100/225%; standard configurations use all five scales. `--smoke`
+captures only one validation scene and does not satisfy the full matrix.
+The dedicated manifest schema/suite name keeps these captures separate from
+normal Gallery snapshot reuse. There is no automatic pixel-diff acceptance rule.
+
+[Phase 7 evidence](NAVIGATION_REBUILD_PHASE7.md) separates native input observations,
+simulated rendering and unavailable platform/monitor/accessibility coverage.
+
+## Theme initialization
 
 Rust applies the known font, selected theme, and initial system preference before showing Gallery, even when its theme equals the default. On Windows it retains Segoe UI Variable Text; elsewhere Slint's system font fallback remains. Font files are not bundled.
 

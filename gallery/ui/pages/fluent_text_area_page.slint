@@ -6,13 +6,12 @@ import { Specimen } from "../shared/specimen.slint";
 import { FluentTextArea, Theme } from "@quadrant-kit";
 export component FluentTextAreaPage inherits GalleryPage {
     in-out property <string> sample_text: "Editable value";
-    private property <int> accepts: 0;
     page_description: "The standard editor owns text selection, focus and scrolling; the host owns its value.";
     Specimen {
         specimen_title: "Editing and state";
         specimen_description: "The standard editor owns text selection, focus and scrolling; the host owns its value.";
         source_code: "import { FluentTextArea } from \"@quadrant-kit\";\nFluentTextArea { height: 110px; text: \"Editable value\"; }";
-        keyboard_info: "Tab focuses interactive controls; Enter or Space invokes actions. Standard editors use platform editing keys.";
+        keyboard_info: "Tab / Shift+Tab move between editors. Use standard selection and editing keys; Enter inserts a new line.";
         accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
         FluentTextArea { height: 110px; text <=> root.sample_text; placeholder_text: "Example text";  }
         FluentTextArea { height: 110px; text: "Disabled value"; enabled: false; }

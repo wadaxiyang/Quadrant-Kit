@@ -12,7 +12,7 @@ export component FluentTextFieldPage inherits GalleryPage {
         specimen_title: "Editing and state";
         specimen_description: "The standard editor owns text selection, focus and scrolling; the host owns its value.";
         source_code: "import { FluentTextField } from \"@quadrant-kit\";\nFluentTextField {  text: \"Editable value\"; }";
-        keyboard_info: "Tab focuses interactive controls; Enter or Space invokes actions. Standard editors use platform editing keys.";
+        keyboard_info: "Tab / Shift+Tab move between editors. Use standard selection and editing keys; Enter submits the field.";
         accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
         FluentTextField {  text <=> root.sample_text; placeholder_text: "Example text"; accepted => { root.accepts += 1; } }
         FluentTextField {  text: "Disabled value"; enabled: false; }

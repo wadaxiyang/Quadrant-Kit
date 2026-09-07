@@ -19,6 +19,7 @@ pub struct Config {
     pub navigation_case: i32,
     pub navigation_compact: bool,
     pub snapshot: Option<PathBuf>,
+    pub navigation_validation: Option<i32>,
 }
 
 impl Config {
@@ -68,6 +69,16 @@ impl Config {
                 }
             })
             .transpose()?;
+        let navigation_validation = read("QUADRANT_GALLERY_NAV_VALIDATION")?
+            .map(|value| index(Some(value), "NAV_VALIDATION", 0, 7))
+            .transpose()?;
+        if navigation_validation.is_some()
+            && (page.is_some() || id.is_some() || theme == ThemeChoice::System)
+        {
+            return Err(
+                "NAV_VALIDATION requires no route option and an explicit Light/Dark theme".into(),
+            );
+        }
         Ok(Self {
             size,
             theme,
@@ -76,6 +87,7 @@ impl Config {
             navigation_case,
             navigation_compact,
             snapshot,
+            navigation_validation,
         })
     }
 }
@@ -121,6 +133,7 @@ mod tests {
                 preview: 1,
                 navigation_case: 0,
                 navigation_compact: false,
+                navigation_validation: None,
                 snapshot: None
             }
         );
@@ -196,6 +209,27 @@ mod tests {
             ])
             .is_err()
         );
+    }
+    #[test]
+    fn validation_variants_and_conflicts() {
+        for variant in 0..8 {
+            assert_eq!(
+                parse(&[("QUADRANT_GALLERY_NAV_VALIDATION", &variant.to_string())])
+                    .unwrap()
+                    .navigation_validation,
+                Some(variant)
+            );
+        }
+        for value in ["8", "-1", "", "invalid"] {
+            assert!(parse(&[("QUADRANT_GALLERY_NAV_VALIDATION", value)]).is_err());
+        }
+        for other in [
+            ("QUADRANT_GALLERY_PAGE", "0"),
+            ("QUADRANT_GALLERY_DESTINATION", "home"),
+            ("QUADRANT_GALLERY_THEME", "system"),
+        ] {
+            assert!(parse(&[("QUADRANT_GALLERY_NAV_VALIDATION", "0"), other]).is_err());
+        }
     }
     #[test]
     fn rejects_unknown_theme_and_empty_output() {

@@ -16,17 +16,21 @@ export component IconButton inherits Rectangle {
     in property <bool> preview_pressed: false;
     in property <bool> preview_focus: false;
     callback clicked;
+    // Slint 1.17 ignores FocusOut after enabled becomes false. Track the visible
+    // focus independently so disabling/re-enabling cannot revive a stale ring.
+    private property <bool> focus_visible: false;
 
     width: UiConstants.icon_button_size;
     height: UiConstants.icon_button_size;
     border-radius: UiConstants.control_radius;
-    border-width: (keyboard_focus.has-focus || root.preview_focus) ? 2px : 0px;
+    border-width: root.enabled && (root.focus_visible || root.preview_focus) ? 2px : 0px;
     border-color: Theme.focus_ring;
     background: !root.enabled ? transparent :
                 (button_touch.pressed || root.preview_pressed) ? (root.danger ? Theme.danger_bg : Theme.selected_bg) :
                 (button_touch.has-hover || root.preview_hover) ? (root.danger ? Theme.danger_bg : Theme.control_bg_hover) : transparent;
     opacity: root.enabled ? 1 : 0.45;
     forward-focus: keyboard_focus;
+    changed enabled => { if (!root.enabled) { root.focus_visible = false; keyboard_focus.clear-focus(); } }
     accessible-role: button;
     accessible-label: root.tooltip;
     accessible-enabled: root.enabled;
@@ -42,8 +46,10 @@ export component IconButton inherits Rectangle {
 
     keyboard_focus := FocusScope {
         enabled: root.enabled;
+        focus-gained => { root.focus_visible = true; }
+        focus-lost => { root.focus_visible = false; }
         key-pressed(event) => {
-            if (event.text == Key.Return || event.text == Key.Space) {
+            if (root.enabled && (event.text == Key.Return || event.text == Key.Space)) {
                 root.clicked();
                 return accept;
             }
