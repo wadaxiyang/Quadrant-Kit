@@ -21,13 +21,20 @@ mod config;
 mod navigation;
 mod navigation_samples;
 mod navigation_validation;
+mod window_chrome;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = config::Config::from_env()?;
     if config.navigation_validation.is_some() {
         return navigation_validation::run(&config);
     }
+    // Native caption integration uses winit; its renderer follows SLINT_BACKEND.
+    #[cfg(target_os = "windows")]
+    slint::BackendSelector::new()
+        .backend_name("winit".into())
+        .select()?;
     let gallery = DesignGalleryWindow::new()?;
+    gallery.set_custom_chrome(cfg!(target_os = "windows"));
     gallery.global::<GalleryNavigationExamples>().on_entries(
         |case, footer, controls, inputs, settings, icon, selected_icon| {
             slint::ModelRc::new(slint::VecModel::from(navigation_samples::entries(
@@ -69,8 +76,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     gallery.set_preview_mode(config.preview);
     // Explicit even when Light equals the default and changed does not run.
     gallery.invoke_apply_theme();
+    gallery.show()?;
+    let title_bar = window_chrome::install(&gallery)?;
     if let Some(snapshot_path) = config.snapshot {
-        gallery.show()?;
         gallery.window().request_redraw();
         schedule_snapshot(
             gallery.as_weak(),
@@ -80,8 +88,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         slint::run_event_loop()?;
     } else {
-        gallery.run()?;
+        slint::run_event_loop()?;
     }
+    title_bar.check()?;
     Ok(())
 }
 

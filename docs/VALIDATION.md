@@ -25,6 +25,11 @@ The Cargo module also has fixtures for future Tasks Git+full-SHA, alias, workspa
 
 ## Reviewed baselines
 
+The subsequent user-requested Windows shell integration is recorded in
+[GALLERY_TITLE_BAR_VALIDATION.md](GALLERY_TITLE_BAR_VALIDATION.md). It supersedes
+the earlier main-Gallery native-decoration deferral without rewriting historical
+phase evidence. Its checks apply to the changed host and explicit Slint feature.
+
 Navigation Phase 6 catalog/route behavior is recorded in
 [NAVIGATION_REBUILD_PHASE6.md](NAVIGATION_REBUILD_PHASE6.md). Current keyboard/focus
 polish, the six-command common gate, native input observations and 184 simulated-DPI

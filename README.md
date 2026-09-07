@@ -31,6 +31,9 @@ The current local facade exports 35 names, including NavigationView and the navi
 types, Back button, pane toggle and content surface. Gallery uses NavigationView
 with a hierarchical catalog, title/keyword search and Gallery-owned Back history;
 its 25 destinations share page scrolling and collapsible, selectable source/details.
+On Windows, navigation controls, Gallery utilities and real window controls share
+one top title bar; the old duplicate header rows are removed. See the
+[Gallery title-bar notes](docs/GALLERY.md#unified-windows-title-bar).
 Home and All components use the same catalog as navigation/search, linking all 21
 public visual components. Snapshot destinations are stable strings; 0–7 remain
 explicit Gallery-only aliases.

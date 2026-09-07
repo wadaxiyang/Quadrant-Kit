@@ -2,6 +2,31 @@
 
 The Gallery is a development, verification, and learning application with no Product dependencies. Build it with `cargo build --locked -p quadrant-kit-gallery`; run with `cargo run --locked -p quadrant-kit-gallery`. It opens DesignGalleryWindow. The compiled KitApiProbe is not shown during normal startup.
 
+## Unified Windows title bar
+
+On Windows the main Gallery uses one 48 px top row for Back, pane toggle,
+Kit Gallery title, System/Light/Dark, C/M/W preview and the real window controls.
+The old decorative menu icon, separate native caption and duplicate NavigationView
+operation row are removed. Search starts directly below this row. The title text
+and its adjacent empty space support native drag, double-click maximize/restore
+and a right-click system menu. Edges/corners resize the window; maximized windows
+disable the resize border. Window buttons in this top row act on the real window;
+the dedicated WindowControlButton page still demonstrates counters only.
+
+Gallery owns this composition in `shared/gallery_title_bar.slint` and the native
+bridge in `src/window_chrome.rs`. Kit's NavigationView API remains unchanged:
+Gallery turns off its internal Back/toggle and uses the public standalone buttons
+in the top row. Compact search continues to expand the pane and focus its editor.
+The main Windows host selects winit while retaining the configured renderer.
+Only Gallery enables Slint's pinned `unstable-winit-030` accessor feature; no
+dependency version or Kit runtime dependency changes. A small Windows-only
+window subclass uses the already locked windows-sys 0.61.2 to identify the title
+region as a native Windows caption. Other platforms retain
+native decorations, with navigation and utilities combined in their client toolbar.
+The opt-in navigation validation host remains independently decorated.
+
+Current evidence and limits: [title-bar correction](GALLERY_TITLE_BAR_VALIDATION.md).
+
 ## Pages and controls
 
 The shell uses one public NavigationView driven by `gallery/catalog.tsv`.

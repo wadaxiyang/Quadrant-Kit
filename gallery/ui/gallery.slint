@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Palette } from "std-widgets.slint";
-import { FluentIcon, FluentIcons, ModalKind, ModalManager, SegmentButton, NavigationView, NavigationPaneMode, Theme, ThemeMode, Typography, UiConstants } from "@quadrant-kit";
+import { ModalKind, ModalManager, NavigationView, NavigationPaneMode, Theme, ThemeMode, Typography, SegmentButton, UiConstants } from "@quadrant-kit";
+import { GalleryTitleBar } from "shared/gallery_title_bar.slint";
 import { GalleryNavigation } from "shared/gallery_catalog.slint";
 import { HomePage } from "pages/home_page.slint";
 import { AllComponentsPage } from "pages/all_components_page.slint";
@@ -43,14 +44,14 @@ export component GallerySystemTheme inherits Window {
     changed system_dark => { root.scheme_changed(root.system_dark); }
 }
 
-component ShellLabel inherits Text {
-    color: Theme.text_tertiary;
-    font-size: Typography.caption;
-    font-weight: Typography.semibold;
-}
-
 export component DesignGalleryWindow inherits Window {
     title: "Quadrant Kit Gallery";
+    in property <bool> custom_chrome: false;
+    out property <length> title_drag_x: title_bar.drag_x;
+    out property <length> title_drag_width: title_bar.drag_width;
+    out property <length> title_drag_top: root.maximized ? 0px : 5px;
+    no-frame: root.custom_chrome;
+    resize-border-width: root.custom_chrome && !root.maximized ? 5px : 0px;
     preferred-width: 1040px;
     preferred-height: 800px;
     min-width: 760px;
@@ -82,22 +83,15 @@ export component DesignGalleryWindow inherits Window {
 
     VerticalLayout {
         spacing: 0px;
-        // Gallery utilities stay outside navigation; their state belongs to this host.
-        HorizontalLayout {
-            height: 56px;
-            padding: UiConstants.space_12;
-            spacing: UiConstants.space_8;
-            FluentIcon { source: FluentIcons.menu; size: 24px; icon_color: Theme.icon_neutral; }
-            Text { text: "Kit Gallery"; color: Theme.text_primary; font-size: Typography.body; font-weight: Typography.semibold; vertical-alignment: center; }
-            Rectangle { horizontal-stretch: 1; }
-            ShellLabel { text: "Theme"; vertical-alignment: center; }
-            SegmentButton { width: 58px; text: "System"; selected: root.gallery_theme == ThemeMode.system; clicked => { root.gallery_theme = ThemeMode.system; } }
-            SegmentButton { width: 58px; text: "Light"; selected: root.gallery_theme == ThemeMode.light; clicked => { root.gallery_theme = ThemeMode.light; } }
-            SegmentButton { width: 58px; text: "Dark"; selected: root.gallery_theme == ThemeMode.dark; clicked => { root.gallery_theme = ThemeMode.dark; } }
-            ShellLabel { text: "Preview"; vertical-alignment: center; }
-            SegmentButton { width: 32px; text: "C"; selected: root.preview_mode == 0; clicked => { root.preview_mode = 0; } }
-            SegmentButton { width: 32px; text: "M"; selected: root.preview_mode == 1; clicked => { root.preview_mode = 1; } }
-            SegmentButton { width: 32px; text: "W"; selected: root.preview_mode == 2; clicked => { root.preview_mode = 2; } }
+        title_bar := GalleryTitleBar {
+            custom_chrome: root.custom_chrome; maximized: root.maximized;
+            back_enabled: GalleryNavigation.can_go_back; pane_mode: root.pane_mode;
+            gallery_theme <=> root.gallery_theme; preview_mode <=> root.preview_mode;
+            back_requested => { GalleryNavigation.back_requested(); }
+            pane_toggle_requested => { root.pane_mode = root.pane_mode == NavigationPaneMode.expanded ? NavigationPaneMode.compact : NavigationPaneMode.expanded; }
+            minimize_requested => { root.minimized = true; }
+            maximize_requested => { root.maximized = !root.maximized; }
+            close_requested => { root.close(); }
         }
         NavigationView {
             vertical-stretch: 1;
@@ -105,7 +99,8 @@ export component DesignGalleryWindow inherits Window {
             pane_mode: root.pane_mode;
             items: GalleryNavigation.items;
             selected_id: GalleryNavigation.selected_id;
-            show_back_button: true;
+            show_back_button: false;
+            show_pane_toggle: false;
             back_enabled: GalleryNavigation.can_go_back;
             show_search: true;
             search_placeholder: "Search pages and components";

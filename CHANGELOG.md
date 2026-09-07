@@ -1,5 +1,17 @@
 # Changelog
 
+## Gallery title-bar correction — local, unpublished
+
+- Combine Back, pane toggle, Gallery title, theme/preview and actual window
+  controls into one Windows title bar. Remove the decorative menu icon and the
+  duplicate NavigationView operation row from the main shell.
+- Use native Windows caption hit testing and Slint window minimize,
+  maximize/restore, close and resize-border behavior in the Gallery host.
+- Enable Gallery's existing pinned Slint winit accessor feature and Windows-only
+  windows-sys 0.61.2. The lockfile gains two dependency edges; package
+  versions and the public Kit API are unchanged. A scoped Windows subclass lets
+  the operating system handle caption dragging, double-click and system menus.
+
 ## Navigation rebuild Phase 8 — local, unpublished
 
 - Finalize current Gallery/API/consumer documentation and distinguish the local
