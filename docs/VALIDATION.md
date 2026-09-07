@@ -103,7 +103,7 @@ The protected retained tag and peeled source are listed in CONSUMER_GUIDE.md.
 Independent anonymous fetch, a neutral Git+SHA consumer with fresh Cargo/target
 directories, and Light/Dark consumer rendering passed. Private reports are under
 `target/phase3/`; the externally recorded integration evidence is in the
-[Tasks ledger](https://github.com/wadaxiyang/Quadrant-Tasks/blob/codex/kit-product-cutover/docs/migrations/kit-extraction-v2.md).
+[Tasks ledger](https://github.com/wadaxiyang/Quadrant-Tasks/blob/main/docs/migrations/kit-extraction-v2.md).
 Tasks does not need to be present to run any Kit check. Documentation added after
 the adopted source is validated at its own commit; it does not retarget consumers.
 
