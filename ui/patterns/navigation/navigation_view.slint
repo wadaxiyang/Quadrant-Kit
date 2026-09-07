@@ -1,0 +1,161 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { ScrollView } from "std-widgets.slint";
+import { Theme, Typography } from "../../foundation/theme.slint";
+import { UiConstants } from "../../foundation/constants.slint";
+import { FluentIcons } from "../../foundation/fluent_icons.slint";
+import { IconButton } from "../../primitives/icon_button.slint";
+import { FluentTextField } from "../../primitives/text_field.slint";
+import { NavigationEntry, NavigationEntryKind, NavigationPaneMode, NavigationContentSurfaceMode } from "navigation_types.slint";
+import { NavigationBackButton } from "navigation_back_button.slint";
+import { NavigationPaneToggleButton } from "navigation_pane_toggle_button.slint";
+import { NavigationContentSurface } from "navigation_content_surface.slint";
+import { NavigationModel } from "private/navigation_model.slint";
+import { NavigationItemRow } from "private/navigation_item_row.slint";
+
+export component NavigationView inherits Rectangle {
+    in property <[NavigationEntry]> items: [];
+    in property <[NavigationEntry]> footer_items: [];
+    in property <string> selected_id: "";
+    in property <NavigationPaneMode> pane_mode: NavigationPaneMode.expanded;
+    in property <length> pane_width: UiConstants.navigation_pane_default_width;
+    in property <string> pane_title: "";
+    in property <bool> show_back_button: false;
+    in property <bool> back_enabled: false;
+    in property <bool> show_pane_toggle: true;
+    in property <bool> show_search: false;
+    in-out property <string> search_text: "";
+    in property <string> search_placeholder: "Search";
+    in property <bool> show_top_separator: false;
+    in property <bool> show_footer_separator: true;
+    in property <NavigationContentSurfaceMode> content_surface_mode: NavigationContentSurfaceMode.fluent;
+    callback item_invoked(string);
+    callback expansion_requested(string, bool);
+    callback back_requested();
+    callback pane_toggle_requested();
+    callback search_changed(string);
+    callback search_submitted(string);
+
+    private property <bool> compact: root.pane_mode == NavigationPaneMode.compact;
+    // Reject both models together: duplicate IDs across regions cannot select an
+    // arbitrary row. Optional controls and host content remain available.
+    private property <bool> valid: false;
+    private property <int> primary_count: 0;
+    private property <int> footer_count: 0;
+    init => { root.sync-models(); }
+    changed items => { root.sync-models(); }
+    changed footer_items => { root.sync-models(); }
+    private property <string> recovery_id;
+    private property <int> recovery_epoch;
+    private property <bool> has_header: root.show_back_button || root.show_pane_toggle || root.show_search || (!root.compact && root.pane_title != "");
+    min-width: 0px;
+    preferred-width: 600px;
+    min-height: 0px;
+    preferred-height: 480px;
+    background: transparent;
+    Rectangle {
+        width: 100%; height: 100%;
+        pane := Rectangle {
+            x: 0px; y: 0px;
+            height: 100%;
+            width: min(max(0px, root.width), max(0px, root.compact ? UiConstants.navigation_pane_compact_width : root.pane_width));
+            background: Theme.navigation_pane_bg;
+            clip: true;
+            pane_focus := FocusScope { width: 0px; focus-on-click: false; focus-on-tab-navigation: false; }
+            VerticalLayout {
+                spacing: 0px;
+                if root.show_back_button || root.show_pane_toggle: Rectangle {
+                    height: root.compact ? (root.show_back_button && root.show_pane_toggle ? 80px : 40px) : 40px;
+                    if root.show_back_button: NavigationBackButton {
+                        x: 4px; y: 0px; enabled: root.back_enabled;
+                        clicked => { root.back_requested(); }
+                    }
+                    if root.show_pane_toggle: NavigationPaneToggleButton {
+                        x: root.compact || !root.show_back_button ? 4px : 44px;
+                        y: root.compact && root.show_back_button ? 40px : 0px;
+                        pane_mode: root.pane_mode;
+                        clicked => { root.pane_toggle_requested(); }
+                    }
+                }
+                if !root.compact && root.pane_title != "": Text {
+                    height: 36px; text: root.pane_title;
+                    horizontal-alignment: center; vertical-alignment: center;
+                    color: Theme.text_primary; font-size: Typography.body; overflow: elide;
+                }
+                if root.show_search: Rectangle {
+                    height: 40px;
+                    if !root.compact: FluentTextField {
+                        x: 8px; width: max(0px, parent.width - 16px); text <=> root.search_text;
+                        placeholder_text: root.search_placeholder;
+                        edited(value) => { root.search_changed(value); }
+                        accepted(value) => { root.search_submitted(value); }
+                    }
+                    if root.compact: IconButton {
+                        x: 7px; width: 40px; height: 40px; icon: FluentIcons.menu;
+                        tooltip: "Expand navigation to search";
+                        clicked => { self.focus(); root.pane_toggle_requested(); }
+                    }
+                }
+                if root.show_top_separator && root.has_header && root.valid && (root.items.length > 0 || root.footer_items.length > 0): Rectangle {
+                    height: 1px; background: Theme.navigation_content_border;
+                }
+                ScrollView {
+                    vertical-stretch: 1; horizontal-scrollbar-policy: always-off;
+                    VerticalLayout {
+                        spacing: 0px; padding-left: 4px; padding-right: 4px; alignment: start;
+                        for index in root.primary_count: NavigationItemRow {
+                            entry: root.items[index]; presented: root.valid && NavigationModel.shown(root.items, index);
+                            compact: root.compact;
+                            context_label: root.valid ? NavigationModel.label(root.items, index) : "";
+                            selected: root.valid && root.selected_id == self.entry.id && (self.entry.kind == NavigationEntryKind.destination || self.entry.kind == NavigationEntryKind.destination_group);
+                            recovery_id: root.recovery_id; recovery_epoch: root.recovery_epoch;
+                            invoked => { root.item_invoked(self.entry.id); }
+                            expand => { root.expansion_requested(self.entry.id, !self.entry.expanded); }
+                            recover => { root.recover-focus(root.valid ? NavigationModel.visible-parent(root.items, index) : ""); }
+                        }
+                    }
+                }
+                if root.footer_count > 0: Rectangle {
+                    height: min(footer_layout.preferred-height + (root.show_footer_separator && (root.has_header || root.items.length > 0) ? 1px : 0px), max(0px, root.height / 3));
+                    if root.show_footer_separator && (root.has_header || root.items.length > 0): Rectangle {
+                        x: 0px; y: 0px; height: 1px; width: 100%; background: Theme.navigation_content_border;
+                    }
+                    ScrollView {
+                        y: root.show_footer_separator && (root.has_header || root.items.length > 0) ? 1px : 0px;
+                        height: max(0px, parent.height - self.y); width: 100%; horizontal-scrollbar-policy: always-off;
+                        footer_layout := VerticalLayout {
+                            spacing: 0px; padding-left: 4px; padding-right: 4px; alignment: start;
+                            for index in root.footer_count: NavigationItemRow {
+                                entry: root.footer_items[index]; presented: NavigationModel.shown(root.footer_items, index);
+                                compact: root.compact; context_label: NavigationModel.label(root.footer_items, index);
+                                selected: root.selected_id == self.entry.id && (self.entry.kind == NavigationEntryKind.destination || self.entry.kind == NavigationEntryKind.destination_group);
+                                recovery_id: root.recovery_id; recovery_epoch: root.recovery_epoch;
+                                invoked => { root.item_invoked(self.entry.id); }
+                                expand => { root.expansion_requested(self.entry.id, !self.entry.expanded); }
+                                recover => { root.recover-focus(NavigationModel.visible-parent(root.footer_items, index)); }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        NavigationContentSurface {
+            x: pane.width; width: max(0px, root.width - pane.width); height: 100%;
+            mode: root.content_surface_mode;
+            @children
+        }
+    }
+    // Assign equal scalar counts without replacing repeater models. Binding the
+    // repeater directly to model.length recreates rows on whole-model assignment.
+    function sync-models() {
+        root.valid = NavigationModel.valid(root.items, root.footer_items);
+        root.primary_count = root.valid ? root.items.length : 0;
+        root.footer_count = root.valid ? root.footer_items.length : 0;
+    }
+    function recover-focus(id: string) {
+        root.recovery_id = id;
+        root.recovery_epoch += 1;
+        if (id == "") { pane_focus.focus(); }
+    }
+}

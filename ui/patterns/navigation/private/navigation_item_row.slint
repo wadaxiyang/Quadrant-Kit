@@ -1,0 +1,140 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { Theme, Typography, Motion } from "../../../foundation/theme.slint";
+import { UiConstants } from "../../../foundation/constants.slint";
+import { FluentIcons } from "../../../foundation/fluent_icons.slint";
+import { FluentIcon } from "../../../primitives/fluent_icon.slint";
+import { TooltipHost } from "../../../primitives/tooltip_host.slint";
+import { NavigationEntry, NavigationEntryKind } from "../navigation_types.slint";
+
+export component NavigationItemRow inherits Rectangle {
+    in property <NavigationEntry> entry;
+    in property <bool> presented;
+    in property <bool> compact;
+    in property <bool> selected;
+    in property <string> context_label;
+    in property <string> recovery_id;
+    in property <int> recovery_epoch;
+    callback invoked();
+    callback expand();
+    callback recover();
+    private property <bool> interactive: root.entry.kind != NavigationEntryKind.header && root.entry.kind != NavigationEntryKind.separator;
+    private property <bool> active: root.presented && root.entry.enabled && root.interactive;
+    private property <bool> focus_memory: false;
+    private property <length> inset: root.compact ? 2px : UiConstants.navigation_item_padding + root.entry.depth * UiConstants.navigation_item_indent;
+    private property <length> arrow_width: root.entry.has_children ? (root.compact ? 22px : 32px) : 0px;
+    visible: root.presented;
+    height: !root.presented ? 0px : root.entry.kind == NavigationEntryKind.separator ? 9px : root.entry.kind == NavigationEntryKind.header ? (root.compact ? 0px : 28px) : UiConstants.navigation_item_height;
+    vertical-stretch: 0;
+    border-radius: UiConstants.control_radius;
+    background: !root.interactive ? transparent : root.selected ? Theme.navigation_item_selected_bg : label_touch.has-hover || arrow_touch.has-hover ? Theme.navigation_item_hover_bg : transparent;
+    animate background { duration: Motion.fast; }
+    changed presented => { if (!root.presented && root.focus_memory) { root.focus_memory = false; root.recover(); } }
+    changed recovery_epoch => { if (root.recovery_id == root.entry.id && root.active) { label_focus.focus(); } }
+
+    if root.entry.kind == NavigationEntryKind.separator: Rectangle {
+        x: 4px; y: 4px; width: max(0px, parent.width - 8px); height: 1px;
+        background: Theme.navigation_content_border;
+    }
+    if root.entry.kind == NavigationEntryKind.header && !root.compact: Text {
+        x: root.inset; width: max(0px, parent.width - root.inset - 4px); height: 100%;
+        text: root.entry.text; color: Theme.text_secondary; font-size: Typography.caption;
+        vertical-alignment: center; overflow: elide;
+    }
+    if root.interactive: FluentIcon {
+        x: root.inset; y: (parent.height - self.height) / 2;
+        size: UiConstants.navigation_icon_size;
+        source: root.selected && root.entry.selected_icon.width > 0 ? root.entry.selected_icon : root.entry.icon.width > 0 ? root.entry.icon : root.compact ? FluentIcons.about_regular : root.entry.icon;
+        icon_color: root.selected ? Theme.navigation_item_foreground_selected : Theme.navigation_item_foreground;
+        opacity: root.entry.enabled ? 1 : 0.45;
+    }
+    if root.interactive && !root.compact: Text {
+        x: root.inset + UiConstants.navigation_icon_slot_width + 8px;
+        width: max(0px, parent.width - self.x - root.arrow_width - 4px); height: 100%;
+        text: root.entry.text == "" ? root.entry.id : root.entry.text;
+        color: root.selected ? Theme.navigation_item_foreground_selected : Theme.navigation_item_foreground;
+        font-size: Typography.body; font-weight: root.selected ? Typography.semibold : Typography.regular;
+        vertical-alignment: center; overflow: elide;
+        opacity: root.entry.enabled ? 1 : 0.45;
+    }
+    if root.selected && root.interactive: Rectangle {
+        x: 0; y: (parent.height - 16px) / 2; width: 3px; height: 16px;
+        border-radius: 1.5px; background: Theme.accent;
+    }
+    label_region := Rectangle {
+        x: 0px;
+        width: max(0px, parent.width - root.arrow_width); height: 100%;
+        border-radius: UiConstants.control_radius;
+        border-width: label_focus.has-focus && root.active ? 2px : 0px; border-color: Theme.focus_ring;
+        visible: root.interactive && root.presented;
+        accessible-role: button;
+        accessible-label: root.context_label;
+        accessible-enabled: root.active;
+        accessible-checkable: root.entry.kind == NavigationEntryKind.destination || root.entry.kind == NavigationEntryKind.destination_group;
+        accessible-checked: root.selected;
+        accessible-expandable: root.entry.kind == NavigationEntryKind.group && root.entry.has_children;
+        accessible-expanded: root.entry.expanded;
+        accessible-action-default => { root.activate-label(); }
+        label_touch := TouchArea {
+            enabled: root.active; mouse-cursor: pointer;
+            clicked => { root.activate-label(); }
+        }
+        label_focus := FocusScope {
+            enabled: root.active; focus-on-click: false;
+            focus-gained => { root.focus_memory = true; }
+            focus-lost => { if (root.presented) { root.focus_memory = false; } }
+            key-pressed(event) => {
+                if (root.active && (event.text == Key.Return || event.text == Key.Space)) { root.activate-label(); return accept; }
+                return reject;
+            }
+        }
+    }
+    arrow_region := Rectangle {
+        x: parent.width - root.arrow_width; width: root.arrow_width; height: 100%;
+        border-radius: UiConstants.control_radius;
+        border-width: chevron_focus.has-focus && root.active ? 2px : 0px; border-color: Theme.focus_ring;
+        visible: root.entry.has_children && root.presented;
+        accessible-role: button;
+        accessible-label: (root.entry.expanded ? "Collapse " : "Expand ") + root.context_label;
+        accessible-enabled: root.active && root.entry.has_children;
+        accessible-expandable: root.entry.has_children;
+        accessible-expanded: root.entry.expanded;
+        accessible-action-default => { root.activate-arrow(); }
+        if root.entry.has_children: Path {
+            x: (parent.width - self.width) / 2; y: (parent.height - self.height) / 2;
+            width: 16px; height: 16px; viewbox-width: 16; viewbox-height: 16;
+            // Explicit geometry also works in the software renderer, where
+            // transformed SVG rotation did not change the observed arrow.
+            commands: root.entry.expanded ? "M 4 6 L 8 10 L 12 6" : "M 6 4 L 10 8 L 6 12";
+            fill: transparent; stroke: Theme.navigation_item_foreground; stroke-width: 1px;
+            stroke-line-cap: round; stroke-line-join: round;
+            opacity: root.entry.enabled ? 1 : 0.45;
+        }
+        arrow_touch := TouchArea {
+            enabled: root.active && root.entry.has_children; mouse-cursor: pointer;
+            clicked => { root.activate-arrow(); }
+        }
+        chevron_focus := FocusScope {
+            enabled: root.active && root.entry.has_children; focus-on-click: false;
+            focus-gained => { root.focus_memory = true; }
+            focus-lost => { if (root.presented) { root.focus_memory = false; } }
+            key-pressed(event) => {
+                if (root.active && root.entry.has_children && (event.text == Key.Return || event.text == Key.Space)) { root.activate-arrow(); return accept; }
+                return reject;
+            }
+        }
+    }
+    // Builtin Tooltip escapes ScrollView clipping without taking row focus.
+    Tooltip { TooltipHost { text: root.context_label; shown: true; } }
+    function activate-label() {
+        if (root.active) {
+            label_focus.focus();
+            if (root.entry.kind == NavigationEntryKind.group) { if (root.entry.has_children) { root.expand(); } }
+            else { root.invoked(); }
+        }
+    }
+    function activate-arrow() {
+        if (root.active && root.entry.has_children) { chevron_focus.focus(); root.expand(); }
+    }
+}

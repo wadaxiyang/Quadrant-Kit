@@ -27,8 +27,8 @@ The root `quadrant-kit` package is only a build-time source locator. It owns no 
 - [Candidate changes](CHANGELOG.md)
 - [Checks, baseline review and platform evidence](docs/VALIDATION.md)
 
-The current local facade exports 35 names, including the Phase 1 navigation types,
-Back button, pane toggle and content surface. SidebarItem and the existing Gallery
+The current local facade exports 36 names, including NavigationView and the navigation
+types, Back button, pane toggle and content surface. SidebarItem and the existing Gallery
 shell remain until later phases. These additions are unpublished; the retained
 extraction source still has 28 names. Branding, task models, Inbox, task row
 composition, quadrant colors, product-specific timer/layout tokens, and product
@@ -49,7 +49,7 @@ cargo package --locked -p quadrant-kit
 python scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.0.crate
 ```
 
-Python 3.11 or newer is required for developer checks, not for ordinary Slint consumers. The boundary command checks the 35-name API baseline, defaults, layer/import graph, assets, provenance, Cargo manifests and host-filtered resolved dependencies. CI never rewrites the baseline. See the validation record for the published source's actual CI/remote-consumer results and remaining native/a11y limits.
+Python 3.11 or newer is required for developer checks, not for ordinary Slint consumers. The boundary command checks the 36-name API baseline, defaults, layer/import graph, assets, provenance, Cargo manifests and host-filtered resolved dependencies. CI never rewrites the baseline. See the validation record for the published source's actual CI/remote-consumer results and remaining native/a11y limits.
 
 For a first exercise follow [the Badge walkthrough](docs/GALLERY.md#first-exercise-token-to-badge-to-gallery).
 It needs only this checkout. The candidate retained at

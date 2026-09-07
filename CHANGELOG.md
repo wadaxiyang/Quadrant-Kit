@@ -1,5 +1,14 @@
 # Changelog
 
+## Navigation rebuild Phase 2 — local, unpublished
+
+- Add controlled NavigationView with three-level primary/footer menus, split
+  destination-group actions, optional regions and host-owned content.
+- Reject malformed/oversized models safely; support up to 256 entries per model
+  with source-only validation on the pinned Slint compiler.
+- Add adversarial Gallery fixtures and observable request/search counters.
+- Review the additive 36-name API; preserve the old main shell and SidebarItem.
+
 ## Navigation rebuild Phase 1 — local, unpublished
 
 - Add NavigationPaneMode, NavigationContentSurfaceMode, NavigationEntryKind and

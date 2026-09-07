@@ -1250,6 +1250,196 @@
         }
       }
     },
+    "NavigationView": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "items": {
+            "kind": "property",
+            "direction": "in",
+            "type": "[ NavigationEntry ]"
+          },
+          "footer-items": {
+            "kind": "property",
+            "direction": "in",
+            "type": "[ NavigationEntry ]"
+          },
+          "selected-id": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "pane-mode": {
+            "kind": "property",
+            "direction": "in",
+            "type": "NavigationPaneMode"
+          },
+          "pane-width": {
+            "kind": "property",
+            "direction": "in",
+            "type": "length"
+          },
+          "pane-title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "show-back-button": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "back-enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "show-pane-toggle": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "show-search": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "search-text": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "string"
+          },
+          "search-placeholder": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "show-top-separator": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "show-footer-separator": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "content-surface-mode": {
+            "kind": "property",
+            "direction": "in",
+            "type": "NavigationContentSurfaceMode"
+          },
+          "item-invoked": {
+            "kind": "callback",
+            "arguments": [
+              "string"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "expansion-requested": {
+            "kind": "callback",
+            "arguments": [
+              "string",
+              "bool"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "back-requested": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "pane-toggle-requested": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "search-changed": {
+            "kind": "callback",
+            "arguments": [
+              "string"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "search-submitted": {
+            "kind": "callback",
+            "arguments": [
+              "string"
+            ],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "items": {
+          "binding": ":",
+          "expression": "[ ]"
+        },
+        "footer-items": {
+          "binding": ":",
+          "expression": "[ ]"
+        },
+        "selected-id": {
+          "binding": ":",
+          "expression": "\"\""
+        },
+        "pane-mode": {
+          "binding": ":",
+          "expression": "NavigationPaneMode . expanded"
+        },
+        "pane-width": {
+          "binding": ":",
+          "expression": "UiConstants . navigation-pane-default-width"
+        },
+        "pane-title": {
+          "binding": ":",
+          "expression": "\"\""
+        },
+        "show-back-button": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "back-enabled": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "show-pane-toggle": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "show-search": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "search-text": {
+          "binding": ":",
+          "expression": "\"\""
+        },
+        "search-placeholder": {
+          "binding": ":",
+          "expression": "\"Search\""
+        },
+        "show-top-separator": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "show-footer-separator": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "content-surface-mode": {
+          "binding": ":",
+          "expression": "NavigationContentSurfaceMode . fluent"
+        }
+      }
+    },
     "PageHeader": {
       "signature": {
         "kind": "component",

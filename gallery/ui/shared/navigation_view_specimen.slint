@@ -1,0 +1,106 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { Switch, ComboBox } from "std-widgets.slint";
+import { NavigationView, NavigationEntry, NavigationPaneMode, NavigationContentSurfaceMode, FluentIcons, SegmentButton, Theme, Typography } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+
+// Gallery-owned fixture construction only. Kit consumers need no callback here.
+export global GalleryNavigationExamples {
+    in-out property <int> scenario_index: 0;
+    in-out property <bool> compact: false;
+    pure callback entries(int, bool, bool, bool, bool, image, image) -> [NavigationEntry];
+}
+
+export component NavigationViewSpecimen inherits Specimen {
+    private property <int> scenario_index <=> GalleryNavigationExamples.scenario_index;
+    private property <bool> accept_requests: true;
+    private property <bool> compact <=> GalleryNavigationExamples.compact;
+    private property <bool> controls_open: true;
+    private property <bool> inputs_open: true;
+    private property <bool> settings_open: true;
+    private property <bool> back: true;
+    private property <bool> back_enabled: true;
+    private property <bool> toggle: true;
+    private property <bool> search: true;
+    private property <bool> footer: true;
+    private property <bool> title: true;
+    private property <string> selection: "button";
+    private property <int> invocations: 0;
+    private property <int> expansions: 0;
+    private property <int> backs: 0;
+    private property <int> toggles: 0;
+    private property <int> edits: 0;
+    private property <int> submits: 0;
+    private property <string> last: "None";
+    specimen_title: "NavigationView · controlled hierarchy";
+    specimen_description: "The host accepts or declines requests. Invalid fixtures reject both menus; content and optional controls remain usable.";
+    keyboard_info: "Tab / Shift+Tab; Enter / Space. Destination-group labels navigate; their separate chevrons expand. Hidden descendants leave traversal.";
+    accessibility_info: "Named buttons, selection and expansion state. Disabled parents do not disable their children. Full screen-reader behavior remains unverified.";
+    HorizontalLayout {
+        ComboBox {
+            model: ["Three levels", "One level", "Two levels", "Missing parent", "Negative depth", "Depth > 2", "Depth jump", "Duplicate ID", "Children flag", "Leaf children", "Non-preorder", "Cross-model parent", "Parent cycle", "Empty ID", "Header children", "257 entries", "Empty models"];
+            current-index <=> root.scenario_index;
+        }
+        Switch { text: "Accept requests"; checked <=> root.accept_requests; }
+        Switch { text: "Compact view"; checked <=> root.compact; }
+    }
+    GridLayout {
+        spacing: 4px;
+        Row {
+            Switch { text: "Back"; checked <=> root.back; }
+            Switch { text: "Back enabled"; checked <=> root.back_enabled; }
+            Switch { text: "Toggle"; checked <=> root.toggle; }
+        }
+        Row {
+            Switch { text: "Search"; checked <=> root.search; }
+            Switch { text: "Footer"; checked <=> root.footer; }
+            Switch { text: "Title"; checked <=> root.title; }
+        }
+    }
+    HorizontalLayout {
+        SegmentButton { text: "Fluent view"; selected: nav.content_surface_mode == NavigationContentSurfaceMode.fluent; clicked => { nav.content_surface_mode = NavigationContentSurfaceMode.fluent; } }
+        SegmentButton { text: "Flat view"; selected: nav.content_surface_mode == NavigationContentSurfaceMode.flat; clicked => { nav.content_surface_mode = NavigationContentSurfaceMode.flat; } }
+        SegmentButton { text: "Transparent view"; selected: nav.content_surface_mode == NavigationContentSurfaceMode.transparent; clicked => { nav.content_surface_mode = NavigationContentSurfaceMode.transparent; } }
+        SegmentButton { text: "Collapse Controls"; clicked => { root.controls_open = false; } }
+        SegmentButton { text: "Select header"; clicked => { root.selection = "heading"; } }
+    }
+    Text {
+        text: "Case " + root.scenario_index + " · Invoke " + root.invocations + " · Expand " + root.expansions + " · Back " + root.backs + " · Toggle " + root.toggles + " · Edit " + root.edits + " · Submit " + root.submits + " · Selected " + root.selection + " · Last " + root.last;
+        color: Theme.text_primary; font-size: Typography.caption; wrap: word-wrap;
+    }
+    nav := NavigationView {
+        height: 360px;
+        pane_width: 304px; pane_title: root.title ? "Component library" : "";
+        pane_mode: root.compact ? NavigationPaneMode.compact : NavigationPaneMode.expanded;
+        items: GalleryNavigationExamples.entries(root.scenario_index, false, root.controls_open, root.inputs_open, root.settings_open, FluentIcons.settings_regular, FluentIcons.settings_filled);
+        footer_items: root.footer ? GalleryNavigationExamples.entries(root.scenario_index, true, root.controls_open, root.inputs_open, root.settings_open, FluentIcons.about_regular, FluentIcons.about_filled) : [];
+        selected_id: root.selection;
+        show_back_button: root.back; back_enabled: root.back_enabled;
+        show_pane_toggle: root.toggle; show_search: root.search;
+        show_top_separator: true;
+        item_invoked(id) => { root.invocations += 1; root.last = id; if (root.accept_requests) { root.selection = id; } }
+        expansion_requested(id, expanded) => {
+            root.expansions += 1; root.last = id;
+            if (root.accept_requests) {
+                if (id == "controls") { root.controls_open = expanded; }
+                if (id == "inputs") { root.inputs_open = expanded; }
+                if (id == "settings") { root.settings_open = expanded; }
+            }
+        }
+        back_requested => { root.backs += 1; }
+        pane_toggle_requested => { root.toggles += 1; if (root.accept_requests) { root.compact = !root.compact; } }
+        search_changed(value) => { root.edits += 1; root.last = value; }
+        search_submitted(value) => { root.submits += 1; root.last = value; }
+        Rectangle {
+            background: transparent;
+            VerticalLayout {
+                padding: 20px; alignment: start; spacing: 12px;
+                Text { text: "Host-owned page"; color: Theme.text_primary; font-size: Typography.body; }
+                Text { text: "Current selection: " + root.selection; color: Theme.text_secondary; wrap: word-wrap; }
+                Text { text: "This content remains mounted when the model, selection or pane mode changes."; color: Theme.text_secondary; wrap: word-wrap; }
+                SegmentButton { text: "Host sets search"; clicked => { nav.search_text = "assigned"; } }
+            }
+        }
+    }
+}

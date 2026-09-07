@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { Switch } from "std-widgets.slint";
-import { EmptyState, FluentIcons, IconButton, MetricCard, PageHeader, SidebarItem, Theme, Typography, UiConstants, WindowControlButton } from "@quadrant-kit";
+import { EmptyState, FluentIcons, IconButton, MetricCard, NavigationView, PageHeader, SidebarItem, Theme, Typography, UiConstants, WindowControlButton } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
 import { PropertyPanel } from "../shared/property_panel.slint";
 import { CodeSample } from "../shared/code_sample.slint";
 import { PreviewContainer } from "../shared/preview_container.slint";
 import { NavigationFoundationSpecimen } from "../shared/navigation_foundation_specimen.slint";
+import { NavigationViewSpecimen } from "../shared/navigation_view_specimen.slint";
 
 export component NavigationPage inherits GalleryPage {
     in property <int> preview_mode: 1;
@@ -21,6 +22,15 @@ export component NavigationPage inherits GalleryPage {
     page_title: "Navigation & shell";
     page_description: "Reusable navigation, page framing, window controls, empty states, and generic application framing.";
 
+    NavigationViewSpecimen { }
+    Specimen {
+        specimen_title: "NavigationView · defaults";
+        specimen_description: "No navigation inputs assigned: empty models, expanded 260 px pane, only Toggle visible, Fluent content.";
+        NavigationView {
+            height: 120px;
+            Text { text: "Default host content"; color: Theme.text_primary; horizontal-alignment: center; vertical-alignment: center; }
+        }
+    }
     NavigationFoundationSpecimen { preview_mode: root.preview_mode; }
 
     Specimen {

@@ -53,9 +53,15 @@ def reusable(record, scene, path):
         return False
 
 
+def navigation_cells():
+    """Phase 2 render coverage; not the later DPI or keyboard acceptance matrix."""
+    return [(1040, 800, theme, 100, case, compact)
+            for theme in ['light', 'dark'] for compact in [False, True] for case in range(17)]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--mode', choices=['Smoke', 'Matrix', 'All'], default='Smoke')
+    parser.add_argument('--mode', choices=['Smoke', 'Matrix', 'All', 'Navigation'], default='Smoke')
     parser.add_argument('--page', type=int, choices=range(8), default=0)
     parser.add_argument('--preview', type=int, choices=range(3), default=1)
     parser.add_argument('--output-directory', type=Path, default=ROOT/'target/visual-baselines')
@@ -63,6 +69,8 @@ def main():
     # Snapshot-only selection; no change to ordinary Gallery runtime defaults.
     parser.add_argument('--backend', choices=['winit-software', 'winit-skia', 'winit-femtovg'], default='winit-software')
     args = parser.parse_args()
+    if args.mode == 'Navigation' and args.page != 7:
+        parser.error('Navigation capture requires --page 7')
     before = source_identity(ROOT)
     subprocess.run(['cargo', 'build', '--locked', '-p', 'quadrant-kit-gallery'], cwd=ROOT, check=True)
     if before != source_identity(ROOT):
@@ -83,9 +91,13 @@ def main():
     cells = [(1040,800,'light',100)] if args.mode in ['Smoke','All'] else []
     if args.mode in ['Matrix','All']:
         cells += [(w,h,t,s) for w,h in [(760,520),(900,600),(1100,720),(1440,900)] for t in ['light','dark'] for s in [100,125,150,200,225]]
-    for width,height,theme,scale in cells:
-        scene = {**common, 'logical_width':width, 'logical_height':height, 'theme':theme, 'scale_percent':scale}
+    cells = navigation_cells() if args.mode == 'Navigation' else [(*cell, 0, False) for cell in cells]
+    for width,height,theme,scale,case,compact in cells:
+        scene = {**common, 'logical_width':width, 'logical_height':height, 'theme':theme, 'scale_percent':scale,
+                 'navigation_case':case, 'navigation_compact':compact}
         key = f'page-{args.page:02}_preview-{args.preview}_{theme}_{width}x{height}_scale-{scale}'
+        if args.mode == 'Navigation':
+            key += f'_nav-{case:02}_compact-{int(compact)}'
         png = output/(key+'.png')
         manifest = output/(key+'.json')
         old = None
@@ -102,6 +114,7 @@ def main():
         env.update(QUADRANT_GALLERY_WIDTH=str(width),QUADRANT_GALLERY_HEIGHT=str(height),
                    QUADRANT_GALLERY_THEME=theme,QUADRANT_GALLERY_PAGE=str(args.page),
                    QUADRANT_GALLERY_PREVIEW=str(args.preview),QUADRANT_GALLERY_SNAPSHOT=str(fresh),
+                   QUADRANT_GALLERY_NAV_CASE=str(case),QUADRANT_GALLERY_NAV_COMPACT=str(int(compact)),
                    SLINT_BACKEND=args.backend,SLINT_SCALE_FACTOR=str(scale/100))
         # Timeout kills only this subprocess; no global process-name cleanup.
         subprocess.run([str(binary)], cwd=output, env=env, check=True, timeout=30)

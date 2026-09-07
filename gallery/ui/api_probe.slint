@@ -7,7 +7,7 @@ import {
     WindowControlButton, SectionHeader, PageHeader, EmptyState, MetricCard,
     ToastHost, ToastKind, ModalManager, ModalKind,
     NavigationPaneMode, NavigationContentSurfaceMode, NavigationEntryKind, NavigationEntry,
-    NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface,
+    NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, NavigationView,
 } from "@quadrant-kit";
 
 // Compiled through gallery.slint; normal Gallery startup does not instantiate it.
@@ -39,6 +39,10 @@ export component KitApiProbe inherits Window {
         SettingRow { title: "Preference"; description: "Sample"; }
         SidebarItem { text: "Preferences"; icon: FluentIcons.settings_regular; clicked => { root.activated = true; } }
         NavigationBackButton { accessible_name: "Go back"; enabled: root.activated; clicked => { root.activated = false; } }
+        NavigationView {
+            height: 100px; items: root.navigation_entries; selected_id: "preferences";
+            Text { text: "Host content"; }
+        }
         NavigationPaneToggleButton {
             pane_mode: root.pane_mode;
             clicked => { root.pane_mode = root.pane_mode == NavigationPaneMode.expanded ? NavigationPaneMode.compact : NavigationPaneMode.expanded; }

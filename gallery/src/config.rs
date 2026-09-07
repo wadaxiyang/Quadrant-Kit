@@ -16,6 +16,8 @@ pub struct Config {
     pub theme: ThemeChoice,
     pub page: i32,
     pub preview: i32,
+    pub navigation_case: i32,
+    pub navigation_compact: bool,
     pub snapshot: Option<PathBuf>,
 }
 
@@ -50,6 +52,9 @@ impl Config {
         };
         let page = index(read("QUADRANT_GALLERY_PAGE")?, "PAGE", 0, 7)?;
         let preview = index(read("QUADRANT_GALLERY_PREVIEW")?, "PREVIEW", 1, 2)?;
+        let navigation_case = index(read("QUADRANT_GALLERY_NAV_CASE")?, "NAV_CASE", 0, 16)?;
+        let navigation_compact =
+            index(read("QUADRANT_GALLERY_NAV_COMPACT")?, "NAV_COMPACT", 0, 1)? == 1;
         let snapshot = read("QUADRANT_GALLERY_SNAPSHOT")?
             .map(|value| {
                 if value.trim().is_empty() {
@@ -64,6 +69,8 @@ impl Config {
             theme,
             page,
             preview,
+            navigation_case,
+            navigation_compact,
             snapshot,
         })
     }
@@ -108,6 +115,8 @@ mod tests {
                 theme: ThemeChoice::Light,
                 page: 0,
                 preview: 1,
+                navigation_case: 0,
+                navigation_compact: false,
                 snapshot: None
             }
         );
@@ -130,6 +139,15 @@ mod tests {
             assert!(parse(&[("QUADRANT_GALLERY_PAGE", value)]).is_err());
         }
         assert!(parse(&[("QUADRANT_GALLERY_PREVIEW", "3")]).is_err());
+        assert!(parse(&[("QUADRANT_GALLERY_NAV_CASE", "17")]).is_err());
+        assert!(parse(&[("QUADRANT_GALLERY_NAV_COMPACT", "2")]).is_err());
+        let navigation = parse(&[
+            ("QUADRANT_GALLERY_NAV_CASE", "16"),
+            ("QUADRANT_GALLERY_NAV_COMPACT", "1"),
+        ])
+        .unwrap();
+        assert_eq!(navigation.navigation_case, 16);
+        assert!(navigation.navigation_compact);
     }
     #[test]
     fn rejects_invalid_dimensions_and_partial_pair() {

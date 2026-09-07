@@ -9,18 +9,26 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from capture_gallery_baseline import png_info, reusable, source_identity
+from capture_gallery_baseline import navigation_cells, png_info, reusable, source_identity
 
 
 class CaptureReuseTests(unittest.TestCase):
+    def test_navigation_matrix_covers_each_model_in_both_presentations_and_themes(self):
+        cells = navigation_cells()
+        self.assertEqual(len(cells), 68)
+        self.assertEqual(len(set(cells)), 68)
+        for theme in ['light', 'dark']:
+            for compact in [False, True]:
+                self.assertEqual({case for _, _, t, _, case, c in cells if t == theme and c == compact}, set(range(17)))
+
     def test_reuse_rejects_other_page_preview_theme_source_and_environment(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)/'sample.png'
             path.write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jw1kAAAAASUVORK5CYII='))
-            scene = dict(page=4, preview=1, theme='light', content_sha256='original', renderer='software', font_policy='system', scale_percent=100)
+            scene = dict(page=4, preview=1, theme='light', content_sha256='original', renderer='software', font_policy='system', scale_percent=100, navigation_case=0, navigation_compact=False)
             record = dict(scene=scene, image=png_info(path))
             self.assertTrue(reusable(record, scene, path))
-            for key, value in [('page',5),('preview',2),('theme','dark'),('content_sha256','edited'),('renderer','skia'),('font_policy','changed'),('scale_percent',200)]:
+            for key, value in [('page',5),('preview',2),('theme','dark'),('content_sha256','edited'),('renderer','skia'),('font_policy','changed'),('scale_percent',200),('navigation_case',7),('navigation_compact',True)]:
                 changed = copy.deepcopy(scene)
                 changed[key] = value
                 self.assertFalse(reusable(record, changed, path), key)

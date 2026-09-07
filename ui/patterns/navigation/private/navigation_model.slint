@@ -1,0 +1,214 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { NavigationEntry, NavigationEntryKind } from "../navigation_types.slint";
+
+// Private source-only algorithms. Slint forbids recursive calls: eight explicit
+// subdivision stages support up to 256 entries per model. The view rejects larger
+// models before calling these functions. No host runtime or mutation is needed.
+export global NavigationModel {
+    public pure function valid(model: [NavigationEntry], other: [NavigationEntry]) -> bool {
+        if (model.length > 256 || other.length > 256) { return false; }
+        return valid-range(model, other, 0, model.length) && valid-range(other, model, 0, other.length);
+    }
+    public pure function count-id-0(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        return 0;
+    }
+    public pure function count-id-1(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-0(model, id, begin, middle) + count-id-0(model, id, middle, end);
+    }
+    public pure function count-id-2(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-1(model, id, begin, middle) + count-id-1(model, id, middle, end);
+    }
+    public pure function count-id-3(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-2(model, id, begin, middle) + count-id-2(model, id, middle, end);
+    }
+    public pure function count-id-4(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-3(model, id, begin, middle) + count-id-3(model, id, middle, end);
+    }
+    public pure function count-id-5(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-4(model, id, begin, middle) + count-id-4(model, id, middle, end);
+    }
+    public pure function count-id-6(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-5(model, id, begin, middle) + count-id-5(model, id, middle, end);
+    }
+    public pure function count-id-7(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-6(model, id, begin, middle) + count-id-6(model, id, middle, end);
+    }
+    public pure function count-id(model: [NavigationEntry], id: string, begin: int, end: int) -> int {
+        if (begin >= end) { return 0; }
+        if (end - begin == 1) { return model[begin].id == id ? 1 : 0; }
+        let middle = floor((begin + end) / 2);
+        return count-id-7(model, id, begin, middle) + count-id-7(model, id, middle, end);
+    }
+    public pure function parent-0(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        return -1;
+    }
+    public pure function parent-1(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-0(model, depth, middle, end); return right >= 0 ? right : parent-0(model, depth, begin, middle);
+    }
+    public pure function parent-2(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-1(model, depth, middle, end); return right >= 0 ? right : parent-1(model, depth, begin, middle);
+    }
+    public pure function parent-3(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-2(model, depth, middle, end); return right >= 0 ? right : parent-2(model, depth, begin, middle);
+    }
+    public pure function parent-4(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-3(model, depth, middle, end); return right >= 0 ? right : parent-3(model, depth, begin, middle);
+    }
+    public pure function parent-5(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-4(model, depth, middle, end); return right >= 0 ? right : parent-4(model, depth, begin, middle);
+    }
+    public pure function parent-6(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-5(model, depth, middle, end); return right >= 0 ? right : parent-5(model, depth, begin, middle);
+    }
+    public pure function parent-7(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-6(model, depth, middle, end); return right >= 0 ? right : parent-6(model, depth, begin, middle);
+    }
+    public pure function parent(model: [NavigationEntry], depth: int, begin: int, end: int) -> int {
+        if (begin >= end) { return -1; }
+        if (end - begin == 1) { return model[begin].depth < depth ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let right = parent-7(model, depth, middle, end); return right >= 0 ? right : parent-7(model, depth, begin, middle);
+    }
+    public pure function valid-range-0(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        return true;
+    }
+    public pure function valid-range-1(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-0(model, other, begin, middle) && valid-range-0(model, other, middle, end);
+    }
+    public pure function valid-range-2(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-1(model, other, begin, middle) && valid-range-1(model, other, middle, end);
+    }
+    public pure function valid-range-3(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-2(model, other, begin, middle) && valid-range-2(model, other, middle, end);
+    }
+    public pure function valid-range-4(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-3(model, other, begin, middle) && valid-range-3(model, other, middle, end);
+    }
+    public pure function valid-range-5(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-4(model, other, begin, middle) && valid-range-4(model, other, middle, end);
+    }
+    public pure function valid-range-6(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-5(model, other, begin, middle) && valid-range-5(model, other, middle, end);
+    }
+    public pure function valid-range-7(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-6(model, other, begin, middle) && valid-range-6(model, other, middle, end);
+    }
+    public pure function valid-range(model: [NavigationEntry], other: [NavigationEntry], begin: int, end: int) -> bool {
+        if (begin >= end) { return true; }
+        if (end - begin == 1) { return entry-valid(model, other, begin); }
+        let middle = floor((begin + end) / 2);
+        return valid-range-7(model, other, begin, middle) && valid-range-7(model, other, middle, end);
+    }
+    public pure function branch(entry: NavigationEntry) -> bool {
+        return entry.kind == NavigationEntryKind.group || entry.kind == NavigationEntryKind.destination_group;
+    }
+    public pure function entry-valid(model: [NavigationEntry], other: [NavigationEntry], index: int) -> bool {
+        if (model[index].id == "" || model[index].depth < 0 || model[index].depth > 2) { return false; }
+        if (count-id(model, model[index].id, 0, model.length) + count-id(other, model[index].id, 0, other.length) != 1) { return false; }
+        let p = parent(model, model[index].depth, 0, index);
+        if (model[index].depth == 0) {
+            if (model[index].parent_id != "") { return false; }
+        } else {
+            if (p < 0 || model[p].depth != model[index].depth - 1 || model[p].id != model[index].parent_id || !branch(model[p])) { return false; }
+        }
+        let children = index + 1 < model.length && model[index + 1].depth > model[index].depth;
+        if (model[index].has_children != children || (children && (!branch(model[index]) || model[index].depth == 2))) { return false; }
+        return true;
+    }
+    public pure function shown(model: [NavigationEntry], index: int) -> bool {
+        if (model[index].depth == 0) { return true; }
+        let p = parent(model, model[index].depth, 0, index);
+        if (p < 0 || !model[p].expanded) { return false; }
+        if (model[index].depth == 1) { return true; }
+        let grand = parent(model, 1, 0, p);
+        return grand >= 0 && model[grand].expanded;
+    }
+    public pure function label(model: [NavigationEntry], index: int) -> string {
+        let entry = model[index];
+        let text = entry.text == "" ? entry.id : entry.text;
+        if (entry.depth == 0) { return text; }
+        let p = parent(model, entry.depth, 0, index);
+        let parent-text = model[p].text == "" ? model[p].id : model[p].text;
+        if (entry.depth == 1) { return parent-text + " / " + text; }
+        let grand = parent(model, 1, 0, p);
+        return (model[grand].text == "" ? model[grand].id : model[grand].text) + " / " + parent-text + " / " + text;
+    }
+    public pure function visible-parent(model: [NavigationEntry], index: int) -> string {
+        let p = parent(model, model[index].depth, 0, index);
+        if (p < 0) { return ""; }
+        if (shown(model, p) && model[p].enabled) { return model[p].id; }
+        let grand = parent(model, model[p].depth, 0, p);
+        return grand >= 0 && model[grand].enabled ? model[grand].id : "";
+    }
+}

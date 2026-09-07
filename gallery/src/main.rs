@@ -17,10 +17,30 @@ use slint::{ComponentHandle, LogicalSize, Rgba8Pixel, SharedPixelBuffer, Weak};
 slint::include_modules!();
 
 mod config;
+mod navigation_samples;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = config::Config::from_env()?;
     let gallery = DesignGalleryWindow::new()?;
+    gallery.global::<GalleryNavigationExamples>().on_entries(
+        |case, footer, controls, inputs, settings, icon, selected_icon| {
+            slint::ModelRc::new(slint::VecModel::from(navigation_samples::entries(
+                case,
+                footer,
+                controls,
+                inputs,
+                settings,
+                &icon,
+                &selected_icon,
+            )))
+        },
+    );
+    gallery
+        .global::<GalleryNavigationExamples>()
+        .set_scenario_index(config.navigation_case);
+    gallery
+        .global::<GalleryNavigationExamples>()
+        .set_compact(config.navigation_compact);
     let system_theme = GallerySystemTheme::new()?;
     gallery.set_system_dark(system_theme.get_system_dark());
     let gallery_weak = gallery.as_weak();

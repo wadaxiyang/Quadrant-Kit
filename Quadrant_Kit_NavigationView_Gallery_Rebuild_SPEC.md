@@ -1,10 +1,10 @@
 # Quadrant-Kit NavigationView & Gallery Rebuild SPEC
 
-> **Status:** Implementation specification / architecture baseline  
-> **Target repository:** `wadaxiyang/Quadrant-Kit`  
-> **Scope:** Quadrant-Kit only  
+> **Status:** Implementation specification / architecture baseline
+> **Target repository:** `wadaxiyang/Quadrant-Kit`
+> **Scope:** Quadrant-Kit only
 > **Out of scope:** Quadrant-Tasks migration, product routing, generic history engine, page lifecycle/cache, publication
-> **Primary visual reference:** WPF UI Gallery / WPF UI `NavigationView`  
+> **Primary visual reference:** WPF UI Gallery / WPF UI `NavigationView`
 > **Implementation strategy:** staged, continuously buildable, reviewable after every phase
 
 > **Revision:** 2026-09-07 — executable phase sequencing after Phase 0 review.
@@ -412,6 +412,12 @@ Disabled interactive entries emit no invocation or expansion callbacks through
 pointer, keyboard or accessibility actions. Disabling a parent does not rewrite
 its descendants' own enabled state. Hosts that want an entire disabled subtree
 must mark its entries disabled. Hidden/invalid entries are not focusable.
+
+Phase 2 compiler constraint: Slint 1.17.1 rejects recursive function calls.
+The source-only implementation supports up to 256 entries per model using eight
+explicit subdivision stages. Larger models reject both menus safely; this is a
+model-size bound, not an increase in the three-level depth limit. No Rust runtime
+is required by Kit consumers.
 
 ## 7.3 Invalid hierarchy behavior
 

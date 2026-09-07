@@ -6,14 +6,14 @@ The Gallery is a development, verification, and learning application with no Pro
 
 | Page | Content |
 |---:|---|
-| 0 | Overview: 35-name local catalog and public import example |
+| 0 | Overview: 36-name local catalog and public import example |
 | 1 | Tokens: generic theme, spacing, elevation, motion |
 | 2 | Typography: generic text roles and content boundaries |
 | 3 | Icons: 32 generic SVGs and action-button states |
 | 4 | Controls: buttons, segments, input wrappers, settings, badges |
 | 5 | Surfaces: decorative/interactive cards and variants |
 | 6 | Feedback: Toast and single confirmation Modal |
-| 7 | Navigation: standalone Back/pane toggle/content surface, legacy sidebar, page framing, metrics, empty state, window controls |
+| 7 | Navigation: controlled NavigationView, standalone Back/pane toggle/content surface, legacy sidebar, page framing, metrics, empty state, window controls |
 
 The old page 8 and Task patterns filter are removed. Inbox components and
 Product window probes belong to Tasks after cutover. Kit has no Inbox models,
@@ -23,13 +23,13 @@ Use Light / Dark / System, Compact / Medium / Wide, and the per-page live settin
 
 ## Observable action specimens
 
-The Navigation page starts with the Phase 1 foundation specimen. Show Back and
+After the NavigationView specimens, the Navigation page retains the Phase 1 foundation specimen. Show Back and
 Show Toggle conditionally mount the controls and their row. Enabled gates both
 buttons; Fluent/Flat/Transparent switches the actual public content surface, and
 Compact supplies the pane-toggle state. Back and Toggle counters expose callback
 delivery; toggling mode is Gallery-owned. The C/M/W utility constrains the sample
 surface to 280/480/720 px, bounded by available width. The main sidebar still uses
-SidebarItem; NavigationView assembly and tree rendering belong to Phase 2.
+SidebarItem; the Phase 2 NavigationView specimen precedes this foundation sample.
 
 To verify this specimen, click each enabled button, use Tab/Shift+Tab to focus it,
 then press Enter and Space; its counter must advance once per action. Disable
@@ -195,3 +195,35 @@ visually checked and had a different hash. Restored source bytes and the restore
 PNG matched their starting hashes. Logs, source/scenario manifests and PNGs are
 retained in ignored `target/phase7/learning/`; the experiment was not committed.
 This demonstrates the learning loop, not an additional IME/DPI/a11y test.
+
+## NavigationView controlled hierarchy
+
+Page 7 begins with the public NavigationView specimen. Choose three/one/two
+primary levels (with a separate two-level footer) or an adversarial model in the
+scenario selector. All malformed cases
+reject both primary and footer menus without removing the host content.
+Accept requests determines whether the host updates selection, expansion and
+pane mode; counters increment even when a valid request is declined.
+
+Back, Back enabled, Toggle, Search, Footer and Title switches exercise optional
+regions. Compact view hides text/indentation and preserves named icon actions.
+The separate Inputs/Settings chevrons expand; their labels invoke destinations.
+Collapse Controls can hide a focused child without stealing pointer focus first.
+Host sets search assigns text without an edit callback. Select header deliberately
+sets a non-navigable ID and must leave all selection indicators absent.
+
+[Phase 2 verification](NAVIGATION_REBUILD_PHASE2.md) records results and limitations.
+
+Phase 2 adds two validated startup selectors to the same Gallery executable:
+`QUADRANT_GALLERY_NAV_CASE=0..16` and `QUADRANT_GALLERY_NAV_COMPACT=0|1`.
+They initialize the existing specimen; defaults remain case 0 / expanded.
+The existing capture script records both values in scene identity, rejects reuse
+across different fixtures and resets inherited selectors for ordinary captures.
+
+```console
+python scripts/capture_gallery_baseline.py --mode Navigation --page 7 --output-directory target/navigation-phase2/captures
+```
+
+This generates 68 raw render scenes at 1040×800, 100%: 17 fixtures × two themes ×
+two pane modes. It complements native input checks; it is not the later full DPI
+matrix. The default-values specimen follows the controlled hierarchy specimen.

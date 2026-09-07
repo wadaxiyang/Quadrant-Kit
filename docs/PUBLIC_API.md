@@ -1,8 +1,8 @@
-# Public API — local navigation rebuild, Phase 1
+# Public API — local navigation rebuild, Phase 2
 
-`ui/kit.slint` is the only supported Slint entry. All 35 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The seven navigation additions are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
+`ui/kit.slint` is the only supported Slint entry. All 36 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The eight navigation additions are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
 
-Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 35 exported names, 234 properties, 15 callbacks, seven enum value lists and one ten-field struct. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
+Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 36 exported names, 249 properties, 21 callbacks, seven enum value lists and one ten-field struct. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
 
 ## Coverage and behavior
 
@@ -10,7 +10,7 @@ Signatures below are copied from the current sources, including declared default
 - Controls demonstrates buttons, segments, fields, text areas, badge, settings composition, tooltip usage, and existing preview states. Text editing remains delegated to std-widgets.
 - Surfaces demonstrates interactive/decorative SurfaceCard and state variants.
 - Feedback demonstrates all Toast/Modal kinds and text boundaries. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks, and screen-reader behavior remain unverified.
-- Navigation demonstrates NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, SidebarItem, PageHeader, MetricCard, EmptyState, and WindowControlButton. NavigationView and hierarchy rendering are Phase 2 work. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
+- Navigation demonstrates NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, NavigationView, SidebarItem, PageHeader, MetricCard, EmptyState, and WindowControlButton. NavigationView demonstrates controlled three-level primary/footer models. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
 - IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
 - Existing keyboard/focus/disabled semantics are retained in component code. Native keyboard/IME/screen-reader tests and every state/size combination have not all been executed. Screenshot rendering is not interaction or accessibility proof.
 
@@ -589,3 +589,50 @@ export component ModalManager inherits Rectangle {
     callback dismissed;
 }
 ```
+
+## NavigationView
+
+```slint
+export component NavigationView inherits Rectangle {
+    in property <[NavigationEntry]> items: [];
+    in property <[NavigationEntry]> footer_items: [];
+    in property <string> selected_id: "";
+    in property <NavigationPaneMode> pane_mode: NavigationPaneMode.expanded;
+    in property <length> pane_width: UiConstants.navigation_pane_default_width;
+    in property <string> pane_title: "";
+    in property <bool> show_back_button: false;
+    in property <bool> back_enabled: false;
+    in property <bool> show_pane_toggle: true;
+    in property <bool> show_search: false;
+    in-out property <string> search_text: "";
+    in property <string> search_placeholder: "Search";
+    in property <bool> show_top_separator: false;
+    in property <bool> show_footer_separator: true;
+    in property <NavigationContentSurfaceMode> content_surface_mode: NavigationContentSurfaceMode.fluent;
+    callback item_invoked(string);
+    callback expansion_requested(string, bool);
+    callback back_requested();
+    callback pane_toggle_requested();
+    callback search_changed(string);
+    callback search_submitted(string);
+
+}
+```
+
+Models are complete depth-first preorder trees with unique nonempty IDs across both
+regions, depth 0–2, matching parent links and child flags. Each model supports up
+to 256 entries. A malformed or oversized model rejects both menus, with no row
+selection or callbacks; optional controls and host content remain available.
+Selection and expansion never mutate locally. Group labels request expansion;
+destination-group labels invoke and their separate chevrons request expansion.
+Headers/separators cannot select. Empty selected icons fall back to regular icons;
+compact iconless entries use the generic About icon and ancestor-qualified labels.
+
+Optional controls are conditionally mounted. Compact mode hides pane title and
+replaces the search field with a labeled expansion-request button. Edits update
+search_text and emit search_changed; Return submits once, while host assignments
+do not echo. Primary and footer menus scroll independently; content scrolling is
+host-owned. Pane geometry clamps to available width.
+
+Private implementation: [navigation_view.slint](../ui/patterns/navigation/navigation_view.slint).
+Native coverage and limits: [Phase 2 report](NAVIGATION_REBUILD_PHASE2.md).
