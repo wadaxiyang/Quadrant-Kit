@@ -17,6 +17,7 @@ use slint::{ComponentHandle, LogicalSize, Rgba8Pixel, SharedPixelBuffer, Weak};
 slint::include_modules!();
 
 mod config;
+mod navigation;
 mod navigation_samples;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -59,7 +60,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         config::ThemeChoice::Dark => ThemeMode::Dark,
         config::ThemeChoice::System => ThemeMode::System,
     });
-    gallery.set_gallery_page(config.page);
+    navigation::install(&gallery, config.page)?;
     gallery.set_preview_mode(config.preview);
     // Explicit even when Light equals the default and changed does not run.
     gallery.invoke_apply_theme();

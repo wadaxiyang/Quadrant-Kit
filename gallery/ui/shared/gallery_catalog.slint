@@ -1,28 +1,22 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { NavigationEntry, NavigationEntryKind, FluentIcons } from "@quadrant-kit";
+import { NavigationEntry, FluentIcons } from "@quadrant-kit";
 
-// Flat host-owned mapping keeps snapshot page indices 0-7 stable through cutover.
-export global GalleryCatalog {
-    out property <[NavigationEntry]> items: [
-        { id: "overview", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Overview", icon: FluentIcons.about_regular, selected_icon: FluentIcons.about_filled, enabled: true, has_children: false, expanded: false },
-        { id: "tokens", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Tokens", icon: FluentIcons.theme_system, selected_icon: FluentIcons.theme_system, enabled: true, has_children: false, expanded: false },
-        { id: "typography", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Typography", icon: FluentIcons.edit, selected_icon: FluentIcons.edit, enabled: true, has_children: false, expanded: false },
-        { id: "icons", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Icons", icon: FluentIcons.info, selected_icon: FluentIcons.info, enabled: true, has_children: false, expanded: false },
-        { id: "controls", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Controls", icon: FluentIcons.add, selected_icon: FluentIcons.add, enabled: true, has_children: false, expanded: false },
-        { id: "surfaces", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Surfaces", icon: FluentIcons.menu, selected_icon: FluentIcons.menu, enabled: true, has_children: false, expanded: false },
-        { id: "feedback", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Feedback", icon: FluentIcons.status_info, selected_icon: FluentIcons.status_success, enabled: true, has_children: false, expanded: false },
-        { id: "navigation", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Navigation", icon: FluentIcons.menu, selected_icon: FluentIcons.menu, enabled: true, has_children: false, expanded: false },
-    ];
-    public pure function page-index(id: string) -> int {
-        return id == "overview" ? 0 :
-               id == "tokens" ? 1 :
-               id == "typography" ? 2 :
-               id == "icons" ? 3 :
-               id == "controls" ? 4 :
-               id == "surfaces" ? 5 :
-               id == "feedback" ? 6 :
-               id == "navigation" ? 7 : -1;
-    }
+// Application state is supplied by gallery/src/navigation.rs, never by Kit.
+export global GalleryNavigation {
+    in-out property <[NavigationEntry]> items;
+    in-out property <string> selected_id: "overview";
+    in-out property <int> page: 0;
+    in-out property <bool> can_go_back: false;
+    in-out property <string> query;
+    in-out property <string> search_status;
+    // Icons remain facade-supplied assets in the consumer's Slint compilation.
+    out property <[image]> icons: [FluentIcons.about_regular, FluentIcons.theme_system, FluentIcons.edit, FluentIcons.info, FluentIcons.add, FluentIcons.menu, FluentIcons.status_info, FluentIcons.menu];
+    out property <[image]> selected_icons: [FluentIcons.about_filled, FluentIcons.theme_system, FluentIcons.edit, FluentIcons.info, FluentIcons.add, FluentIcons.menu, FluentIcons.status_success, FluentIcons.menu];
+    callback navigate(string);
+    callback back_requested();
+    callback query_edited(string);
+    callback search_submitted(string);
+    callback expansion_requested(string, bool);
 }

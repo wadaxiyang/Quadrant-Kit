@@ -1,5 +1,16 @@
 # Changelog
 
+## Navigation rebuild Phase 4 — local, unpublished
+
+- Organize the eight implemented Gallery pages into a validated hierarchy while
+  retaining stable route IDs and snapshot page numbers.
+- Add Gallery-owned Back history, case-insensitive title/keyword search, flat
+  results, empty-result feedback and preserved normal-tree expansion.
+- Enable the main shell's Back/Search controls and route all selections through
+  one Gallery controller; keep the Kit public API and source-only architecture.
+- Fix narrow-window overflow in the Overview catalog and Navigation specimen
+  while retaining the main pane's specified 304 px width.
+
 ## Navigation rebuild Phase 3 — local, unpublished
 
 - Switch the Gallery shell to NavigationView with stable eight-page IDs and a

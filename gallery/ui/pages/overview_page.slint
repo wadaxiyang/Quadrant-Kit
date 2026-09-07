@@ -27,6 +27,7 @@ component OverviewTile inherits SurfaceCard {
                 font-size: Typography.body;
                 font-weight: Typography.semibold;
                 vertical-alignment: center;
+                wrap: word-wrap;
             }
             Badge { text: root.tile_count; kind: BadgeKind.accent; }
         }
@@ -51,7 +52,16 @@ export component OverviewPage inherits GalleryPage {
         keyboard_info: "Tab through the navigation pane; Enter or Space opens a page.";
         accessibility_info: "Navigation entries expose button role, selected state, and stable labels.";
 
-        GridLayout {
+        // The 304 px navigation pane leaves a narrow content host at 760 px.
+        // Stack tiles there instead of letting the grid's minimum width overflow.
+        if root.width < 600px: VerticalLayout {
+            spacing: UiConstants.space_12;
+            OverviewTile { tile_icon: FluentIcons.info; tile_title: "Foundation"; tile_description: "Tokens, type, motion, elevation, and semantic icons."; tile_count: "4 pages"; }
+            OverviewTile { tile_icon: FluentIcons.add; tile_title: "Controls"; tile_description: "Buttons, fields, selection, Switch, badge, and tooltip states."; tile_count: "1 page"; }
+            OverviewTile { tile_icon: FluentIcons.menu; tile_title: "Surfaces & feedback"; tile_description: "Cards, empty states, modal decisions, and transient toast messages."; tile_count: "2 pages"; }
+            OverviewTile { tile_icon: FluentIcons.menu; tile_title: "Navigation"; tile_description: "Back, pane toggle, content surfaces, NavigationView, page headers, and window controls."; tile_count: "1 page"; }
+        }
+        if root.width >= 600px: GridLayout {
             spacing: UiConstants.space_12;
             Row {
                 OverviewTile { tile_icon: FluentIcons.info; tile_title: "Foundation"; tile_description: "Tokens, type, motion, elevation, and semantic icons."; tile_count: "4 pages"; }

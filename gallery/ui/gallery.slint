@@ -3,7 +3,7 @@
 
 import { Palette, ScrollView } from "std-widgets.slint";
 import { FluentIcon, FluentIcons, ModalKind, ModalManager, SegmentButton, NavigationView, NavigationPaneMode, Theme, ThemeMode, Typography, UiConstants } from "@quadrant-kit";
-import { GalleryCatalog } from "shared/gallery_catalog.slint";
+import { GalleryNavigation } from "shared/gallery_catalog.slint";
 import { OverviewPage } from "pages/overview_page.slint";
 import { TokensPage } from "pages/tokens_page.slint";
 import { TypographyPage } from "pages/typography_page.slint";
@@ -13,6 +13,7 @@ import { SurfacesPage } from "pages/surfaces_page.slint";
 import { FeedbackPage } from "pages/feedback_page.slint";
 import { NavigationPage } from "pages/navigation_page.slint";
 
+export { GalleryNavigation } from "shared/gallery_catalog.slint";
 export { KitApiProbe } from "api_probe.slint";
 export { GalleryNavigationExamples } from "shared/navigation_view_specimen.slint";
 
@@ -45,7 +46,7 @@ export component DesignGalleryWindow inherits Window {
     in-out property <string> sample_text: "Prepare a sample document";
     in-out property <bool> sample_switch: true;
     in-out property <ThemeMode> gallery_theme: ThemeMode.light;
-    in-out property <int> gallery_page: 0;
+    in-out property <int> gallery_page <=> GalleryNavigation.page;
     in-out property <int> preview_mode: 1;
     in-out property <bool> sample_modal_visible: false;
     in-out property <int> sample_modal_kind: 0;
@@ -82,45 +83,64 @@ export component DesignGalleryWindow inherits Window {
         }
         NavigationView {
             vertical-stretch: 1;
-            // Preserve the old host width during cutover; Kit's default remains 260 px.
-            pane_width: 216px;
+            pane_width: 304px;
             pane_mode: root.pane_mode;
-            items: GalleryCatalog.items;
-            selected_id: GalleryCatalog.items[root.gallery_page].id;
-            item_invoked(id) => {
-                let page = GalleryCatalog.page-index(id);
-                if (page >= 0) { root.gallery_page = page; }
-            }
+            items: GalleryNavigation.items;
+            selected_id: GalleryNavigation.selected_id;
+            show_back_button: true;
+            back_enabled: GalleryNavigation.can_go_back;
+            show_search: true;
+            search_placeholder: "Search pages and components";
+            search_text <=> GalleryNavigation.query;
+            item_invoked(id) => { GalleryNavigation.navigate(id); }
+            expansion_requested(id, expanded) => { GalleryNavigation.expansion_requested(id, expanded); }
+            back_requested => { GalleryNavigation.back_requested(); }
+            search_changed(query) => { GalleryNavigation.query_edited(query); }
+            search_submitted(query) => { GalleryNavigation.search_submitted(query); }
             pane_toggle_requested => {
                 root.pane_mode = root.pane_mode == NavigationPaneMode.expanded ? NavigationPaneMode.compact : NavigationPaneMode.expanded;
             }
-            ScrollView {
-                width: 100%;
-                height: 100%;
-                viewport-width: self.width;
-
-                VerticalLayout {
-                    padding: parent.width < UiConstants.compact_breakpoint ? UiConstants.page_padding_compact : UiConstants.page_padding_medium;
-                    spacing: UiConstants.space_20;
-
-                    if root.gallery_page == 0: OverviewPage { }
-                    if root.gallery_page == 1: TokensPage { }
-                    if root.gallery_page == 2: TypographyPage { }
-                    if root.gallery_page == 3: IconsPage { }
-                    if root.gallery_page == 4: ControlsPage {
-                        preview_mode: root.preview_mode;
-                        sample_text <=> root.sample_text;
-                        sample_switch <=> root.sample_switch;
+            VerticalLayout {
+                spacing: 0px;
+                if GalleryNavigation.search_status != "": HorizontalLayout {
+                    height: 40px;
+                    padding-left: UiConstants.space_16; padding-right: UiConstants.space_16;
+                    spacing: UiConstants.space_8;
+                    Text {
+                        text: GalleryNavigation.search_status; color: Theme.text_secondary;
+                        vertical-alignment: center; overflow: elide; horizontal-stretch: 1;
                     }
-                    if root.gallery_page == 5: SurfacesPage { preview_mode: root.preview_mode; }
-                    if root.gallery_page == 6: FeedbackPage {
-                        preview_mode: root.preview_mode;
-                        modal_requested(kind) => {
-                            root.sample_modal_kind = kind;
-                            root.sample_modal_visible = true;
+                    SegmentButton { text: "Clear search"; clicked => { GalleryNavigation.query_edited(""); } }
+                }
+                ScrollView {
+                    width: 100%;
+                    vertical-stretch: 1;
+                    viewport-width: self.width;
+
+                    VerticalLayout {
+                        min-width: 0px;
+                        padding: parent.width < UiConstants.compact_breakpoint ? UiConstants.page_padding_compact : UiConstants.page_padding_medium;
+                        spacing: UiConstants.space_20;
+
+                        if root.gallery_page == 0: OverviewPage { }
+                        if root.gallery_page == 1: TokensPage { }
+                        if root.gallery_page == 2: TypographyPage { }
+                        if root.gallery_page == 3: IconsPage { }
+                        if root.gallery_page == 4: ControlsPage {
+                            preview_mode: root.preview_mode;
+                            sample_text <=> root.sample_text;
+                            sample_switch <=> root.sample_switch;
                         }
+                        if root.gallery_page == 5: SurfacesPage { preview_mode: root.preview_mode; }
+                        if root.gallery_page == 6: FeedbackPage {
+                            preview_mode: root.preview_mode;
+                            modal_requested(kind) => {
+                                root.sample_modal_kind = kind;
+                                root.sample_modal_visible = true;
+                            }
+                        }
+                        if root.gallery_page == 7: NavigationPage { preview_mode: root.preview_mode; }
                     }
-                    if root.gallery_page == 7: NavigationPage { preview_mode: root.preview_mode; }
                 }
             }
         }

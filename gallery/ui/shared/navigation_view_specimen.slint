@@ -37,13 +37,16 @@ export component NavigationViewSpecimen inherits Specimen {
     specimen_description: "The host accepts or declines requests. Invalid fixtures reject both menus; content and optional controls remain usable.";
     keyboard_info: "Tab / Shift+Tab; Enter / Space. Destination-group labels navigate; their separate chevrons expand. Hidden descendants leave traversal.";
     accessibility_info: "Named buttons, selection and expansion state. Disabled parents do not disable their children. Full screen-reader behavior remains unverified.";
-    HorizontalLayout {
+    VerticalLayout {
+        spacing: 8px;
         ComboBox {
             model: ["Three levels", "One level", "Two levels", "Missing parent", "Negative depth", "Depth > 2", "Depth jump", "Duplicate ID", "Children flag", "Leaf children", "Non-preorder", "Cross-model parent", "Parent cycle", "Empty ID", "Header children", "257 entries", "Empty models"];
             current-index <=> root.scenario_index;
         }
-        Switch { text: "Accept requests"; checked <=> root.accept_requests; }
-        Switch { text: "Compact view"; checked <=> root.compact; }
+        HorizontalLayout {
+            Switch { text: "Accept requests"; checked <=> root.accept_requests; }
+            Switch { text: "Compact view"; checked <=> root.compact; }
+        }
     }
     GridLayout {
         spacing: 4px;
@@ -62,6 +65,8 @@ export component NavigationViewSpecimen inherits Specimen {
         SegmentButton { text: "Fluent view"; selected: nav.content_surface_mode == NavigationContentSurfaceMode.fluent; clicked => { nav.content_surface_mode = NavigationContentSurfaceMode.fluent; } }
         SegmentButton { text: "Flat view"; selected: nav.content_surface_mode == NavigationContentSurfaceMode.flat; clicked => { nav.content_surface_mode = NavigationContentSurfaceMode.flat; } }
         SegmentButton { text: "Transparent view"; selected: nav.content_surface_mode == NavigationContentSurfaceMode.transparent; clicked => { nav.content_surface_mode = NavigationContentSurfaceMode.transparent; } }
+    }
+    HorizontalLayout {
         SegmentButton { text: "Collapse Controls"; clicked => { root.controls_open = false; } }
         SegmentButton { text: "Select header"; clicked => { root.selection = "heading"; } }
     }
@@ -71,7 +76,8 @@ export component NavigationViewSpecimen inherits Specimen {
     }
     nav := NavigationView {
         height: 360px;
-        pane_width: 304px; pane_title: root.title ? "Component library" : "";
+        pane_width: min(304px, max(54px, self.width - 200px));
+        pane_title: root.title ? "Component library" : "";
         pane_mode: root.compact ? NavigationPaneMode.compact : NavigationPaneMode.expanded;
         items: GalleryNavigationExamples.entries(root.scenario_index, false, root.controls_open, root.inputs_open, root.settings_open, FluentIcons.settings_regular, FluentIcons.settings_filled);
         footer_items: root.footer ? GalleryNavigationExamples.entries(root.scenario_index, true, root.controls_open, root.inputs_open, root.settings_open, FluentIcons.about_regular, FluentIcons.about_filled) : [];

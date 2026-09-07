@@ -4,12 +4,25 @@ The Gallery is a development, verification, and learning application with no Pro
 
 ## Pages and controls
 
-The Phase 3 shell uses one public NavigationView with eight flat destinations.
+The Phase 4 shell uses one public NavigationView with eight destinations under
+Overview, Foundation and Components; Surfaces & feedback is a nested group.
 Stable IDs overview/tokens/typography/icons/controls/surfaces/feedback/navigation
-map to the existing snapshot page numbers 0–7. Catalog filter and the separate
-Pages heading/list are gone. Theme and C/M/W preview utilities occupy a top toolbar;
-pane mode remains host-owned. Main-shell Back/Search stay hidden until Phase 4.
+map to the existing snapshot page numbers 0–7. Only implemented pages are linked.
+Catalog filter and the separate Pages heading/list are gone. Theme and C/M/W
+preview utilities occupy a top toolbar; pane mode remains host-owned.
+Back, Search and group expansion use the Gallery-only Rust controller. A different
+valid destination adds history; repeated selection, query editing and expansion
+do not. Back pops once, reveals ancestors and clears a query only if it hides the
+target. Empty history disables Back.
+
+Search matches titles and keywords case-insensitively, ignoring outer whitespace.
+Typing filters a flat list without navigating; Enter opens the first match in
+catalog order. Clicking any result uses the same route table. No matches displays
+a non-interactive message and keeps the current page. Clear search restores the
+normal hierarchy and its saved expansion state. In compact mode the search action
+expands the pane. History and search are not Kit runtime responsibilities.
 The existing page ScrollView/padding remains inside the view for Phase 5 transfer.
+[Phase 4 evidence](NAVIGATION_REBUILD_PHASE4.md) records the current checks;
 [Phase 3 evidence](NAVIGATION_REBUILD_PHASE3.md) records the cutover and removal.
 
 | Page | Content |
