@@ -30,8 +30,16 @@ Navigation Phase 6 catalog/route behavior is recorded in
 polish, the six-command common gate, native input observations and 184 simulated-DPI
 render scenes are recorded in [NAVIGATION_REBUILD_PHASE7.md](NAVIGATION_REBUILD_PHASE7.md).
 Real monitor transitions and unavailable platform/accessibility coverage remain
-separately NOT_RUN; the Phase 8 full distribution gate has not started.
+separately NOT_RUN. The final local construction gate and identified package/MSRV/
+incremental evidence are tracked in [NAVIGATION_REBUILD_PHASE8.md](NAVIGATION_REBUILD_PHASE8.md).
 The unchanged public API was reviewed in [Phase 3](NAVIGATION_REBUILD_PHASE3.md).
+
+Current repository tests compare every PUBLIC_API.md Slint declaration, including
+defaults, with the facade; reconcile the 35 probe imports and their uses; check
+240 properties, 20 callbacks, 21 components, six globals, seven enums and the
+ten-field NavigationEntry; and reject live legacy navigation/shell identifiers.
+The catalog test separately requires all 21 visual exports to have real typed
+destinations. Probe compilation complements these declaration/token checks.
 
 `scripts/kit_api_v1.json` schema 1 currently records **35 names, 240 explicitly declared properties, 20 callbacks, seven enums and one ten-field struct**. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 added NavigationView with 15 properties and six callbacks. Phase 3 removes SidebarItem and three legacy sidebar tokens, rebinding two navigation defaults to their identical resolved values; all other surviving contracts are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.
 

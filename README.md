@@ -34,6 +34,11 @@ its 25 destinations share page scrolling and collapsible, selectable source/deta
 Home and All components use the same catalog as navigation/search, linking all 21
 public visual components. Snapshot destinations are stable strings; 0–7 remain
 explicit Gallery-only aliases.
+The shell supports expanded/compact navigation, independent primary/footer
+scrolling and keyboard focus recovery. Phase 7 records Windows input checks and
+184 render scenes at simulated 100/125/150/200/225% scale; real monitor transitions
+and full accessibility coverage remain unverified. Final local construction
+checks are recorded in [the Phase 8 report](docs/NAVIGATION_REBUILD_PHASE8.md).
 SidebarItem and its legacy tokens have been removed. These changes are unpublished; the retained
 extraction source still has 28 names. Branding, task models, Inbox, task row
 composition, quadrant colors, product-specific timer/layout tokens, and product
@@ -50,9 +55,17 @@ cargo test --workspace --locked
 python scripts/check_ui_boundaries.py
 python -m unittest discover -s scripts/tests -p "test_*.py"
 cargo build --locked -p quadrant-kit-gallery
+python scripts/verify_distribution.py --package
+cargo package --locked -p quadrant-kit --list
 cargo package --locked -p quadrant-kit
 python scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.0.crate
+cargo +1.92.0 build --locked -p quadrant-kit -p quadrant-kit-gallery --target-dir target/msrv-1.92
 ```
+
+Package/archive checks require a clean committed source snapshot. With exclusive
+access to the checkout and build directory, also run
+`python scripts/verify_incremental.py`; it temporarily changes and restores one
+theme token and SVG. These local checks do not publish or retarget a consumer.
 
 Python 3.11 or newer is required for developer checks, not for ordinary Slint consumers. The boundary command checks the 35-name API baseline, defaults, layer/import graph, assets, provenance, Cargo manifests and host-filtered resolved dependencies. CI never rewrites the baseline. See the validation record for the published source's actual CI/remote-consumer results and remaining native/a11y limits.
 

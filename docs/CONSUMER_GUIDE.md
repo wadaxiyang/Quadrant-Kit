@@ -13,6 +13,12 @@ Same-SHA CI and anonymous remote-consumer evidence are linked in
 change any consumer's adopted source. This is a retained candidate, not a stable
 release tag.
 
+The local NavigationView/Gallery rebuild is a different, unpublished API contract.
+The dependency below selects the historical extraction API, not the current
+35-name navigation API described in PUBLIC_API.md. Phase 8 local packaging does
+not make the rebuild available for Tasks adoption; a separately authorized
+publication and same-SHA remote-consumer verification must precede that change.
+
 An executable build dependency for that verified source is:
 
 ```toml

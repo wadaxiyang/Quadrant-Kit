@@ -1,4 +1,4 @@
-# Public API — local navigation rebuild, Phase 3
+# Public API — local NavigationView / Gallery rebuild
 
 `ui/kit.slint` is the only supported Slint entry. All 35 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The navigation rebuild additions and SidebarItem removal are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
 
@@ -10,15 +10,15 @@ and other shared tokens remain. See [Phase 3 cutover](NAVIGATION_REBUILD_PHASE3.
 
 ## Coverage and behavior
 
-- Tokens, Typography, and Icons pages demonstrate general globals and images; static content is labeled.
-- Controls demonstrates buttons, segments, fields, text areas, badge, settings composition, tooltip usage, and existing preview states. Text editing remains delegated to std-widgets.
-- Surfaces demonstrates interactive/decorative SurfaceCard and state variants.
-- Feedback demonstrates all Toast/Modal kinds and text boundaries. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks, and screen-reader behavior remain unverified.
-- Navigation demonstrates NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, NavigationView, PageHeader, MetricCard, EmptyState, and WindowControlButton. NavigationView demonstrates controlled three-level primary/footer models. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
+- Home and All components share the Gallery catalog: 25 destinations cover all 21 public visual components. Theme / Colors, Typography and Icons provide conceptual guidance for globals and resources.
+- Controls overview compares inputs and commands. Dedicated FluentButton, IconButton, SegmentButton, FluentTextField and FluentTextArea pages provide their specimens. Text editing remains delegated to std-widgets.
+- SurfaceCard, Badge, MetricCard and SettingRow have dedicated pages. Non-interactive reference specimens are labeled Reference.
+- Feedback overview compares outcomes; ToastHost, ModalManager and TooltipHost have dedicated pages. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks and screen-reader behavior remain unverified.
+- NavigationView demonstrates controlled three-level primary and two-level footer models. Navigation foundations composes NavigationBackButton, NavigationPaneToggleButton and NavigationContentSurface. PageHeader, SectionHeader, EmptyState and WindowControlButton have dedicated destinations.
 - IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
-- Existing keyboard/focus/disabled semantics are retained in component code. Native keyboard/IME/screen-reader tests and every state/size combination have not all been executed. Screenshot rendering is not interaction or accessibility proof.
+- Navigation keyboard/focus polish and its Windows input/render evidence are recorded in [Phase 7](NAVIGATION_REBUILD_PHASE7.md). Up/Down/Home/End item traversal is not implemented; full IME/screen-reader/platform coverage remains unverified. Screenshot rendering is not interaction or accessibility proof.
 
-The intentional difference from the embedded API removes Branding, TaskRowShell, InboxItem, and InboxPane, plus Q1–Q4 colors, Typography.timer, UiConstants.focus_wide_breakpoint, and 11 product icon aliases. No generic component callbacks or behavior were redesigned.
+The historical extraction removed Branding, TaskRowShell, InboxItem and InboxPane, plus Q1–Q4 colors, Typography.timer, UiConstants.focus_wide_breakpoint and 11 product icon aliases. The subsequent local navigation rebuild intentionally replaces SidebarItem with the controlled NavigationView API. Its reviewed 35-name contract remains unchanged since Phase 3; Phase 7 refines focus and keyboard behavior without changing signatures/defaults.
 
 ## Declarations
 
@@ -418,7 +418,7 @@ export component NavigationBackButton inherits Rectangle {
 }
 ```
 
-A 40 px button reusing IconButton input and tooltip behavior, with focus forwarded
+A 40 px button reusing IconButton input, with a popup tooltip and focus forwarded
 to the inner button on activation. Its geometric
 arrow is drawn in Slint source, with no new static asset or font glyph. The host
 handles `clicked`; there is no back stack. `accessible_name` also supplies the tooltip.
@@ -614,10 +614,18 @@ Headers/separators cannot select. Empty selected icons fall back to regular icon
 compact iconless entries use the generic About icon and ancestor-qualified labels.
 
 Optional controls are conditionally mounted. Compact mode hides pane title and
-replaces the search field with a labeled expansion-request button. Edits update
+replaces the search field with a labeled expansion-request button. After the host
+accepts expansion, focus transfers to the new editor. Edits update
 search_text and emit search_changed; Return submits once, while host assignments
 do not echo. Primary and footer menus scroll independently; content scrolling is
 host-owned. Pane geometry clamps to available width.
 
 Private implementation: [navigation_view.slint](../ui/patterns/navigation/navigation_view.slint).
-Native coverage and limits: [Phase 2 report](NAVIGATION_REBUILD_PHASE2.md).
+Tab/Shift+Tab traverse labels and independent chevrons; Enter/Space activate them.
+Right requests expansion. Left requests collapse or focuses an enabled visible
+ancestor. These direction keys never invoke a destination. Disabling or hiding
+a focused row recovers to a visible enabled ancestor or the pane focus scope.
+Back and pane-toggle buttons clear focus when disabled. Compact tooltips expose
+ancestor-qualified labels outside the pane clip.
+
+Native coverage and limits: [Phase 7 report](NAVIGATION_REBUILD_PHASE7.md).

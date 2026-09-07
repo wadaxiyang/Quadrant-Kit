@@ -85,7 +85,7 @@ The existing source-keyed capture tool can capture its default state with
 `--mode Smoke --destination navigation-foundations --preview 1`. Interactive state evidence is recorded in
 [the Phase 1 report](NAVIGATION_REBUILD_PHASE1.md).
 
-The Icons page wires every enabled IconButton state to an action count and last
+The IconButton page wires every enabled IconButton state to an action count and last
 action label. The disabled specimen has the same callback wiring, so an unexpected
 activation would also be visible. Controls provides a separate Add/Edit/Delete
 counter. PageHeader exposes its action count; WindowControlButton exposes a window-action
@@ -94,10 +94,10 @@ they keep Gallery open for repeated testing. Counters reset when the page is rec
 
 To reproduce the focused native smoke check, start a fresh Gallery:
 
-1. On Icons, click normal Add: expect `Icon actions: 1 · Last: Add`. Use Tab or
+1. On IconButton, click normal Add: expect `Icon actions: 1 · Last: Add`. Use Tab or
    Shift+Tab to focus Delete, then press Enter and Space: expect counts 2 and 3,
    both with `Last: Delete`. Click disabled Dismiss: count stays 3. Tab from Delete
-   skips Dismiss and returns to the Gallery controls.
+   skips Dismiss and reaches the source/details toggle.
 2. On Controls, scroll to the icon states and click Add, Edit, Delete: expect
    counts 1, 2, 3 and the corresponding last-action label.
 3. On PageHeader, click Add, focus it with Tab/Shift+Tab, then press Enter
@@ -116,7 +116,8 @@ evidence under ignored `target/specimen-interaction-20260907/`. Navigation feedb
 was also visually checked in Light/Medium, Dark/Medium and Dark/Compact. This is a
 focused interaction check, not the full keyboard/IME/screen-reader/backend matrix.
 The disabled check applies to IconButton; PageHeader and WindowControlButton do
-not declare an enabled input. Public component code and API baselines are unchanged.
+not declare an enabled input. That historical specimen-only change did not alter
+public component code or API baselines; later focus fixes are recorded below.
 
 ## Navigation keyboard and polish verification
 

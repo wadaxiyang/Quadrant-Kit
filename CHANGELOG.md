@@ -1,5 +1,20 @@
 # Changelog
 
+## Navigation rebuild Phase 8 — local, unpublished
+
+- Finalize current Gallery/API/consumer documentation and distinguish the local
+  35-name API from the published 28-name extraction candidate.
+- Guard documentation declarations and probe coverage against the reviewed API,
+  and prevent live legacy navigation/shell identifiers from returning.
+- Record clean-source package/archive, Windows MSRV and incremental-build
+  verification separately from historical publication and native coverage.
+
+The rebuild intentionally replaces SidebarItem and legacy sidebar tokens with
+NavigationView, NavigationEntry, navigation enums and standalone Back, pane-toggle
+and content-surface components. Hosts own routing, selection, expansion and pane
+mode. The final API baseline preserves the explicit Phase 3 review; Phase 8
+does not refresh it, change versions or publish a release.
+
 ## Navigation rebuild Phase 7 — local, unpublished
 
 - Add Left/Right expansion and ancestor focus behavior without changing the

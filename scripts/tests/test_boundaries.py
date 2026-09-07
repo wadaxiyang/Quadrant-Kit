@@ -1,13 +1,15 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 # SPDX-License-Identifier: GPL-3.0-only
 import json
+import re
+from collections import Counter
 from pathlib import Path
 import sys
 import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from slint_contract import ContractError, images, parse, public_api
+from slint_contract import ContractError, images, lex, parse, public_api
 from check_ui_boundaries import baseline_findings, boundaries, check, check_product, provenance
 from check_cargo_boundaries import KIT_URL, check_manifest, check_metadata, reachable
 from verify_distribution import verify, verify_archive
@@ -299,6 +301,40 @@ class CargoFixtures(unittest.TestCase):
 
 
 class CurrentRepositoryTests(unittest.TestCase):
+    def test_documented_contract_and_probe_cover_current_api(self):
+        root = Path(__file__).resolve().parents[2]
+        api = public_api(root)
+        documented = {}
+        text = (root / 'docs/PUBLIC_API.md').read_text(encoding='utf-8')
+        for source in re.findall(r'```slint\s*\n(.*?)```', text, re.S):
+            definitions = parse(source)['definitions']
+            self.assertFalse(documented.keys() & definitions.keys(), 'Duplicate documented declaration')
+            documented.update(definitions)
+        self.assertEqual(documented, api, 'Documented signatures/defaults must match the facade')
+        probe = (root / 'gallery/ui/api_probe.slint').read_text(encoding='utf-8')
+        imports = [pair for target, pairs in parse(probe)['imports'] if target == '@quadrant-kit' for pair in pairs]
+        self.assertEqual({name for name, _ in imports}, set(api))
+        tokens = Counter(token.value for token in lex(probe))
+        for _, alias in imports:
+            self.assertGreater(tokens[alias], 1, f'{alias} is imported but unused by the probe')
+        members = [member for item in api.values() for member in item['signature'].get('members', {}).values()]
+        self.assertEqual(Counter(member['kind'] for member in members), {'property': 240, 'callback': 20})
+        self.assertEqual(Counter(item['signature']['kind'] for item in api.values()),
+                         {'component': 21, 'global': 6, 'enum': 7, 'struct': 1})
+        self.assertEqual(len(api['NavigationEntry']['signature']['fields']), 10)
+
+    def test_live_legacy_navigation_is_absent(self):
+        root = Path(__file__).resolve().parents[2]
+        forbidden = {'SidebarItem', 'sidebar-bg', 'sidebar-collapsed-width',
+                     'sidebar-expanded-width', 'catalog-filter', 'CatalogFilter'}
+        for folder in ('ui', 'gallery/ui'):
+            for path in (root / folder).rglob('*.slint'):
+                tokens = lex(path.read_text(encoding='utf-8'))
+                self.assertFalse(forbidden & {token.value for token in tokens}, str(path))
+                self.assertFalse(any(token.kind == 'string' and 'Catalog filter' in token.value
+                                     for token in tokens), str(path))
+        self.assertFalse((root / 'ui/patterns/navigation/sidebar_item.slint').exists())
+
     def test_reviewed_current_api_and_assets(self):
         result = check(Path(__file__).resolve().parents[2], metadata=False)
         self.assertEqual(result['exports'], 35)
