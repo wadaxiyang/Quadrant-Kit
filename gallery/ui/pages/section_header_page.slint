@@ -1,0 +1,19 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { SectionHeader } from "@quadrant-kit";
+export component SectionHeaderPage inherits GalleryPage {
+
+    page_description: "A section title, supporting description and compact badge.";
+    Specimen {
+        specimen_title: "Heading and metadata";
+        specimen_description: "A section title, supporting description and compact badge.";
+        source_code: "import { SectionHeader } from \"@quadrant-kit\";\nSectionHeader { title: \"Appearance\"; badge_text: \"New\"; }";
+        keyboard_info: "Headings and badges are non-interactive.";
+        accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
+        SectionHeader { title: "Appearance"; description: "Preferences for the current host."; badge_text: "New"; }
+        SectionHeader { title: "Simple heading"; }
+    }
+}

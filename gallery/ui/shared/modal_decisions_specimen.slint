@@ -1,0 +1,44 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { FluentButton, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+import { ModalTextSample } from "modal_text_sample.slint";
+
+export component ModalDecisionsSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+    callback modal_requested(int);
+
+    specimen_title: "Modal decisions";
+    source_code: "import { ModalManager } from \"@quadrant-kit\";\n\nModalManager { shown: true; title: \"Apply changes?\"; message: \"Review the change before continuing.\"; primary_text: \"Continue\"; accepted => { /* The host closes the overlay. */ } }";
+    specimen_description: "Info, warning, and destructive confirmation share one overlay, focus scope, and content-driven surface.";
+    keyboard_info: "Enter accepts the primary action; Escape dismisses; focus containment and restoration require further verification.";
+    accessibility_info: "Semantic icon, title, message, labeled actions, and danger hierarchy describe the decision.";
+
+    HorizontalLayout {
+        spacing: UiConstants.space_8;
+        FluentButton { text: "Show info"; clicked => { root.modal_requested(0); } }
+        FluentButton { text: "Show warning"; clicked => { root.modal_requested(1); } }
+        FluentButton { text: "Show danger"; danger: true; clicked => { root.modal_requested(2); } }
+        Rectangle { horizontal-stretch: 1; }
+    }
+
+    GridLayout {
+        spacing: UiConstants.space_12;
+        ModalTextSample {
+            row: 0;
+            col: 0;
+            width: parent.width < 500px ? parent.width : (parent.width - UiConstants.space_12) / 2;
+            sample_title: "Short confirmation";
+            sample_message: "Save these changes?";
+        }
+        ModalTextSample {
+            row: parent.width < 500px ? 1 : 0;
+            col: parent.width < 500px ? 0 : 1;
+            width: parent.width < 500px ? parent.width : (parent.width - UiConstants.space_12) / 2;
+            sample_title: "Long wrapped confirmation";
+            sample_message: "This longer modal copy demonstrates content-driven height when a decision needs enough context to remain clear without clipping or relying on a fixed dialog height.";
+        }
+    }
+}

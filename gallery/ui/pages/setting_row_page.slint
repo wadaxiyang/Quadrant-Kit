@@ -1,0 +1,23 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { SettingRow, Theme } from "@quadrant-kit";
+import { Switch } from "std-widgets.slint";
+export component SettingRowPage inherits GalleryPage {
+    in-out property <bool> sample_switch: true;
+    page_description: "Compose a supporting description with a standard switch.";
+    Specimen {
+        specimen_title: "Labeled setting";
+        specimen_description: "Compose a supporting description with a standard switch.";
+        source_code: "import { SettingRow } from \"@quadrant-kit\";\nimport { Switch } from \"std-widgets.slint\";\nSettingRow { title: \"Show hints\"; Switch { checked: true; } }";
+        keyboard_info: "Tab enters the switch; Space changes its checked state.";
+        accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
+        SettingRow {
+            title: "Show hints"; description: "Supporting text stays beside the trailing control.";
+            Switch { checked <=> root.sample_switch; accessible-label: "Show hints"; }
+        }
+        Text { text: root.sample_switch ? "Hints enabled" : "Hints disabled"; color: Theme.text_secondary; }
+    }
+}

@@ -1,0 +1,20 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { TooltipHost } from "@quadrant-kit";
+import { Switch } from "std-widgets.slint";
+export component TooltipHostPage inherits GalleryPage {
+    private property <bool> shown: true;
+    page_description: "The host decides when a short tooltip is shown. This example exposes visibility directly.";
+    Specimen {
+        specimen_title: "Optional help";
+        specimen_description: "The host decides when a short tooltip is shown. This example exposes visibility directly.";
+        source_code: "import { TooltipHost } from \"@quadrant-kit\";\nTooltipHost { shown: true; text: \"More information\"; }";
+        keyboard_info: "Tab enters the visibility switch; Space toggles it. TooltipHost itself is non-interactive.";
+        accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
+        Switch { text: "Show tooltip"; checked <=> root.shown; }
+        Rectangle { height: 48px; TooltipHost { shown: root.shown; text: "More information"; } }
+    }
+}

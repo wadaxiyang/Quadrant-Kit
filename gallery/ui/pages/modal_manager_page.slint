@@ -1,0 +1,10 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { ModalDecisionsSpecimen } from "../shared/modal_decisions_specimen.slint";
+export component ModalManagerPage inherits GalleryPage {
+    callback modal_requested(int);
+    page_description: "Host-controlled informational, warning and destructive confirmations.";
+    ModalDecisionsSpecimen { modal_requested(kind) => { root.modal_requested(kind); } }
+}

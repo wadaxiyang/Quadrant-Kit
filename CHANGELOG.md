@@ -1,5 +1,15 @@
 # Changelog
 
+## Navigation rebuild Phase 6 — local, unpublished
+
+- Introduce one Gallery catalog for 25 routes, navigation/search and 21 public
+  visual component links in Home/All components.
+- Split focused component pages while reusing extracted comparison specimens;
+  dedicate NavigationView and retain purposeful Controls/Feedback/surface overviews.
+- Add stable destination snapshot options, preserve numeric aliases 0–7, reject
+  conflicting routes and invalidate old capture reuse with scene schema 2.
+- Add route/API coverage and capture argument fixtures; retain Kit API and assets.
+
 ## Navigation rebuild Phase 5 — local, unpublished
 
 - Transfer all eight destinations atomically to GalleryPage-owned scrolling,

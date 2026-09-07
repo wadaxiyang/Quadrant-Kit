@@ -1,0 +1,10 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { NavigationFoundationSpecimen } from "../shared/navigation_foundation_specimen.slint";
+export component NavigationFoundationsPage inherits GalleryPage {
+    in property <int> preview_mode: 1;
+    page_description: "Back, pane toggle and content surface stay grouped to show their standalone composition contract.";
+    NavigationFoundationSpecimen { preview_mode: root.preview_mode; }
+}

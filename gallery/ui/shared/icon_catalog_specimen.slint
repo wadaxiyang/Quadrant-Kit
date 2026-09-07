@@ -1,0 +1,62 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { FluentIcon, FluentIcons, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+
+component IconCatalogItem inherits VerticalLayout {
+    in property <image> catalog_icon;
+    in property <string> catalog_name;
+    spacing: UiConstants.space_4;
+    alignment: center;
+    min-width: 88px;
+
+    FluentIcon { source: root.catalog_icon; size: 20px; icon_color: Theme.icon_neutral; }
+    Text { text: root.catalog_name; color: Theme.text_secondary; font-size: Typography.caption; horizontal-alignment: center; overflow: elide; }
+}
+
+export component IconCatalogSpecimen inherits Specimen {
+
+        specimen_title: "Semantic icon catalog";
+        source_code: "import { FluentIcon, FluentIcons } from \"@quadrant-kit\";\n\nFluentIcon { source: FluentIcons.calendar; size: 20px; }";
+        specimen_description: "Regular/Filled navigation, 16px actions, and 24px status icons remain distinct assets.";
+        specimen_kind: "Catalog";
+        keyboard_info: "Not applicable; catalog glyphs are reference content.";
+        accessibility_info: "Decorative FluentIcon hosts are paired with visible semantic names.";
+
+        GridLayout {
+            spacing: UiConstants.space_12;
+            IconCatalogItem { row: parent.width < 500px ? 0 : 0; col: parent.width < 500px ? 0 : 0; catalog_icon: FluentIcons.settings_regular; catalog_name: "settings";  }
+            IconCatalogItem { row: parent.width < 500px ? 0 : 0; col: parent.width < 500px ? 1 : 1; catalog_icon: FluentIcons.about_regular; catalog_name: "about";  }
+            IconCatalogItem { row: parent.width < 500px ? 1 : 0; col: parent.width < 500px ? 0 : 2; catalog_icon: FluentIcons.settings_filled; catalog_name: "settings filled";  }
+            IconCatalogItem { row: parent.width < 500px ? 1 : 0; col: parent.width < 500px ? 1 : 3; catalog_icon: FluentIcons.about_filled; catalog_name: "about filled";  }
+            IconCatalogItem { row: parent.width < 500px ? 2 : 0; col: parent.width < 500px ? 0 : 4; catalog_icon: FluentIcons.menu; catalog_name: "menu";  }
+            IconCatalogItem { row: parent.width < 500px ? 2 : 1; col: parent.width < 500px ? 1 : 0; catalog_icon: FluentIcons.add; catalog_name: "add";  }
+            IconCatalogItem { row: parent.width < 500px ? 3 : 1; col: parent.width < 500px ? 0 : 1; catalog_icon: FluentIcons.dismiss; catalog_name: "dismiss";  }
+            IconCatalogItem { row: parent.width < 500px ? 3 : 1; col: parent.width < 500px ? 1 : 2; catalog_icon: FluentIcons.minimize; catalog_name: "minimize";  }
+            IconCatalogItem { row: parent.width < 500px ? 4 : 1; col: parent.width < 500px ? 0 : 3; catalog_icon: FluentIcons.maximize; catalog_name: "maximize";  }
+            IconCatalogItem { row: parent.width < 500px ? 4 : 1; col: parent.width < 500px ? 1 : 4; catalog_icon: FluentIcons.restore_window; catalog_name: "window restore";  }
+            IconCatalogItem { row: parent.width < 500px ? 5 : 2; col: parent.width < 500px ? 0 : 0; catalog_icon: FluentIcons.edit; catalog_name: "edit";  }
+            IconCatalogItem { row: parent.width < 500px ? 5 : 2; col: parent.width < 500px ? 1 : 1; catalog_icon: FluentIcons.delete; catalog_name: "delete";  }
+            IconCatalogItem { row: parent.width < 500px ? 6 : 2; col: parent.width < 500px ? 0 : 2; catalog_icon: FluentIcons.complete; catalog_name: "complete";  }
+            IconCatalogItem { row: parent.width < 500px ? 6 : 2; col: parent.width < 500px ? 1 : 3; catalog_icon: FluentIcons.more_horizontal; catalog_name: "more";  }
+            IconCatalogItem { row: parent.width < 500px ? 7 : 2; col: parent.width < 500px ? 0 : 4; catalog_icon: FluentIcons.calendar; catalog_name: "calendar";  }
+            IconCatalogItem { row: parent.width < 500px ? 7 : 3; col: parent.width < 500px ? 1 : 0; catalog_icon: FluentIcons.clock; catalog_name: "clock";  }
+            IconCatalogItem { row: parent.width < 500px ? 8 : 3; col: parent.width < 500px ? 0 : 1; catalog_icon: FluentIcons.recurrence; catalog_name: "recurrence";  }
+            IconCatalogItem { row: parent.width < 500px ? 8 : 3; col: parent.width < 500px ? 1 : 2; catalog_icon: FluentIcons.folder_open; catalog_name: "folder";  }
+            IconCatalogItem { row: parent.width < 500px ? 9 : 3; col: parent.width < 500px ? 0 : 3; catalog_icon: FluentIcons.backup; catalog_name: "backup";  }
+            IconCatalogItem { row: parent.width < 500px ? 9 : 3; col: parent.width < 500px ? 1 : 4; catalog_icon: FluentIcons.theme_system; catalog_name: "theme system";  }
+            IconCatalogItem { row: parent.width < 500px ? 10 : 4; col: parent.width < 500px ? 0 : 0; catalog_icon: FluentIcons.theme_light; catalog_name: "theme light";  }
+            IconCatalogItem { row: parent.width < 500px ? 10 : 4; col: parent.width < 500px ? 1 : 1; catalog_icon: FluentIcons.theme_dark; catalog_name: "theme dark";  }
+            IconCatalogItem { row: parent.width < 500px ? 11 : 4; col: parent.width < 500px ? 0 : 2; catalog_icon: FluentIcons.chevron_up; catalog_name: "chevron up";  }
+            IconCatalogItem { row: parent.width < 500px ? 11 : 4; col: parent.width < 500px ? 1 : 3; catalog_icon: FluentIcons.chevron_down; catalog_name: "chevron down";  }
+            IconCatalogItem { row: parent.width < 500px ? 12 : 4; col: parent.width < 500px ? 0 : 4; catalog_icon: FluentIcons.info; catalog_name: "info action";  }
+            IconCatalogItem { row: parent.width < 500px ? 12 : 5; col: parent.width < 500px ? 1 : 0; catalog_icon: FluentIcons.warning; catalog_name: "warning action";  }
+            IconCatalogItem { row: parent.width < 500px ? 13 : 5; col: parent.width < 500px ? 0 : 1; catalog_icon: FluentIcons.error; catalog_name: "error action";  }
+            IconCatalogItem { row: parent.width < 500px ? 13 : 5; col: parent.width < 500px ? 1 : 2; catalog_icon: FluentIcons.status_info; catalog_name: "info";  }
+            IconCatalogItem { row: parent.width < 500px ? 14 : 5; col: parent.width < 500px ? 0 : 3; catalog_icon: FluentIcons.status_success; catalog_name: "success";  }
+            IconCatalogItem { row: parent.width < 500px ? 14 : 5; col: parent.width < 500px ? 1 : 4; catalog_icon: FluentIcons.status_warning; catalog_name: "warning";  }
+            IconCatalogItem { row: parent.width < 500px ? 15 : 6; col: parent.width < 500px ? 0 : 0; catalog_icon: FluentIcons.status_error; catalog_name: "error";  }
+            IconCatalogItem { row: parent.width < 500px ? 15 : 6; col: parent.width < 500px ? 1 : 1; catalog_icon: FluentIcons.heart_filled; catalog_name: "heart";  }
+        }
+}

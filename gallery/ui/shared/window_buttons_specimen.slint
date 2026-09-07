@@ -1,0 +1,34 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { FluentIcons, Theme, Typography, WindowControlButton } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+
+export component WindowButtonsSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+    private property <int> window_actions: 0;
+    private property <string> last_window_action: "None";
+
+    specimen_title: "Window controls";
+    source_code: "import { WindowControlButton, FluentIcons } from \"@quadrant-kit\";\n\nWindowControlButton { icon: FluentIcons.dismiss; label: \"Close\"; close_button: true; clicked => { /* The host handles the window action. */ } }";
+    specimen_description: "Actions update the result below. The Gallery window stays open so each action can be tested repeatedly.";
+    specimen_kind: "Interactive";
+    keyboard_info: "Tab focuses; Enter or Space records each window action.";
+    accessibility_info: "Every action exposes button role and Minimize, Maximize, or Close label.";
+
+    HorizontalLayout {
+        height: 40px;
+        spacing: 0px;
+        WindowControlButton { icon: FluentIcons.minimize; label: "Minimize"; clicked => { root.window_actions += 1; root.last_window_action = "Minimize"; } }
+        WindowControlButton { icon: FluentIcons.maximize; label: "Maximize"; clicked => { root.window_actions += 1; root.last_window_action = "Maximize"; } }
+        WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; close_button: true; clicked => { root.window_actions += 1; root.last_window_action = "Close"; } }
+        Rectangle { horizontal-stretch: 1; }
+    }
+    Text {
+        text: "Window actions: " + root.window_actions + " · Last: " + root.last_window_action;
+        color: Theme.text_secondary;
+        font-size: Typography.body;
+        wrap: word-wrap;
+    }
+}

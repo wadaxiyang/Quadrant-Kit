@@ -1,0 +1,66 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { Switch } from "std-widgets.slint";
+import { Badge, BadgeKind, SegmentButton, SettingRow, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+import { StateSpecimen } from "state_specimen.slint";
+
+export component SelectionSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+    in-out property <string> sample_text: "Prepare a sample document";
+    in-out property <bool> sample_switch: true;
+    private property <int> selected_segment: 0;
+
+    specimen_title: "Segment, Switch, and Badge";
+    source_code: "import { SegmentButton, Badge, BadgeKind } from \"@quadrant-kit\";\nimport { Switch } from \"std-widgets.slint\";\n\nSegmentButton { text: \"All\"; selected: true; }\nSwitch { text: \"Enabled\"; checked: true; }\nBadge { text: \"Ready\"; kind: BadgeKind.success; }";
+    specimen_description: "Selection controls expose stable checked state; badges communicate compact non-interactive status.";
+    keyboard_info: "Tab focuses segments and Switch; Enter/Space activates segments, Space toggles Switch.";
+    accessibility_info: "Segments expose button + checked state; Switch uses native checked semantics; Badge has a visible label.";
+
+    VerticalLayout {
+        spacing: UiConstants.space_12;
+        GridLayout {
+            spacing: UiConstants.space_8;
+            Row {
+                StateSpecimen { label: "Segment selected"; SegmentButton { text: "Selected"; selected: true; } }
+                StateSpecimen { label: "Segment hover"; SegmentButton { text: "Hover"; preview_hover: true; } }
+                StateSpecimen { label: "Segment pressed"; SegmentButton { text: "Pressed"; preview_pressed: true; } }
+            }
+            Row {
+                StateSpecimen { label: "Segment focus"; SegmentButton { text: "Focus"; preview_focus: true; } }
+                StateSpecimen { label: "Segment disabled"; SegmentButton { text: "Disabled"; enabled: false; } }
+                StateSpecimen { label: "Not selected"; SegmentButton { text: "Available"; } }
+            }
+        }
+        HorizontalLayout {
+            spacing: UiConstants.space_4;
+            SegmentButton { text: "All"; selected: root.selected_segment == 0; clicked => { root.selected_segment = 0; } }
+            SegmentButton { text: "Recent"; selected: root.selected_segment == 1; clicked => { root.selected_segment = 1; } }
+            SegmentButton { text: "Favorites"; selected: root.selected_segment == 2; clicked => { root.selected_segment = 2; } }
+            SegmentButton { text: "Disabled"; enabled: false; }
+            Rectangle { horizontal-stretch: 1; }
+        }
+        SettingRow {
+            title: "Standard setting row";
+            description: "Supporting text wraps while the trailing control remains aligned.";
+            Switch { text: ""; accessible-label: "Standard setting row"; checked <=> root.sample_switch; }
+        }
+        HorizontalLayout {
+            spacing: UiConstants.space_12;
+            Switch { text: "Interactive switch"; checked <=> root.sample_switch; }
+            Switch { text: "Disabled switch"; enabled: false; }
+            Rectangle { horizontal-stretch: 1; }
+        }
+        HorizontalLayout {
+            spacing: UiConstants.space_8;
+            Badge { text: "Neutral"; }
+            Badge { text: "Accent"; kind: BadgeKind.accent; }
+            Badge { text: "Ready"; kind: BadgeKind.success; }
+            Badge { text: "Warning"; kind: BadgeKind.warning; }
+            Badge { text: "Error"; kind: BadgeKind.danger; }
+            Rectangle { horizontal-stretch: 1; }
+        }
+    }
+}

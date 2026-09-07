@@ -1,0 +1,33 @@
+# Gallery-local route catalog. Columns: id, title, parent, icon, numeric alias, Slint component, page file, public visual exports, keywords
+home	Home		0	0	HomePage	home_page.slint		getting started introduction guide
+all-components	All components		0		AllComponentsPage	all_components_page.slint		browse public visual component index
+design-guidance	Design guidance		1					
+tokens	Theme / Colors	design-guidance	1	1	TokensPage	tokens_page.slint		theme colors spacing elevation motion constants
+typography	Typography	design-guidance	2	2	TypographyPage	typography_page.slint		font text type scale
+icons	Icons	design-guidance	3	3	IconsPage	icons_page.slint	FluentIcon	fluent svg symbols icon catalog
+controls-group	Controls		4					
+controls	Controls overview	controls-group	4	4	ControlsPage	controls_page.slint		controls comparison input command selection overview
+fluent-button	FluentButton	controls-group	4		FluentButtonPage	fluent_button_page.slint	FluentButton	controls button input text editing command selection
+icon-button	IconButton	controls-group	4		IconButtonPage	icon_button_page.slint	IconButton	controls button input text editing command selection
+segment-button	SegmentButton	controls-group	4		SegmentButtonPage	segment_button_page.slint	SegmentButton	controls button input text editing command selection
+fluent-text-field	FluentTextField	controls-group	4		FluentTextFieldPage	fluent_text_field_page.slint	FluentTextField	controls button input text editing command selection
+fluent-text-area	FluentTextArea	controls-group	4		FluentTextAreaPage	fluent_text_area_page.slint	FluentTextArea	controls button input text editing command selection
+display-group	Surfaces & data display		5					
+surfaces	SurfaceCard	display-group	5	5	SurfacesPage	surfaces_page.slint	SurfaceCard	surface card overview elevation comparison
+badge	Badge	display-group	5		BadgePage	badge_page.slint	Badge	surface data display status settings
+metric-card	MetricCard	display-group	5		MetricCardPage	metric_card_page.slint	MetricCard	surface data display status settings
+setting-row	SettingRow	display-group	5		SettingRowPage	setting_row_page.slint	SettingRow	surface data display status settings
+feedback-group	Feedback & overlays		6					
+feedback	Feedback overview	feedback-group	6	6	FeedbackPage	feedback_page.slint		outcome decision feedback comparison overview
+tooltip-host	TooltipHost	feedback-group	6		TooltipHostPage	tooltip_host_page.slint	TooltipHost	feedback overlay tooltip host
+toast-host	ToastHost	feedback-group	6		ToastHostPage	toast_host_page.slint	ToastHost	feedback overlay toast host
+modal-manager	ModalManager	feedback-group	6		ModalManagerPage	modal_manager_page.slint	ModalManager	feedback overlay modal manager
+navigation-group	Navigation		7					
+navigation-view	NavigationView	navigation-group	7	7	NavigationViewPage	navigation_view_page.slint	NavigationView	navigation hierarchy destination group back pane search footer content surface
+navigation-foundations	Navigation foundations	navigation-group	7		NavigationFoundationsPage	navigation_foundations_page.slint	NavigationBackButton,NavigationPaneToggleButton,NavigationContentSurface	navigation back toggle pane content surface modular primitives
+layout-group	Page & layout		5					
+page-header	PageHeader	layout-group	5		PageHeaderPage	page_header_page.slint	PageHeader	page layout header title content state
+section-header	SectionHeader	layout-group	5		SectionHeaderPage	section_header_page.slint	SectionHeader	page layout header title content state
+empty-state	EmptyState	layout-group	5		EmptyStatePage	empty_state_page.slint	EmptyState	page layout header title content state
+window-group	Window		7					
+window-control-button	WindowControlButton	window-group	7		WindowControlButtonPage	window_control_button_page.slint	WindowControlButton	window minimize maximize close chrome

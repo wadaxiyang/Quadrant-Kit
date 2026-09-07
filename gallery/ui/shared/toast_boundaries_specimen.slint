@@ -1,0 +1,34 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { ToastHost, ToastKind, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+
+export component ToastBoundariesSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+    callback modal_requested(int);
+
+    specimen_title: "Toast content boundaries";
+    source_code: "import { ToastHost } from \"@quadrant-kit\";\n\nToastHost { shown: true; message: \"A long outcome message wraps within the available toast width.\"; }";
+    specimen_description: "Short, normal, and deliberately long messages verify content-driven height and constrained width.";
+    specimen_kind: "Boundaries";
+    keyboard_info: "Dismiss actions use the same keyboard contract in every semantic variant.";
+    accessibility_info: "Color is paired with a semantic icon and explicit message text.";
+
+    VerticalLayout {
+        spacing: UiConstants.space_8;
+        Rectangle {
+            height: 56px;
+            ToastHost { width: min(parent.width, 420px); shown: true; message: "Saved."; kind: ToastKind.success; auto_dismiss: false; }
+        }
+        Rectangle {
+            height: 56px;
+            ToastHost { width: min(parent.width, 420px); shown: true; message: "Information uses the shared SVG and type scale."; kind: ToastKind.info; auto_dismiss: false; }
+        }
+        Rectangle {
+            height: 76px;
+            ToastHost { width: min(parent.width, 420px); shown: true; message: "This deliberately long error wraps onto a second line so critical details remain visible at the maximum toast width."; kind: ToastKind.error; auto_dismiss: false; }
+        }
+    }
+}

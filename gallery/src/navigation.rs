@@ -8,167 +8,7 @@ use slint::{ComponentHandle, Model, ModelRc, VecModel};
 
 use crate::{DesignGalleryWindow, GalleryNavigation, NavigationEntry, NavigationEntryKind};
 
-#[derive(Clone, Copy)]
-struct CatalogEntry {
-    id: &'static str,
-    title: &'static str,
-    parent: &'static str,
-    depth: i32,
-    page: Option<i32>,
-    icon: usize,
-    keywords: &'static str,
-}
-
-// Preorder, with the original snapshot page indices preserved. Aggregate pages
-// remain real destinations until the later page-splitting phase.
-const CATALOG: &[CatalogEntry] = &[
-    CatalogEntry {
-        id: "overview",
-        title: "Overview",
-        parent: "",
-        depth: 0,
-        page: Some(0),
-        icon: 0,
-        keywords: "getting started introduction guide",
-    },
-    CatalogEntry {
-        id: "foundation",
-        title: "Foundation",
-        parent: "",
-        depth: 0,
-        page: None,
-        icon: 1,
-        keywords: "",
-    },
-    CatalogEntry {
-        id: "tokens",
-        title: "Tokens",
-        parent: "foundation",
-        depth: 1,
-        page: Some(1),
-        icon: 1,
-        keywords: "foundation theme colors spacing motion",
-    },
-    CatalogEntry {
-        id: "typography",
-        title: "Typography",
-        parent: "foundation",
-        depth: 1,
-        page: Some(2),
-        icon: 2,
-        keywords: "foundation font text type",
-    },
-    CatalogEntry {
-        id: "icons",
-        title: "Icons",
-        parent: "foundation",
-        depth: 1,
-        page: Some(3),
-        icon: 3,
-        keywords: "foundation fluent svg symbols",
-    },
-    CatalogEntry {
-        id: "components",
-        title: "Components",
-        parent: "",
-        depth: 0,
-        page: None,
-        icon: 4,
-        keywords: "",
-    },
-    CatalogEntry {
-        id: "controls",
-        title: "Controls",
-        parent: "components",
-        depth: 1,
-        page: Some(4),
-        icon: 4,
-        keywords: "components button textfield input switch badge settings",
-    },
-    CatalogEntry {
-        id: "surfaces-feedback",
-        title: "Surfaces & feedback",
-        parent: "components",
-        depth: 1,
-        page: None,
-        icon: 5,
-        keywords: "",
-    },
-    CatalogEntry {
-        id: "surfaces",
-        title: "Surfaces",
-        parent: "surfaces-feedback",
-        depth: 2,
-        page: Some(5),
-        icon: 5,
-        keywords: "components surface card elevation",
-    },
-    CatalogEntry {
-        id: "feedback",
-        title: "Feedback",
-        parent: "surfaces-feedback",
-        depth: 2,
-        page: Some(6),
-        icon: 6,
-        keywords: "components toast modal dialog confirmation",
-    },
-    CatalogEntry {
-        id: "navigation",
-        title: "Navigation",
-        parent: "components",
-        depth: 1,
-        page: Some(7),
-        icon: 7,
-        keywords: "components navigationview back pane shell window",
-    },
-];
-
-fn validate_catalog(catalog: &[CatalogEntry]) -> Result<(), String> {
-    let mut ids = HashSet::new();
-    let mut pages = HashSet::new();
-    let mut ancestors: Vec<&CatalogEntry> = Vec::new();
-    for entry in catalog {
-        let depth = usize::try_from(entry.depth).map_err(|_| "Negative catalog depth")?;
-        if depth > 2 || entry.id.is_empty() || entry.title.is_empty() || !ids.insert(entry.id) {
-            return Err(format!("Invalid catalog entry: {}", entry.id));
-        }
-        ancestors.truncate(depth);
-        if ancestors.len() != depth
-            || (depth == 0 && !entry.parent.is_empty())
-            || (depth > 0
-                && (ancestors[depth - 1].id != entry.parent || ancestors[depth - 1].page.is_some()))
-        {
-            return Err(format!("Invalid catalog parent: {}", entry.id));
-        }
-        if let Some(page) = entry.page
-            && (!(0..8).contains(&page) || !pages.insert(page))
-        {
-            return Err(format!("Invalid catalog page: {page}"));
-        }
-        if entry.icon >= 8 {
-            return Err(format!("Invalid catalog icon: {}", entry.id));
-        }
-        ancestors.push(entry);
-    }
-    if pages.len() != 8 {
-        return Err("Catalog must reach exactly the eight implemented pages".into());
-    }
-    for (index, entry) in catalog.iter().enumerate() {
-        let has_children = catalog
-            .get(index + 1)
-            .is_some_and(|next| next.depth > entry.depth);
-        if entry.page.is_none() && !has_children {
-            return Err(format!("Empty catalog group: {}", entry.id));
-        }
-    }
-    Ok(())
-}
-
-fn destination(id: &str) -> Option<&'static CatalogEntry> {
-    CATALOG
-        .iter()
-        .find(|entry| entry.id == id && entry.page.is_some())
-}
+use crate::catalog::{CATALOG, CatalogEntry, destination};
 
 struct NavigationState {
     selected: &'static str,
@@ -178,18 +18,16 @@ struct NavigationState {
 }
 
 impl NavigationState {
-    fn new(page: i32) -> Result<Self, String> {
-        let selected = CATALOG
-            .iter()
-            .find(|entry| entry.page == Some(page))
-            .ok_or_else(|| format!("Unknown Gallery page: {page}"))?
+    fn new(id: &str) -> Result<Self, String> {
+        let selected = destination(id)
+            .ok_or_else(|| format!("Unknown Gallery destination: {id}"))?
             .id;
         Ok(Self {
             selected,
             history: Vec::new(),
             expanded: CATALOG
                 .iter()
-                .filter(|entry| entry.page.is_none())
+                .filter(|entry| !entry.is_destination())
                 .map(|entry| entry.id)
                 .collect(),
             query: String::new(),
@@ -201,9 +39,10 @@ impl NavigationState {
         CATALOG
             .iter()
             .filter(|entry| {
-                entry.page.is_some()
+                entry.is_destination()
                     && (entry.title.to_lowercase().contains(&query)
-                        || entry.keywords.contains(&query))
+                        || entry.keywords.contains(&query)
+                        || entry.exports.to_lowercase().contains(&query))
             })
             .collect()
     }
@@ -257,7 +96,7 @@ impl NavigationState {
         }
         let Some(entry) = CATALOG
             .iter()
-            .find(|entry| entry.id == id && entry.page.is_none())
+            .find(|entry| entry.id == id && !entry.is_destination())
         else {
             return;
         };
@@ -299,7 +138,7 @@ impl NavigationState {
                     text: entry.title.into(),
                     parent_id: if searching { "" } else { entry.parent }.into(),
                     depth: if searching { 0 } else { entry.depth },
-                    kind: if entry.page.is_some() {
+                    kind: if entry.is_destination() {
                         NavigationEntryKind::Destination
                     } else {
                         NavigationEntryKind::Group
@@ -327,10 +166,11 @@ fn sync(window: &DesignGalleryWindow, state: &NavigationState) {
     }
     ui.set_items(ModelRc::new(VecModel::from(rows)));
     ui.set_selected_id(state.selected.into());
-    ui.set_page(
+    ui.set_page_title(
         destination(state.selected)
-            .and_then(|entry| entry.page)
-            .unwrap_or(0),
+            .expect("validated selection")
+            .title
+            .into(),
     );
     ui.set_can_go_back(!state.history.is_empty());
     ui.set_query(state.query.clone().into());
@@ -347,9 +187,28 @@ fn sync(window: &DesignGalleryWindow, state: &NavigationState) {
     ui.set_search_status(status.into());
 }
 
-pub fn install(window: &DesignGalleryWindow, page: i32) -> Result<(), String> {
-    validate_catalog(CATALOG)?;
-    let state = Rc::new(RefCell::new(NavigationState::new(page)?));
+pub fn install(window: &DesignGalleryWindow, id: &str) -> Result<(), String> {
+    let state = Rc::new(RefCell::new(NavigationState::new(id)?));
+    let ui = window.global::<GalleryNavigation>();
+    let components = CATALOG
+        .iter()
+        .flat_map(|entry| {
+            entry
+                .exports
+                .split(',')
+                .filter(|name| !name.is_empty())
+                .map(move |name| crate::GalleryComponentLink {
+                    destination: entry.id.into(),
+                    name: name.into(),
+                    category: CATALOG
+                        .iter()
+                        .find(|parent| parent.id == entry.parent)
+                        .map_or("Design guidance", |parent| parent.title)
+                        .into(),
+                })
+        })
+        .collect::<Vec<_>>();
+    ui.set_components(ModelRc::new(VecModel::from(components)));
     sync(window, &state.borrow());
     let update = {
         let weak = window.as_weak();
@@ -389,88 +248,76 @@ mod tests {
 
     #[test]
     fn catalog_and_startup_reach_only_real_pages() {
-        validate_catalog(CATALOG).unwrap();
-        for page in 0..8 {
-            let state = NavigationState::new(page).unwrap();
-            assert_eq!(destination(state.selected).unwrap().page, Some(page));
+        for entry in CATALOG.iter().filter(|entry| entry.is_destination()) {
+            let state = NavigationState::new(entry.id).unwrap();
+            assert_eq!(state.selected, entry.id);
             assert!(state.history.is_empty());
         }
-        assert!(NavigationState::new(8).is_err());
-        let mut broken = CATALOG.to_vec();
-        broken[2].parent = "missing";
-        assert!(validate_catalog(&broken).is_err());
-        broken = CATALOG.to_vec();
-        broken[2].id = "overview";
-        assert!(validate_catalog(&broken).is_err());
-        broken = CATALOG.to_vec();
-        broken[2].page = Some(8);
-        assert!(validate_catalog(&broken).is_err());
-        broken = CATALOG.to_vec();
-        broken[2].depth = 3;
-        assert!(validate_catalog(&broken).is_err());
+        assert!(NavigationState::new("missing").is_err());
+        assert!(NavigationState::new("design-guidance").is_err());
     }
 
     #[test]
     fn forward_repeat_invalid_and_back_history() {
-        let mut state = NavigationState::new(0).unwrap();
+        let mut state = NavigationState::new("home").unwrap();
         state.back();
-        state.navigate("overview");
+        state.navigate("home");
         state.navigate("missing");
-        state.navigate("foundation");
+        state.navigate("design-guidance");
         assert!(state.history.is_empty());
         state.navigate("tokens");
         state.navigate("tokens");
         state.navigate("feedback");
-        assert_eq!(state.history, ["overview", "tokens"]);
-        state.expand("foundation", false);
+        assert_eq!(state.history, ["home", "tokens"]);
+        state.expand("design-guidance", false);
         state.back();
         assert_eq!(state.selected, "tokens");
-        assert!(state.expanded.contains("foundation"));
+        assert!(state.expanded.contains("design-guidance"));
         state.back();
         state.back();
-        assert_eq!(state.selected, "overview");
+        assert_eq!(state.selected, "home");
         assert!(state.history.is_empty());
     }
 
     #[test]
     fn case_insensitive_search_flat_results_and_expansion_restore() {
-        let mut state = NavigationState::new(0).unwrap();
-        state.expand("components", false);
-        state.expand("surfaces-feedback", false);
+        let mut state = NavigationState::new("home").unwrap();
+        state.expand("controls-group", false);
+        state.expand("feedback-group", false);
         let expanded = state.expanded.clone();
         state.query = "  MODAL  ".into();
-        assert_eq!(state.results()[0].id, "feedback");
+        assert_eq!(state.results()[0].id, "modal-manager");
         let rows = state.rows();
         assert!(
             rows.iter()
                 .all(|row| row.depth == 0 && row.parent_id.is_empty() && !row.has_children)
         );
         state.navigate("feedback");
-        state.expand("components", true);
+        state.expand("controls-group", true);
         assert_eq!(state.expanded, expanded);
         state.query.clear();
         assert_eq!(state.expanded, expanded);
         assert_eq!(state.rows().len(), CATALOG.len());
-        assert_eq!(state.history, ["overview"]);
+        assert_eq!(state.history, ["home"]);
     }
 
     #[test]
     fn submit_no_results_and_back_clear_only_when_needed() {
-        let mut state = NavigationState::new(0).unwrap();
+        let mut state = NavigationState::new("home").unwrap();
         state.query = "absent-result".into();
         assert!(state.rows().is_empty());
         state.submit(state.query.clone());
-        assert_eq!(state.selected, "overview");
+        assert_eq!(state.selected, "home");
         assert!(state.history.is_empty());
-        state.submit("components".into());
+        state.submit("controls".into());
         assert_eq!(state.selected, "controls");
         state.navigate("feedback");
         state.back();
-        assert_eq!(state.query, "components");
+        assert_eq!(state.query, "controls");
         assert_eq!(state.selected, "controls");
         state.query = "icons".into();
         state.back();
-        assert_eq!(state.selected, "overview");
+        assert_eq!(state.selected, "home");
         assert!(state.query.is_empty());
         assert!(state.history.is_empty());
     }

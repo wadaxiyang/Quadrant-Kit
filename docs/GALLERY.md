@@ -4,45 +4,42 @@ The Gallery is a development, verification, and learning application with no Pro
 
 ## Pages and controls
 
-The shell uses one public NavigationView with eight destinations under
-Overview, Foundation and Components; Surfaces & feedback is a nested group.
-Stable IDs overview/tokens/typography/icons/controls/surfaces/feedback/navigation
-map to the existing snapshot page numbers 0–7. Only implemented pages are linked.
-Catalog filter and the separate Pages heading/list are gone. Theme and C/M/W
-preview utilities occupy a top toolbar; pane mode remains host-owned.
-Back, Search and group expansion use the Gallery-only Rust controller. A different
-valid destination adds history; repeated selection, query editing and expansion
-do not. Back pops once, reveals ancestors and clears a query only if it hides the
-target. Empty history disables Back.
+The shell uses one public NavigationView driven by `gallery/catalog.tsv`.
+This Gallery-local metadata supplies the hierarchical navigation, search,
+canonical string destinations, explicit snapshot aliases, titles and public
+visual component links in All components. The typed Slint dispatcher is checked
+against every metadata row by the route coverage test.
 
-Search matches titles and keywords case-insensitively, ignoring outer whitespace.
-Typing filters a flat list without navigating; Enter opens the first match in
-catalog order. Clicking any result uses the same route table. No matches displays
-a non-interactive message and keeps the current page. Clear search restores the
-normal hierarchy and its saved expansion state. In compact mode the search action
-expands the pane. History and search are not Kit runtime responsibilities.
-GalleryPage now owns each page's ScrollView and padding; the shell only fills
-the current destination into its content host.
-[Phase 5 evidence](NAVIGATION_REBUILD_PHASE5.md) records the page/specimen rebuild;
-[Phase 4 evidence](NAVIGATION_REBUILD_PHASE4.md) records history and search;
-[Phase 3 evidence](NAVIGATION_REBUILD_PHASE3.md) records the cutover and removal.
+There are 25 destinations under Home, All components, Design guidance, Controls,
+Surfaces & data display, Feedback & overlays, Navigation, Page & layout and Window.
+All components lists exactly the 21 public visual components; globals, enums and
+NavigationEntry stay in conceptual guidance or their owning component's docs.
+The complete Kit facade remains 35 public names.
 
-| Page | Content |
-|---:|---|
-| 0 | Overview: 35-name local catalog and public import example |
-| 1 | Tokens: generic theme, spacing, elevation, motion |
-| 2 | Typography: generic text roles and content boundaries |
-| 3 | Icons: 32 generic SVGs and action-button states |
-| 4 | Controls: buttons, segments, input wrappers, settings, badges |
-| 5 | Surfaces: decorative/interactive cards and variants |
-| 6 | Feedback: Toast and single confirmation Modal |
-| 7 | Navigation: controlled NavigationView, standalone Back/pane toggle/content surface, page framing, metrics, empty state, window controls |
+Home is the starting point. Controls overview retains the cross-component input
+and selection comparison and the page-4 CI smoke contract. SurfaceCard retains
+its interactive/state overview. Feedback overview compares transient outcomes
+with explicit decisions. Dedicated pages reuse extracted Button, IconButton,
+Toast, Modal and window specimens. NavigationView has its own composable
+configuration page. The three standalone navigation primitives stay together
+on Navigation foundations to demonstrate their composition. Theme, typography
+and the FluentIcon/resource catalog remain grouped design guidance.
 
-The old page 8 and Task patterns filter are removed. Inbox components and
-Product window probes belong to Tasks after cutover. Kit has no Inbox models,
-product brand, task navigation aliases, or quadrant colors.
+Selecting the current destination does not add history. Back restores the last
+visited destination and reveals its ancestors. Search matches titles, public
+visual names and keywords case-insensitively; typing filters without navigating.
+Enter opens the first match in catalog order. Clicking an All components card
+uses the same controller as a navigation item. No results preserves the page;
+clearing search restores the hierarchy and its expansion state. Compact search
+expands the pane. These behaviors belong to Gallery, not Kit.
 
-Use Light / Dark / System, Compact / Medium / Wide, and the per-page live settings. Existing preview properties remain specimen inputs; they do not assert that real pointer, focus, IME, or assistive-technology paths have been tested. The modal specimen no longer claims a complete Tab trap.
+All destinations fill the shared GalleryPage viewport. The page owns scrolling
+and padding; the shell owns Theme and C/M/W preview actions. Only public
+`@quadrant-kit` imports supply Kit components.
+
+[Phase 6 evidence](NAVIGATION_REBUILD_PHASE6.md) records the catalog migration;
+[Phase 5 evidence](NAVIGATION_REBUILD_PHASE5.md) records the page/specimen contract;
+[Phase 4 evidence](NAVIGATION_REBUILD_PHASE4.md) records history and search.
 
 ## Observable action specimens
 
@@ -58,7 +55,7 @@ Source reveals the page's integration fragment. Theme and C/M/W remain in the
 shell toolbar. These actions do not open external pages or require named child
 slots. New pages supply page metadata and a single content children slot.
 
-All 23 specimens share a live preview card and a separated Show source & details
+The specimens share a live preview card and a separated Show source & details
 toggle. Details start collapsed with no body height or hidden editor Tab stops.
 The toggle supports Tab, Enter and Space and exposes expanded state. Its body
 contains an illustrative static snippet and the existing keyboard/accessibility
@@ -71,13 +68,12 @@ Expanding/collapsing details leaves the preview mounted and preserves its state.
 Changing destination recreates page-local state as before; host-bound example
 text and switches retain their existing lifetime. No page cache is introduced.
 
-After the NavigationView specimens, the Navigation page retains the Phase 1 foundation specimen. Show Back and
+The Navigation foundations destination retains the Phase 1 foundation specimen. Show Back and
 Show Toggle conditionally mount the controls and their row. Enabled gates both
 buttons; Fluent/Flat/Transparent switches the actual public content surface, and
 Compact supplies the pane-toggle state. Back and Toggle counters expose callback
 delivery; toggling mode is Gallery-owned. The C/M/W utility constrains the sample
-surface to 280/480/720 px, bounded by available width. The main shell uses NavigationView; the hierarchy and defaults specimens precede
-this foundation sample.
+surface to 280/480/720 px, bounded by available width. The main shell uses NavigationView; hierarchy and defaults specimens live on its dedicated page.
 
 To verify this specimen, click each enabled button, use Tab/Shift+Tab to focus it,
 then press Enter and Space; its counter must advance once per action. Disable
@@ -86,13 +82,13 @@ skip them. Hide each control separately, then both: the row and its layout gap
 must disappear. Inspect all three surface modes in Light/Dark and C/M, including
 the top-left curve, straight remaining corners, and absence of right/bottom borders.
 The existing source-keyed capture tool can capture its default state with
-`--mode Smoke --page 7 --preview 1`. Interactive state evidence is recorded in
+`--mode Smoke --destination navigation-foundations --preview 1`. Interactive state evidence is recorded in
 [the Phase 1 report](NAVIGATION_REBUILD_PHASE1.md).
 
 The Icons page wires every enabled IconButton state to an action count and last
 action label. The disabled specimen has the same callback wiring, so an unexpected
 activation would also be visible. Controls provides a separate Add/Edit/Delete
-counter. Navigation exposes the PageHeader action count and a shared window-action
+counter. PageHeader exposes its action count; WindowControlButton exposes a window-action
 count with the last Minimize/Maximize/Close label. Window actions are demonstrations:
 they keep Gallery open for repeated testing. Counters reset when the page is recreated.
 
@@ -104,16 +100,17 @@ To reproduce the focused native smoke check, start a fresh Gallery:
    skips Dismiss and returns to the Gallery controls.
 2. On Controls, scroll to the icon states and click Add, Edit, Delete: expect
    counts 1, 2, 3 and the corresponding last-action label.
-3. On Navigation, click Add item, focus it with Tab/Shift+Tab, then press Enter
-   and Space: expect `Add item actions` to advance 1, 2, 3.
-4. Scroll to Window controls. Click Minimize, Maximize, Close: expect counts
+3. On PageHeader, click Add, focus it with Tab/Shift+Tab, then press Enter
+   and Space: expect `Add actions` to advance 1, 2, 3.
+4. Open WindowControlButton. Click Minimize, Maximize, Close: expect counts
    1, 2, 3 with matching labels. Focus Close and press Enter then Space: expect
    counts 4 and 5. The real Gallery window remains open throughout.
 5. Switch Light/Dark and Medium/Compact to inspect the feedback text. Use the
    real title-bar close action to exit Gallery after testing.
 
-All listed input checks passed on native Windows on 2026-09-07 after a locked
-Gallery build, using its ordinary backend selection (renderer not separately
+The original aggregate-page versions of these input checks passed on native
+Windows on 2026-09-07 before the Phase 6 split, after a locked Gallery build,
+using its ordinary backend selection (renderer not separately
 instrumented). Screenshots and accessibility-tree snapshots are retained as local
 evidence under ignored `target/specimen-interaction-20260907/`. Navigation feedback
 was also visually checked in Light/Medium, Dark/Medium and Dark/Compact. This is a
@@ -135,9 +132,47 @@ Existing names remain supported:
 |---|---|
 | QUADRANT_GALLERY_WIDTH / HEIGHT | Both supplied together, finite positive numbers; otherwise use window defaults |
 | QUADRANT_GALLERY_THEME | light, dark, system (case insensitive), default light |
-| QUADRANT_GALLERY_PAGE | Integer 0–7, default 0; 8 is an error |
+| QUADRANT_GALLERY_PAGE | Optional legacy alias 0–7; 8 is an error |
+| QUADRANT_GALLERY_DESTINATION | Stable catalog destination; default Home when both route variables are absent |
 | QUADRANT_GALLERY_PREVIEW | Integer 0–2, default 1 |
 | QUADRANT_GALLERY_SNAPSHOT | Nonempty output path; absent means interactive run |
+
+Numeric aliases remain explicit and are never renumbered:
+
+| Alias | Destination |
+| --- | --- |
+| 0 | home |
+| 1 | tokens |
+| 2 | typography |
+| 3 | icons |
+| 4 | controls |
+| 5 | surfaces |
+| 6 | feedback |
+| 7 | navigation-view |
+
+The runtime rejects PAGE and DESTINATION supplied together, even when they name
+the same page. Python `--page`/`--destination` and PowerShell `-Page`/`-Destination`
+follow the same rule. CLI captures discard inherited Gallery environment options
+and explicitly set their selected route. No option means Home. Group IDs and
+unknown/empty destinations are rejected before opening a window.
+
+```console
+python scripts/capture_gallery_baseline.py --mode Smoke --destination home
+python scripts/capture_gallery_baseline.py --mode Smoke --destination all-components
+python scripts/capture_gallery_baseline.py --mode Smoke --destination navigation-view
+python scripts/capture_gallery_baseline.py --mode Catalog
+```
+
+Catalog mode captures every metadata destination at normal/minimum sizes in both
+Light and Dark (100% scale); omit route options for this mode. Navigation mode
+accepts `--destination navigation-view` or legacy `--page 7` and keeps the 17 model
+fixtures in both pane modes/themes. This does not add runtime configuration APIs
+to Kit. PowerShell accepts the same modes and forwards its explicit route only.
+
+Capture schema 2 includes the resolved stable destination in each scene and its
+filename, and rejects reuse from older schemas. Numeric aliases and their string
+successors describe the same scene; distinct destinations cannot share reuse.
+The page-4 smoke still passes the numeric alias to the native executable.
 
 Invalid configuration fails before constructing the window. Snapshot mode preserves bounded retries for transparent frames, PNG output, and nonzero errors for output failures. The screenshot tool adds a 30-second subprocess timeout. It only stops its own child on timeout.
 
@@ -156,7 +191,7 @@ The wrapper invokes the Python standard-library script. PowerShell 7 is the loca
 
 Smoke captures Light at 1040×800 / 100%. Matrix captures four sizes, Light/Dark, and 100/125/150/200/225% simulated scales for the selected page/preview. All combines them. Simulated scales are render checks, not actual monitor DPI transitions.
 
-Outputs default to `target/visual-baselines/<full-sha-or-dirty-content-id>/<os-backend-renderer>/`. Each image has its own JSON manifest; page, preview, theme, size and scale appear in filenames. Manifests record full Git SHA when available, dirty/content identity, OS, architecture, renderer, font policy, Slint version, binary hash, logical and actual pixel dimensions, PNG hash, and UTC time. An unborn repository explicitly records no SHA and uses a dirty content identifier. Custom output directories should be outside the repository or under ignored target output.
+Outputs default to `target/visual-baselines/<full-sha-or-dirty-content-id>/<os-backend-renderer>/`. Each image has its own JSON manifest; destination, preview, theme, size and scale appear in filenames. Manifests record full Git SHA when available, dirty/content identity, OS, architecture, renderer, font policy, Slint version, binary hash, logical and actual pixel dimensions, PNG hash, and UTC time. An unborn repository explicitly records no SHA and uses a dirty content identifier. Custom output directories should be outside the repository or under ignored target output.
 
 Reuse requires complete scenario equality and a matching actual PNG hash/dimensions. Other pages and environments are never merged into a current-scene manifest. A fresh capture uses a new temporary PNG so stale files cannot impersonate successful output. Source changes during build/capture cause an explicit failure. Cross-OS/font/renderer images are not asserted pixel-equal. Font policy is recorded, but installed font binary/version parity still needs control for strict cross-machine comparisons.
 
@@ -207,14 +242,14 @@ required for any of the following steps.
 1. Read `UiConstants.space_4: 4px` in `ui/foundation/constants.slint` and the
    `Theme`/`Typography` bindings in `ui/foundation/theme.slint`. These are Slint
    globals; each host component instance owns its initialization.
-2. Run `cargo run --locked -p quadrant-kit-gallery`. Overview (page 0) shows
-   neutral/accent badges; Controls (page 4) also shows five semantic kinds.
+2. Run `cargo run --locked -p quadrant-kit-gallery`. Open Badge from All components
+   to see neutral/accent badges and the success, warning and danger kinds.
    Inspect Badge's two public input properties and Text child, then close Gallery
    before rebuilding the executable on Windows.
 3. Capture the starting state:
 
    ```console
-   python scripts/capture_gallery_baseline.py --mode Smoke --page 0 --preview 1 --output-directory target/learning/before
+   python scripts/capture_gallery_baseline.py --mode Smoke --destination badge --preview 1 --output-directory target/learning/before
    ```
 
 4. In `ui/primitives/badge.slint`, temporarily replace only
@@ -223,7 +258,7 @@ required for any of the following steps.
 
    ```console
    python scripts/check_ui_boundaries.py
-   python scripts/capture_gallery_baseline.py --mode Smoke --page 0 --preview 1 --output-directory target/learning/modified
+   python scripts/capture_gallery_baseline.py --mode Smoke --destination badge --preview 1 --output-directory target/learning/modified
    ```
 
    The capture command builds and runs Gallery. Compare the two PNGs: pill-shaped
@@ -235,7 +270,7 @@ required for any of the following steps.
    state. If keeping a deliberate improvement instead, review it, add appropriate
    coverage/changelog notes and commit Kit separately before proposing adoption.
 
-On 2026-09-06 this exercise was executed from Kit at
+On 2026-09-06 the original Overview-based version of this exercise was executed from Kit at
 `838ecfbead2d0a1966907ddd742cb6f34516d3f6`: native Windows, Rust 1.94.1,
 Slint 1.17.1, winit-software, Light, 1040×800, 100%, page 0/preview 1.
 All three guards and build/capture commands exited 0. The modified image was

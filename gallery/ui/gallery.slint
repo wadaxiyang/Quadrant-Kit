@@ -4,16 +4,33 @@
 import { Palette } from "std-widgets.slint";
 import { FluentIcon, FluentIcons, ModalKind, ModalManager, SegmentButton, NavigationView, NavigationPaneMode, Theme, ThemeMode, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryNavigation } from "shared/gallery_catalog.slint";
-import { OverviewPage } from "pages/overview_page.slint";
+import { HomePage } from "pages/home_page.slint";
+import { AllComponentsPage } from "pages/all_components_page.slint";
 import { TokensPage } from "pages/tokens_page.slint";
 import { TypographyPage } from "pages/typography_page.slint";
 import { IconsPage } from "pages/icons_page.slint";
 import { ControlsPage } from "pages/controls_page.slint";
+import { FluentButtonPage } from "pages/fluent_button_page.slint";
+import { IconButtonPage } from "pages/icon_button_page.slint";
+import { SegmentButtonPage } from "pages/segment_button_page.slint";
+import { FluentTextFieldPage } from "pages/fluent_text_field_page.slint";
+import { FluentTextAreaPage } from "pages/fluent_text_area_page.slint";
 import { SurfacesPage } from "pages/surfaces_page.slint";
+import { BadgePage } from "pages/badge_page.slint";
+import { MetricCardPage } from "pages/metric_card_page.slint";
+import { SettingRowPage } from "pages/setting_row_page.slint";
 import { FeedbackPage } from "pages/feedback_page.slint";
-import { NavigationPage } from "pages/navigation_page.slint";
+import { TooltipHostPage } from "pages/tooltip_host_page.slint";
+import { ToastHostPage } from "pages/toast_host_page.slint";
+import { ModalManagerPage } from "pages/modal_manager_page.slint";
+import { NavigationViewPage } from "pages/navigation_view_page.slint";
+import { NavigationFoundationsPage } from "pages/navigation_foundations_page.slint";
+import { PageHeaderPage } from "pages/page_header_page.slint";
+import { SectionHeaderPage } from "pages/section_header_page.slint";
+import { EmptyStatePage } from "pages/empty_state_page.slint";
+import { WindowControlButtonPage } from "pages/window_control_button_page.slint";
 
-export { GalleryNavigation } from "shared/gallery_catalog.slint";
+export { GalleryNavigation, GalleryComponentLink } from "shared/gallery_catalog.slint";
 export { KitApiProbe } from "api_probe.slint";
 export { GalleryNavigationExamples } from "shared/navigation_view_specimen.slint";
 
@@ -46,7 +63,7 @@ export component DesignGalleryWindow inherits Window {
     in-out property <string> sample_text: "Prepare a sample document";
     in-out property <bool> sample_switch: true;
     in-out property <ThemeMode> gallery_theme: ThemeMode.light;
-    in-out property <int> gallery_page <=> GalleryNavigation.page;
+    in-out property <string> gallery_destination <=> GalleryNavigation.selected_id;
     in-out property <int> preview_mode: 1;
     in-out property <bool> sample_modal_visible: false;
     in-out property <int> sample_modal_kind: 0;
@@ -114,26 +131,31 @@ export component DesignGalleryWindow inherits Window {
                 }
                 Rectangle {
                     vertical-stretch: 1; min-width: 0px; min-height: 0px;
-                    if root.gallery_page == 0: OverviewPage { width: 100%; height: 100%; }
-                    if root.gallery_page == 1: TokensPage { width: 100%; height: 100%; }
-                    if root.gallery_page == 2: TypographyPage { width: 100%; height: 100%; }
-                    if root.gallery_page == 3: IconsPage { width: 100%; height: 100%; }
-                    if root.gallery_page == 4: ControlsPage {
-                        width: 100%; height: 100%;
-                        preview_mode: root.preview_mode;
-                        sample_text <=> root.sample_text;
-                        sample_switch <=> root.sample_switch;
-                    }
-                    if root.gallery_page == 5: SurfacesPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
-                    if root.gallery_page == 6: FeedbackPage {
-                        width: 100%; height: 100%;
-                        preview_mode: root.preview_mode;
-                        modal_requested(kind) => {
-                            root.sample_modal_kind = kind;
-                            root.sample_modal_visible = true;
-                        }
-                    }
-                    if root.gallery_page == 7: NavigationPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
+                    if root.gallery_destination == "home": HomePage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "all-components": AllComponentsPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "tokens": TokensPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "typography": TypographyPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "icons": IconsPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "controls": ControlsPage { width: 100%; height: 100%; preview_mode: root.preview_mode; sample_text <=> root.sample_text; sample_switch <=> root.sample_switch; }
+                    if root.gallery_destination == "fluent-button": FluentButtonPage { width: 100%; height: 100%; preview_mode: root.preview_mode; sample_text <=> root.sample_text; }
+                    if root.gallery_destination == "icon-button": IconButtonPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "segment-button": SegmentButtonPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "fluent-text-field": FluentTextFieldPage { width: 100%; height: 100%; sample_text <=> root.sample_text; }
+                    if root.gallery_destination == "fluent-text-area": FluentTextAreaPage { width: 100%; height: 100%; sample_text <=> root.sample_text; }
+                    if root.gallery_destination == "surfaces": SurfacesPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
+                    if root.gallery_destination == "badge": BadgePage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "metric-card": MetricCardPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "setting-row": SettingRowPage { width: 100%; height: 100%; sample_switch <=> root.sample_switch; }
+                    if root.gallery_destination == "feedback": FeedbackPage { width: 100%; height: 100%; preview_mode: root.preview_mode; modal_requested(kind) => { root.sample_modal_kind = kind; root.sample_modal_visible = true; } }
+                    if root.gallery_destination == "tooltip-host": TooltipHostPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "toast-host": ToastHostPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
+                    if root.gallery_destination == "modal-manager": ModalManagerPage { width: 100%; height: 100%; modal_requested(kind) => { root.sample_modal_kind = kind; root.sample_modal_visible = true; } }
+                    if root.gallery_destination == "navigation-view": NavigationViewPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "navigation-foundations": NavigationFoundationsPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
+                    if root.gallery_destination == "page-header": PageHeaderPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "section-header": SectionHeaderPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "empty-state": EmptyStatePage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "window-control-button": WindowControlButtonPage { width: 100%; height: 100%; }
                 }
             }
         }

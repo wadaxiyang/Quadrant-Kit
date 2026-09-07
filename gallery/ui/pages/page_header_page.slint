@@ -1,0 +1,19 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { PageHeader, Theme } from "@quadrant-kit";
+export component PageHeaderPage inherits GalleryPage {
+    private property <int> actions: 0;
+    page_description: "A page heading with optional supporting text and an observable action.";
+    Specimen {
+        specimen_title: "Header with an action";
+        specimen_description: "A page heading with optional supporting text and an observable action.";
+        source_code: "import { PageHeader } from \"@quadrant-kit\";\nPageHeader { title: \"Preferences\"; show_action: true; action_text: \"Add\"; }";
+        keyboard_info: "Tab focuses interactive controls; Enter or Space invokes actions. Standard editors use platform editing keys.";
+        accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
+        PageHeader { title: "Preferences"; subtitle: "Display settings"; show_action: true; action_text: "Add"; action_clicked => { root.actions += 1; } }
+        Text { text: "Add actions: " + root.actions; color: Theme.text_secondary; }
+    }
+}

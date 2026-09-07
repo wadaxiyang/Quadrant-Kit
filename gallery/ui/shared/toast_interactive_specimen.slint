@@ -1,0 +1,51 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { FluentTextField, SegmentButton, ToastHost, ToastKind, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+import { PropertyPanel } from "property_panel.slint";
+import { PreviewContainer } from "preview_container.slint";
+
+export component ToastInteractiveSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+    callback modal_requested(int);
+    private property <int> toast_kind: 0;
+    private property <string> toast_message: "The operation completed successfully.";
+
+    specimen_title: "Toast · interactive";
+    source_code: "import { ToastHost, ToastKind } from \"@quadrant-kit\";\n\nToastHost { shown: true; kind: ToastKind.success; message: \"Saved\"; }";
+    specimen_description: "Change semantic kind and content while preserving the shared width, wrapping, status icon, and dismiss behavior.";
+    keyboard_info: "Dismiss IconButton enters Tab order and activates with Enter or Space; hover pauses auto-dismiss.";
+    accessibility_info: "Status icon is semantic decoration; visible message and labeled dismiss action remain available.";
+
+    PreviewContainer {
+        preview_mode: root.preview_mode;
+        preview_title: "Toast width boundary";
+
+        Rectangle {
+            height: 76px;
+            ToastHost {
+                width: min(parent.width, 420px);
+                shown: true;
+                message: root.toast_message;
+                kind: root.toast_kind == 1 ? ToastKind.info : root.toast_kind == 2 ? ToastKind.error : ToastKind.success;
+                auto_dismiss: false;
+            }
+        }
+    }
+
+    PropertyPanel {
+        VerticalLayout {
+            spacing: UiConstants.space_8;
+            HorizontalLayout {
+                spacing: UiConstants.space_4;
+                SegmentButton { text: "Success"; selected: root.toast_kind == 0; clicked => { root.toast_kind = 0; } }
+                SegmentButton { text: "Info"; selected: root.toast_kind == 1; clicked => { root.toast_kind = 1; } }
+                SegmentButton { text: "Error"; selected: root.toast_kind == 2; clicked => { root.toast_kind = 2; } }
+                Rectangle { horizontal-stretch: 1; }
+            }
+            FluentTextField { text <=> root.toast_message; placeholder_text: "Toast message"; }
+        }
+    }
+}

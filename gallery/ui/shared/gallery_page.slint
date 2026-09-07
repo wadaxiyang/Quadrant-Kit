@@ -3,11 +3,12 @@
 
 import { ScrollView } from "std-widgets.slint";
 import { Badge, BadgeKind, SegmentButton, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { GalleryNavigation } from "gallery_catalog.slint";
 import { GalleryMetrics } from "gallery_metrics.slint";
 import { SpecimenSourcePanel } from "specimen_source_panel.slint";
 
 export component GalleryPage inherits Rectangle {
-    in property <string> page_title;
+    in property <string> page_title: GalleryNavigation.page_title;
     in property <string> page_description;
     in property <string> stability: "Candidate";
     in property <string> page_source;

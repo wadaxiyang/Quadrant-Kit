@@ -14,7 +14,7 @@ pub enum ThemeChoice {
 pub struct Config {
     pub size: Option<(f32, f32)>,
     pub theme: ThemeChoice,
-    pub page: i32,
+    pub destination: &'static str,
     pub preview: i32,
     pub navigation_case: i32,
     pub navigation_compact: bool,
@@ -50,7 +50,11 @@ impl Config {
             "system" => ThemeChoice::System,
             _ => return Err("QUADRANT_GALLERY_THEME must be light, dark, or system".into()),
         };
-        let page = index(read("QUADRANT_GALLERY_PAGE")?, "PAGE", 0, 7)?;
+        let page = read("QUADRANT_GALLERY_PAGE")?
+            .map(|value| index(Some(value), "PAGE", 0, 7))
+            .transpose()?;
+        let id = read("QUADRANT_GALLERY_DESTINATION")?;
+        let destination = crate::catalog::resolve(page, id.as_deref())?;
         let preview = index(read("QUADRANT_GALLERY_PREVIEW")?, "PREVIEW", 1, 2)?;
         let navigation_case = index(read("QUADRANT_GALLERY_NAV_CASE")?, "NAV_CASE", 0, 16)?;
         let navigation_compact =
@@ -67,7 +71,7 @@ impl Config {
         Ok(Self {
             size,
             theme,
-            page,
+            destination,
             preview,
             navigation_case,
             navigation_compact,
@@ -113,7 +117,7 @@ mod tests {
             Config {
                 size: None,
                 theme: ThemeChoice::Light,
-                page: 0,
+                destination: "home",
                 preview: 1,
                 navigation_case: 0,
                 navigation_compact: false,
@@ -131,7 +135,7 @@ mod tests {
         .unwrap();
         assert_eq!(config.size, Some((900.0, 600.0)));
         assert_eq!(config.theme, ThemeChoice::System);
-        assert_eq!((config.page, config.preview), (7, 2));
+        assert_eq!((config.destination, config.preview), ("navigation-view", 2));
     }
     #[test]
     fn rejects_removed_page_and_malformed_indices() {
@@ -168,6 +172,30 @@ mod tests {
             );
         }
         assert!(parse(&[("QUADRANT_GALLERY_WIDTH", "800")]).is_err());
+    }
+    #[test]
+    fn destination_and_alias_conflicts() {
+        for entry in crate::catalog::CATALOG
+            .iter()
+            .filter(|e| e.is_destination())
+        {
+            assert_eq!(
+                parse(&[("QUADRANT_GALLERY_DESTINATION", entry.id)])
+                    .unwrap()
+                    .destination,
+                entry.id
+            );
+        }
+        for id in ["", "missing", "controls-group"] {
+            assert!(parse(&[("QUADRANT_GALLERY_DESTINATION", id)]).is_err());
+        }
+        assert!(
+            parse(&[
+                ("QUADRANT_GALLERY_PAGE", "0"),
+                ("QUADRANT_GALLERY_DESTINATION", "home")
+            ])
+            .is_err()
+        );
     }
     #[test]
     fn rejects_unknown_theme_and_empty_output() {

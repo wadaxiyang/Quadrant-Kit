@@ -1,0 +1,38 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { FluentTextArea, FluentTextField, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+import { PreviewContainer } from "preview_container.slint";
+
+export component TextEditorsSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+    in-out property <string> sample_text: "Prepare a sample document";
+    in-out property <bool> sample_switch: true;
+
+    specimen_title: "TextField and TextArea";
+    source_code: "import { FluentTextField, FluentTextArea } from \"@quadrant-kit\";\n\nFluentTextField { text: \"Editable value\"; placeholder_text: \"Title\"; }\nFluentTextArea { height: 88px; text: \"Notes\"; }";
+    specimen_description: "Standard Slint Fluent editors own selection, scrolling, focus, placeholder, and input behavior.";
+    keyboard_info: "Tab enters fields; normal platform editing and selection keys apply; Enter accepts TextField.";
+    accessibility_info: "Standard editors expose text-entry semantics; errors remain adjacent visible text.";
+
+    PreviewContainer {
+        preview_mode: root.preview_mode;
+        preview_title: "Input width boundary";
+        FluentTextField { text <=> root.sample_text; placeholder_text: "Task title"; }
+        FluentTextArea { height: 88px; text <=> root.sample_text; placeholder_text: "Notes"; }
+    }
+
+    GridLayout {
+        spacing: UiConstants.space_8;
+        Row {
+            FluentTextField { text: "Focused value"; preview_focus: true; }
+            FluentTextField { text: "Invalid value"; error_text: "Explain the problem beside the field."; }
+        }
+        Row {
+            FluentTextField { text: "Disabled value"; enabled: false; }
+            FluentTextField { text: "A deliberately long value that remains editable"; }
+        }
+    }
+}

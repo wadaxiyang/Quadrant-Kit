@@ -1,182 +1,32 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Switch } from "std-widgets.slint";
-import { Badge, BadgeKind, FluentButton, FluentIcons, FluentTextArea, FluentTextField, IconButton, SegmentButton, SettingRow, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { FluentButton, FluentTextField } from "@quadrant-kit";
 import { GalleryPage } from "../shared/gallery_page.slint";
-import { Specimen } from "../shared/specimen.slint";
-import { PropertyPanel } from "../shared/property_panel.slint";
-import { PreviewContainer } from "../shared/preview_container.slint";
-import { StateSpecimen } from "../shared/state_specimen.slint";
+
+import { ButtonInteractiveSpecimen } from "../shared/button_interactive_specimen.slint";
+
+import { ButtonStatesSpecimen } from "../shared/button_states_specimen.slint";
+
+import { TextEditorsSpecimen } from "../shared/text_editors_specimen.slint";
+
+import { SelectionSpecimen } from "../shared/selection_specimen.slint";
 
 export component ControlsPage inherits GalleryPage {
+
     in property <int> preview_mode: 1;
     in-out property <string> sample_text: "Prepare a sample document";
     in-out property <bool> sample_switch: true;
-    private property <bool> button_primary: true;
-    private property <bool> button_danger: false;
-    private property <bool> button_enabled: true;
-    private property <int> selected_segment: 0;
-    private property <int> icon_actions: 0;
-    private property <string> last_icon_action: "None";
 
-    page_title: "Controls";
     page_description: "Interactive input and command primitives with deterministic state, variant, content-boundary, keyboard, and accessibility coverage.";
     page_source: "import { FluentButton, FluentTextField } from \"@quadrant-kit\";\n\nFluentTextField { text <=> title; placeholder_text: \"Task title\"; }\nFluentButton { text: \"Save\"; primary: true; clicked => { save(); } }";
 
-    Specimen {
-        specimen_title: "FluentButton · interactive";
-        source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Save\"; primary: true; clicked => { /* Save in the host. */ } }";
-        specimen_description: "Live properties exercise the same public inputs used by Product surfaces.";
-        keyboard_info: "Tab focuses; Enter or Space invokes clicked.";
-        accessibility_info: "Role button; text is the label; enabled state and default action are exposed.";
+    ButtonInteractiveSpecimen { preview_mode: root.preview_mode; sample_text <=> root.sample_text; sample_switch <=> root.sample_switch; }
 
-        PreviewContainer {
-            preview_mode: root.preview_mode;
-            preview_title: "Live button preview";
-            HorizontalLayout {
-                spacing: UiConstants.space_8;
-                FluentButton {
-                    text: root.sample_text == "" ? "Empty label" : root.sample_text;
-                    primary: root.button_primary;
-                    danger: root.button_danger;
-                    enabled: root.button_enabled;
-                }
-                FluentButton { text: "Secondary"; accent: true; }
-                Rectangle { horizontal-stretch: 1; }
-            }
-        }
+    ButtonStatesSpecimen { preview_mode: root.preview_mode; sample_text <=> root.sample_text; sample_switch <=> root.sample_switch; }
 
-        PropertyPanel {
-            GridLayout {
-                spacing: UiConstants.space_8;
-                Row {
-                    Switch { text: "Primary"; checked <=> root.button_primary; accessible-label: "Primary button"; }
-                    Switch { text: "Danger"; checked <=> root.button_danger; accessible-label: "Danger button"; }
-                }
-                Row {
-                    Switch { text: "Enabled"; checked <=> root.button_enabled; accessible-label: "Button enabled"; }
-                }
-                Row {
-                    Text { text: "Label"; color: Theme.text_secondary; font-size: Typography.caption; vertical-alignment: center; }
-                    FluentTextField { text <=> root.sample_text; placeholder_text: "Button label"; }
-                }
-            }
-        }
-    }
+    TextEditorsSpecimen { preview_mode: root.preview_mode; sample_text <=> root.sample_text; sample_switch <=> root.sample_switch; }
 
-    Specimen {
-        specimen_title: "Button and IconButton states";
-        source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Unavailable\"; enabled: false; }\nFluentButton { text: \"Delete\"; danger: true; primary: true; }";
-        specimen_description: "Preview inputs are development-only visual overrides and remain false in Product code.";
-        specimen_kind: "States";
-        keyboard_info: "Enter and Space activate; pointer hover and press use the same visual hierarchy.";
-        accessibility_info: "Disabled controls expose disabled state; danger is reinforced by label and color.";
-
-        GridLayout {
-            spacing: UiConstants.space_12;
-            Row {
-                StateSpecimen { label: "Normal"; FluentButton { text: "Button"; } }
-                StateSpecimen { label: "Hover"; FluentButton { text: "Button"; preview_hover: true; } }
-                StateSpecimen { label: "Pressed"; FluentButton { text: "Button"; preview_pressed: true; } }
-            }
-            Row {
-                StateSpecimen { label: "Keyboard focus"; FluentButton { text: "Button"; preview_focus: true; } }
-                StateSpecimen { label: "Disabled"; FluentButton { text: "Button"; enabled: false; } }
-                StateSpecimen { label: "Danger"; FluentButton { text: "Delete"; danger: true; primary: true; } }
-            }
-            Row {
-                StateSpecimen { label: "Icon normal"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.icon_actions += 1; root.last_icon_action = "Add"; } } }
-                StateSpecimen { label: "Icon focus"; IconButton { icon: FluentIcons.edit; tooltip: "Edit"; preview_focus: true; clicked => { root.icon_actions += 1; root.last_icon_action = "Edit"; } } }
-                StateSpecimen { label: "Icon danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; preview_hover: true; clicked => { root.icon_actions += 1; root.last_icon_action = "Delete"; } } }
-            }
-        }
-        Text {
-            text: "Icon actions: " + root.icon_actions + " · Last: " + root.last_icon_action;
-            color: Theme.text_secondary;
-            font-size: Typography.body;
-            wrap: word-wrap;
-        }
-    }
-
-    Specimen {
-        specimen_title: "TextField and TextArea";
-        source_code: "import { FluentTextField, FluentTextArea } from \"@quadrant-kit\";\n\nFluentTextField { text: \"Editable value\"; placeholder_text: \"Title\"; }\nFluentTextArea { height: 88px; text: \"Notes\"; }";
-        specimen_description: "Standard Slint Fluent editors own selection, scrolling, focus, placeholder, and input behavior.";
-        keyboard_info: "Tab enters fields; normal platform editing and selection keys apply; Enter accepts TextField.";
-        accessibility_info: "Standard editors expose text-entry semantics; errors remain adjacent visible text.";
-
-        PreviewContainer {
-            preview_mode: root.preview_mode;
-            preview_title: "Input width boundary";
-            FluentTextField { text <=> root.sample_text; placeholder_text: "Task title"; }
-            FluentTextArea { height: 88px; text <=> root.sample_text; placeholder_text: "Notes"; }
-        }
-
-        GridLayout {
-            spacing: UiConstants.space_8;
-            Row {
-                FluentTextField { text: "Focused value"; preview_focus: true; }
-                FluentTextField { text: "Invalid value"; error_text: "Explain the problem beside the field."; }
-            }
-            Row {
-                FluentTextField { text: "Disabled value"; enabled: false; }
-                FluentTextField { text: "A deliberately long value that remains editable"; }
-            }
-        }
-    }
-
-    Specimen {
-        specimen_title: "Segment, Switch, and Badge";
-        source_code: "import { SegmentButton, Badge, BadgeKind } from \"@quadrant-kit\";\nimport { Switch } from \"std-widgets.slint\";\n\nSegmentButton { text: \"All\"; selected: true; }\nSwitch { text: \"Enabled\"; checked: true; }\nBadge { text: \"Ready\"; kind: BadgeKind.success; }";
-        specimen_description: "Selection controls expose stable checked state; badges communicate compact non-interactive status.";
-        keyboard_info: "Tab focuses segments and Switch; Enter/Space activates segments, Space toggles Switch.";
-        accessibility_info: "Segments expose button + checked state; Switch uses native checked semantics; Badge has a visible label.";
-
-        VerticalLayout {
-            spacing: UiConstants.space_12;
-            GridLayout {
-                spacing: UiConstants.space_8;
-                Row {
-                    StateSpecimen { label: "Segment selected"; SegmentButton { text: "Selected"; selected: true; } }
-                    StateSpecimen { label: "Segment hover"; SegmentButton { text: "Hover"; preview_hover: true; } }
-                    StateSpecimen { label: "Segment pressed"; SegmentButton { text: "Pressed"; preview_pressed: true; } }
-                }
-                Row {
-                    StateSpecimen { label: "Segment focus"; SegmentButton { text: "Focus"; preview_focus: true; } }
-                    StateSpecimen { label: "Segment disabled"; SegmentButton { text: "Disabled"; enabled: false; } }
-                    StateSpecimen { label: "Not selected"; SegmentButton { text: "Available"; } }
-                }
-            }
-            HorizontalLayout {
-                spacing: UiConstants.space_4;
-                SegmentButton { text: "All"; selected: root.selected_segment == 0; clicked => { root.selected_segment = 0; } }
-                SegmentButton { text: "Recent"; selected: root.selected_segment == 1; clicked => { root.selected_segment = 1; } }
-                SegmentButton { text: "Favorites"; selected: root.selected_segment == 2; clicked => { root.selected_segment = 2; } }
-                SegmentButton { text: "Disabled"; enabled: false; }
-                Rectangle { horizontal-stretch: 1; }
-            }
-            SettingRow {
-                title: "Standard setting row";
-                description: "Supporting text wraps while the trailing control remains aligned.";
-                Switch { text: ""; accessible-label: "Standard setting row"; checked <=> root.sample_switch; }
-            }
-            HorizontalLayout {
-                spacing: UiConstants.space_12;
-                Switch { text: "Interactive switch"; checked <=> root.sample_switch; }
-                Switch { text: "Disabled switch"; enabled: false; }
-                Rectangle { horizontal-stretch: 1; }
-            }
-            HorizontalLayout {
-                spacing: UiConstants.space_8;
-                Badge { text: "Neutral"; }
-                Badge { text: "Accent"; kind: BadgeKind.accent; }
-                Badge { text: "Ready"; kind: BadgeKind.success; }
-                Badge { text: "Warning"; kind: BadgeKind.warning; }
-                Badge { text: "Error"; kind: BadgeKind.danger; }
-                Rectangle { horizontal-stretch: 1; }
-            }
-        }
-    }
+    SelectionSpecimen { preview_mode: root.preview_mode; sample_text <=> root.sample_text; sample_switch <=> root.sample_switch; }
 
 }

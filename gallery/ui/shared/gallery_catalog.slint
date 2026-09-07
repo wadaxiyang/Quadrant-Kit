@@ -4,10 +4,13 @@
 import { NavigationEntry, FluentIcons } from "@quadrant-kit";
 
 // Application state is supplied by gallery/src/navigation.rs, never by Kit.
+export struct GalleryComponentLink { destination: string, name: string, category: string }
+
 export global GalleryNavigation {
     in-out property <[NavigationEntry]> items;
-    in-out property <string> selected_id: "overview";
-    in-out property <int> page: 0;
+    in-out property <string> selected_id: "home";
+    in-out property <string> page_title: "Home";
+    in-out property <[GalleryComponentLink]> components;
     in-out property <bool> can_go_back: false;
     in-out property <string> query;
     in-out property <string> search_status;

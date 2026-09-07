@@ -1,0 +1,39 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { FluentIcons, IconButton, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+import { StateSpecimen } from "state_specimen.slint";
+
+export component IconButtonSpecimen inherits Specimen {
+
+    private property <int> action_count: 0;
+    private property <string> last_action: "None";
+
+    specimen_title: "IconButton states";
+    source_code: "import { IconButton, FluentIcons } from \"@quadrant-kit\";\n\nIconButton { icon: FluentIcons.add; tooltip: \"Add\"; clicked => { /* Handle the action in the host. */ } }";
+    specimen_description: "Activate an icon to update the action count. The disabled icon must leave it unchanged.";
+    specimen_kind: "States";
+    keyboard_info: "Tab focuses; Enter or Space invokes the default action.";
+    accessibility_info: "Role button; tooltip supplies the accessible label; enabled state is exposed.";
+
+    GridLayout {
+        spacing: UiConstants.space_12;
+        Row {
+            StateSpecimen { label: "Normal"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.action_count += 1; root.last_action = "Add"; } } }
+            StateSpecimen { label: "Hover"; IconButton { icon: FluentIcons.add; tooltip: "Add"; preview_hover: true; clicked => { root.action_count += 1; root.last_action = "Hover sample"; } } }
+            StateSpecimen { label: "Pressed"; IconButton { icon: FluentIcons.add; tooltip: "Add"; preview_pressed: true; clicked => { root.action_count += 1; root.last_action = "Pressed sample"; } } }
+        }
+        Row {
+            StateSpecimen { label: "Keyboard focus"; IconButton { icon: FluentIcons.add; tooltip: "Add"; preview_focus: true; clicked => { root.action_count += 1; root.last_action = "Focus sample"; } } }
+            StateSpecimen { label: "Danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; preview_hover: true; clicked => { root.action_count += 1; root.last_action = "Delete"; } } }
+            StateSpecimen { label: "Disabled"; IconButton { icon: FluentIcons.dismiss; tooltip: "Dismiss"; enabled: false; clicked => { root.action_count += 1; root.last_action = "Disabled sample"; } } }
+        }
+    }
+    Text {
+        text: "Icon actions: " + root.action_count + " · Last: " + root.last_action;
+        color: Theme.text_secondary;
+        font-size: Typography.body;
+        wrap: word-wrap;
+    }
+}

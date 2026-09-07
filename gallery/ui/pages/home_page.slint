@@ -1,0 +1,24 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { FluentButton, Theme } from "@quadrant-kit";
+import { GalleryNavigation } from "../shared/gallery_catalog.slint";
+export component HomePage inherits GalleryPage {
+
+    page_description: "Interactive documentation for the reusable Slint source library. Start with guidance or browse the public visual components.";
+    Specimen {
+        specimen_title: "Explore the Kit";
+        specimen_description: "Browse public visual components, open a focused example and inspect its source. Design guidance groups themes, typography and icon resources.";
+        source_code: "import { FluentButton } from \"@quadrant-kit\";\nFluentButton { text: \"Save\"; primary: true; }";
+        FluentButton { text: "Browse all components"; primary: true; clicked => { GalleryNavigation.navigate("all-components"); } }
+        FluentButton { text: "Explore NavigationView"; clicked => { GalleryNavigation.navigate("navigation-view"); } }
+        Text { text: GalleryNavigation.components.length + " public visual components · one shared catalog"; color: Theme.text_secondary; wrap: word-wrap; }
+    }
+    Specimen {
+        specimen_title: "Try, inspect, integrate";
+        specimen_description: "Choose Light or Dark and a preview width in the toolbar. Exercise the controls, expand source and details, then import the public facade in your host.";
+        Text { text: "Controls and Feedback overview pages retain cross-component comparisons. SurfaceCard retains its surface-state overview. Focused pages provide direct destinations for everyday reference."; color: Theme.text_secondary; wrap: word-wrap; }
+    }
+}

@@ -1,0 +1,12 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { ToastInteractiveSpecimen } from "../shared/toast_interactive_specimen.slint";
+import { ToastBoundariesSpecimen } from "../shared/toast_boundaries_specimen.slint";
+export component ToastHostPage inherits GalleryPage {
+    in property <int> preview_mode: 1;
+    page_description: "Transient outcomes: semantic variants, editable messages and content boundaries.";
+    ToastInteractiveSpecimen { preview_mode: root.preview_mode; }
+    ToastBoundariesSpecimen { preview_mode: root.preview_mode; }
+}

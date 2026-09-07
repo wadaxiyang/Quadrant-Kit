@@ -1,0 +1,23 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { SurfaceCard, Theme, Typography } from "@quadrant-kit";
+import { GalleryNavigation } from "../shared/gallery_catalog.slint";
+export component AllComponentsPage inherits GalleryPage {
+
+    page_description: "Every public visual component links to its canonical destination. Globals, enums and data types remain in design guidance and component documentation.";
+    Text { text: GalleryNavigation.components.length + " public visual components"; color: Theme.text_secondary; }
+    VerticalLayout {
+        spacing: 12px;
+    for entry in GalleryNavigation.components: SurfaceCard {
+        height: 76px; interactive: true; accessible_name: "Open " + entry.name;
+        clicked => { GalleryNavigation.navigate(entry.destination); }
+        VerticalLayout {
+            padding: 16px; spacing: 4px;
+            Text { text: entry.name; color: Theme.text_primary; font-size: Typography.body; font-weight: Typography.semibold; }
+            Text { text: entry.category; color: Theme.text_secondary; font-size: Typography.caption; }
+        }
+    }
+    }
+}

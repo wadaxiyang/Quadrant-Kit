@@ -1,0 +1,18 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { NavigationView, Theme } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+
+export component NavigationDefaultsSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+
+    specimen_title: "NavigationView · defaults";
+    source_code: "import { NavigationView } from \"@quadrant-kit\";\n\nNavigationView { Text { text: \"Host-owned content\"; } }";
+    specimen_description: "No navigation inputs assigned: empty models, expanded 260 px pane, only Toggle visible, Fluent content.";
+    NavigationView {
+        height: 120px;
+        Text { text: "Default host content"; color: Theme.text_primary; horizontal-alignment: center; vertical-alignment: center; }
+    }
+}

@@ -1,0 +1,13 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { ButtonInteractiveSpecimen } from "../shared/button_interactive_specimen.slint";
+import { ButtonStatesSpecimen } from "../shared/button_states_specimen.slint";
+export component FluentButtonPage inherits GalleryPage {
+    in property <int> preview_mode: 1;
+    in-out property <string> sample_text;
+    page_description: "Commands with live properties, keyboard states and comparison examples.";
+    ButtonInteractiveSpecimen { preview_mode: root.preview_mode; sample_text <=> root.sample_text; }
+    ButtonStatesSpecimen { preview_mode: root.preview_mode; sample_text <=> root.sample_text; }
+}

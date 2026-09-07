@@ -1,0 +1,57 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { Switch } from "std-widgets.slint";
+import { FluentButton, FluentTextField, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+import { PropertyPanel } from "property_panel.slint";
+import { PreviewContainer } from "preview_container.slint";
+
+export component ButtonInteractiveSpecimen inherits Specimen {
+
+    in property <int> preview_mode: 1;
+    in-out property <string> sample_text: "Prepare a sample document";
+    in-out property <bool> sample_switch: true;
+    private property <bool> button_primary: true;
+    private property <bool> button_danger: false;
+    private property <bool> button_enabled: true;
+
+    specimen_title: "FluentButton · interactive";
+    source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Save\"; primary: true; clicked => { /* Save in the host. */ } }";
+    specimen_description: "Live properties exercise the same public inputs used by Product surfaces.";
+    keyboard_info: "Tab focuses; Enter or Space invokes clicked.";
+    accessibility_info: "Role button; text is the label; enabled state and default action are exposed.";
+
+    PreviewContainer {
+        preview_mode: root.preview_mode;
+        preview_title: "Live button preview";
+        HorizontalLayout {
+            spacing: UiConstants.space_8;
+            FluentButton {
+                text: root.sample_text == "" ? "Empty label" : root.sample_text;
+                primary: root.button_primary;
+                danger: root.button_danger;
+                enabled: root.button_enabled;
+            }
+            FluentButton { text: "Secondary"; accent: true; }
+            Rectangle { horizontal-stretch: 1; }
+        }
+    }
+
+    PropertyPanel {
+        GridLayout {
+            spacing: UiConstants.space_8;
+            Row {
+                Switch { text: "Primary"; checked <=> root.button_primary; accessible-label: "Primary button"; }
+                Switch { text: "Danger"; checked <=> root.button_danger; accessible-label: "Danger button"; }
+            }
+            Row {
+                Switch { text: "Enabled"; checked <=> root.button_enabled; accessible-label: "Button enabled"; }
+            }
+            Row {
+                Text { text: "Label"; color: Theme.text_secondary; font-size: Typography.caption; vertical-alignment: center; }
+                FluentTextField { text <=> root.sample_text; placeholder_text: "Button label"; }
+            }
+        }
+    }
+}

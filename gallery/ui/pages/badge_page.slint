@@ -1,0 +1,25 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { Badge, BadgeKind } from "@quadrant-kit";
+export component BadgePage inherits GalleryPage {
+
+    page_description: "Status pairs a visible label with a semantic color.";
+    Specimen {
+        specimen_title: "Semantic labels";
+        specimen_description: "Status pairs a visible label with a semantic color.";
+        source_code: "import { Badge, BadgeKind } from \"@quadrant-kit\";\nBadge { text: \"Ready\"; kind: BadgeKind.success; }";
+        keyboard_info: "Reference labels are not interactive and do not enter Tab order.";
+        accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
+        VerticalLayout {
+            spacing: 12px;
+            Badge { text: "Neutral"; }
+            Badge { text: "Accent"; kind: BadgeKind.accent; }
+            Badge { text: "Ready"; kind: BadgeKind.success; }
+            Badge { text: "Warning"; kind: BadgeKind.warning; }
+            Badge { text: "Error"; kind: BadgeKind.danger; }
+        }
+    }
+}
