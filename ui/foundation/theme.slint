@@ -31,7 +31,6 @@ export global Theme {
     out property <bool> dark_mode: mode == ThemeMode.dark || (mode == ThemeMode.system && system_dark);
     out property <color> background: dark_mode ? #202020 : #f3f3f3;
     out property <color> content_bg: dark_mode ? #1e1e1e : #ffffff;
-    out property <color> sidebar_bg: transparent;
     out property <color> card_bg: dark_mode ? #2d2d30 : #ffffff;
     out property <color> card_bg_muted: dark_mode ? #27272a : #fafafa;
     out property <color> text_primary: dark_mode ? #eeeeee : #1a1a1a;
@@ -42,7 +41,7 @@ export global Theme {
     out property <color> main_color: dark_mode ? #55555a : #c6c6c6;
     out property <color> hover_bg: dark_mode ? #2a2d2e : #eaeaea;
     out property <color> selected_bg: dark_mode ? #37373d : #e6e6e6;
-    out property <color> navigation_pane_bg: sidebar_bg;
+    out property <color> navigation_pane_bg: transparent;
     out property <color> navigation_content_bg: content_bg;
     out property <color> navigation_content_border: border_color;
     out property <color> navigation_item_hover_bg: hover_bg;

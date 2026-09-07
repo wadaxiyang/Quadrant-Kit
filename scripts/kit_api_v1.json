@@ -1645,76 +1645,6 @@
         }
       }
     },
-    "SidebarItem": {
-      "signature": {
-        "kind": "component",
-        "inherits": "Rectangle",
-        "members": {
-          "icon": {
-            "kind": "property",
-            "direction": "in",
-            "type": "image"
-          },
-          "selected-icon": {
-            "kind": "property",
-            "direction": "in",
-            "type": "image"
-          },
-          "text": {
-            "kind": "property",
-            "direction": "in",
-            "type": "string"
-          },
-          "icon-color": {
-            "kind": "property",
-            "direction": "in",
-            "type": "color"
-          },
-          "selected": {
-            "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "collapsed": {
-            "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "clicked": {
-            "kind": "callback",
-            "arguments": [],
-            "return": "void",
-            "pure": false
-          }
-        }
-      },
-      "defaults": {
-        "icon": {
-          "binding": null,
-          "expression": ""
-        },
-        "selected-icon": {
-          "binding": ":",
-          "expression": "root . icon"
-        },
-        "text": {
-          "binding": null,
-          "expression": ""
-        },
-        "icon-color": {
-          "binding": ":",
-          "expression": "Theme . icon-neutral"
-        },
-        "selected": {
-          "binding": ":",
-          "expression": "false"
-        },
-        "collapsed": {
-          "binding": ":",
-          "expression": "false"
-        }
-      }
-    },
     "SurfaceCard": {
       "signature": {
         "kind": "component",
@@ -1834,11 +1764,6 @@
             "type": "color"
           },
           "content-bg": {
-            "kind": "property",
-            "direction": "out",
-            "type": "color"
-          },
-          "sidebar-bg": {
             "kind": "property",
             "direction": "out",
             "type": "color"
@@ -2080,10 +2005,6 @@
           "binding": ":",
           "expression": "dark-mode ? # 1e 1e 1e : # ffffff"
         },
-        "sidebar-bg": {
-          "binding": ":",
-          "expression": "transparent"
-        },
         "card-bg": {
           "binding": ":",
           "expression": "dark-mode ? # 2d 2d 30 : # ffffff"
@@ -2126,7 +2047,7 @@
         },
         "navigation-pane-bg": {
           "binding": ":",
-          "expression": "sidebar-bg"
+          "expression": "transparent"
         },
         "navigation-content-bg": {
           "binding": ":",
@@ -2496,16 +2417,6 @@
             "direction": "out",
             "type": "length"
           },
-          "sidebar-collapsed-width": {
-            "kind": "property",
-            "direction": "out",
-            "type": "length"
-          },
-          "sidebar-expanded-width": {
-            "kind": "property",
-            "direction": "out",
-            "type": "length"
-          },
           "title-bar-height": {
             "kind": "property",
             "direction": "out",
@@ -2657,14 +2568,6 @@
           "binding": ":",
           "expression": "40px"
         },
-        "sidebar-collapsed-width": {
-          "binding": ":",
-          "expression": "54px"
-        },
-        "sidebar-expanded-width": {
-          "binding": ":",
-          "expression": "200px"
-        },
         "title-bar-height": {
           "binding": ":",
           "expression": "40px"
@@ -2687,7 +2590,7 @@
         },
         "navigation-pane-compact-width": {
           "binding": ":",
-          "expression": "sidebar-collapsed-width"
+          "expression": "54px"
         },
         "navigation-pane-default-width": {
           "binding": ":",

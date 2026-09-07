@@ -1,10 +1,28 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-export struct GalleryCatalogEntry {
-    id: int,
-    category: int,
-    title: string,
-    icon: image,
-    selected_icon: image,
+import { NavigationEntry, NavigationEntryKind, FluentIcons } from "@quadrant-kit";
+
+// Flat host-owned mapping keeps snapshot page indices 0-7 stable through cutover.
+export global GalleryCatalog {
+    out property <[NavigationEntry]> items: [
+        { id: "overview", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Overview", icon: FluentIcons.about_regular, selected_icon: FluentIcons.about_filled, enabled: true, has_children: false, expanded: false },
+        { id: "tokens", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Tokens", icon: FluentIcons.theme_system, selected_icon: FluentIcons.theme_system, enabled: true, has_children: false, expanded: false },
+        { id: "typography", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Typography", icon: FluentIcons.edit, selected_icon: FluentIcons.edit, enabled: true, has_children: false, expanded: false },
+        { id: "icons", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Icons", icon: FluentIcons.info, selected_icon: FluentIcons.info, enabled: true, has_children: false, expanded: false },
+        { id: "controls", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Controls", icon: FluentIcons.add, selected_icon: FluentIcons.add, enabled: true, has_children: false, expanded: false },
+        { id: "surfaces", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Surfaces", icon: FluentIcons.menu, selected_icon: FluentIcons.menu, enabled: true, has_children: false, expanded: false },
+        { id: "feedback", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Feedback", icon: FluentIcons.status_info, selected_icon: FluentIcons.status_success, enabled: true, has_children: false, expanded: false },
+        { id: "navigation", parent_id: "", depth: 0, kind: NavigationEntryKind.destination, text: "Navigation", icon: FluentIcons.menu, selected_icon: FluentIcons.menu, enabled: true, has_children: false, expanded: false },
+    ];
+    public pure function page-index(id: string) -> int {
+        return id == "overview" ? 0 :
+               id == "tokens" ? 1 :
+               id == "typography" ? 2 :
+               id == "icons" ? 3 :
+               id == "controls" ? 4 :
+               id == "surfaces" ? 5 :
+               id == "feedback" ? 6 :
+               id == "navigation" ? 7 : -1;
+    }
 }

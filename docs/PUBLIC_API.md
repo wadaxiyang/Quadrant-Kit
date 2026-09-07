@@ -1,8 +1,12 @@
-# Public API — local navigation rebuild, Phase 2
+# Public API — local navigation rebuild, Phase 3
 
-`ui/kit.slint` is the only supported Slint entry. All 36 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The eight navigation additions are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
+`ui/kit.slint` is the only supported Slint entry. All 35 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The navigation rebuild additions and SidebarItem removal are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
 
-Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 36 exported names, 249 properties, 21 callbacks, seven enum value lists and one ten-field struct. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
+Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 35 exported names, 240 properties, 20 callbacks, seven enum value lists and one ten-field struct. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
+
+Phase 3 removes SidebarItem, Theme.sidebar_bg and the two UiConstants.sidebar_* widths.
+The new pane tokens retain their resolved transparent/54 px values; content_radius
+and other shared tokens remain. See [Phase 3 cutover](NAVIGATION_REBUILD_PHASE3.md).
 
 ## Coverage and behavior
 
@@ -10,7 +14,7 @@ Signatures below are copied from the current sources, including declared default
 - Controls demonstrates buttons, segments, fields, text areas, badge, settings composition, tooltip usage, and existing preview states. Text editing remains delegated to std-widgets.
 - Surfaces demonstrates interactive/decorative SurfaceCard and state variants.
 - Feedback demonstrates all Toast/Modal kinds and text boundaries. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks, and screen-reader behavior remain unverified.
-- Navigation demonstrates NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, NavigationView, SidebarItem, PageHeader, MetricCard, EmptyState, and WindowControlButton. NavigationView demonstrates controlled three-level primary/footer models. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
+- Navigation demonstrates NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, NavigationView, PageHeader, MetricCard, EmptyState, and WindowControlButton. NavigationView demonstrates controlled three-level primary/footer models. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
 - IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
 - Existing keyboard/focus/disabled semantics are retained in component code. Native keyboard/IME/screen-reader tests and every state/size combination have not all been executed. Screenshot rendering is not interaction or accessibility proof.
 
@@ -66,7 +70,6 @@ export global Theme {
     out property <bool> dark_mode: mode == ThemeMode.dark || (mode == ThemeMode.system && system_dark);
     out property <color> background: dark_mode ? #202020 : #f3f3f3;
     out property <color> content_bg: dark_mode ? #1e1e1e : #ffffff;
-    out property <color> sidebar_bg: transparent;
     out property <color> card_bg: dark_mode ? #2d2d30 : #ffffff;
     out property <color> card_bg_muted: dark_mode ? #27272a : #fafafa;
     out property <color> text_primary: dark_mode ? #eeeeee : #1a1a1a;
@@ -77,7 +80,7 @@ export global Theme {
     out property <color> main_color: dark_mode ? #55555a : #c6c6c6;
     out property <color> hover_bg: dark_mode ? #2a2d2e : #eaeaea;
     out property <color> selected_bg: dark_mode ? #37373d : #e6e6e6;
-    out property <color> navigation_pane_bg: sidebar_bg;
+    out property <color> navigation_pane_bg: transparent;
     out property <color> navigation_content_bg: content_bg;
     out property <color> navigation_content_border: border_color;
     out property <color> navigation_item_hover_bg: hover_bg;
@@ -154,14 +157,12 @@ export global UiConstants {
     out property <length> space_28: 28px;
     out property <length> space_32: 32px;
     out property <length> space_40: 40px;
-    out property <length> sidebar_collapsed_width: 54px;
-    out property <length> sidebar_expanded_width: 200px;
     out property <length> title_bar_height: 40px;
     out property <length> navigation_item_height: 40px;
     out property <length> navigation_item_padding: 11px;
     out property <length> navigation_icon_slot_width: 24px;
     out property <length> navigation_icon_size: 20px;
-    out property <length> navigation_pane_compact_width: sidebar_collapsed_width;
+    out property <length> navigation_pane_compact_width: 54px;
     out property <length> navigation_pane_default_width: 260px;
     out property <length> navigation_item_indent: 28px;
     out property <length> navigation_content_radius: content_radius;
@@ -373,22 +374,6 @@ export component SettingRow inherits Rectangle {
     in property <string> title;
     in property <string> description;
     in property <bool> enabled: true;
-}
-```
-
-### SidebarItem
-
-[Source](../ui/patterns/navigation/sidebar_item.slint)
-
-```slint
-export component SidebarItem inherits Rectangle {
-    in property <image> icon;
-    in property <image> selected_icon: root.icon;
-    in property <string> text;
-    in property <color> icon_color: Theme.icon_neutral;
-    in property <bool> selected: false;
-    in property <bool> collapsed: false;
-    callback clicked;
 }
 ```
 

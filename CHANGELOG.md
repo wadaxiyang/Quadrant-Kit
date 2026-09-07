@@ -1,5 +1,14 @@
 # Changelog
 
+## Navigation rebuild Phase 3 — local, unpublished
+
+- Switch the Gallery shell to NavigationView with stable eight-page IDs and a
+  separate Theme/preview toolbar; preserve host-owned scrolling and page state.
+- Remove SidebarItem and its three legacy sidebar tokens after native cutover
+  verification. Preserve all other contracts except two equivalent token rebindings.
+- Replace the legacy specimen/probe/sample, update the reviewed 35-name API, and
+  keep the pane-toggle tooltip readable at the window edge.
+
 ## Navigation rebuild Phase 2 — local, unpublished
 
 - Add controlled NavigationView with three-level primary/footer menus, split

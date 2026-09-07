@@ -5,6 +5,7 @@ import { UiConstants } from "../../foundation/constants.slint";
 import { Theme } from "../../foundation/theme.slint";
 import { FluentIcons } from "../../foundation/fluent_icons.slint";
 import { IconButton } from "../../primitives/icon_button.slint";
+import { TooltipHost } from "../../primitives/tooltip_host.slint";
 import { FluentIcon } from "../../primitives/fluent_icon.slint";
 import { NavigationPaneMode } from "navigation_types.slint";
 
@@ -23,11 +24,14 @@ export component NavigationPaneToggleButton inherits Rectangle {
         width: 100%;
         height: 100%;
         enabled: root.enabled;
-        tooltip: root.accessible_name;
+        accessible-label: root.accessible_name;
         accessible-expandable: true;
         accessible-expanded: root.pane_mode == NavigationPaneMode.expanded;
         clicked => { if (root.enabled) { button.focus(); root.clicked(); } }
     }
+
+    // Popup tooltip stays readable at the left window edge and in compact panes.
+    Tooltip { TooltipHost { text: root.accessible_name; shown: true; } }
 
     FluentIcon {
         x: (parent.width - self.width) / 2;

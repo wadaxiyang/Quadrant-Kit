@@ -15,7 +15,7 @@ below retain their original scope; publication is summarized at the end.
 - foundation → no higher layer; primitives → foundation; patterns/overlays → their own layer, primitives and foundation. Same-layer imports must be acyclic; patterns and overlays cannot import each other. Implementation cannot import the facade.
 - Gallery may import its own files, std-widgets and the exact named `@quadrant-kit` facade. Raw Kit paths, external imports and canonical path escapes fail.
 - Multiline declarations/imports, re-export aliases, comment/string delimiters, escaped strings, public property direction/type, callback arguments/returns, pure public functions, enum order/values, struct fields and explicit base types. Unknown public syntax fails explicitly.
-- All 36 currently reachable public names, extra/missing exports and duplicate definitions. Actual Product names/tokens are rejected; generic FocusScope, focus-ring, task text and copyright references remain legal.
+- All 35 currently reachable public names, extra/missing exports and duplicate definitions. Actual Product names/tokens are rejected; generic FocusScope, focus-ring, task text and copyright references remain legal.
 - Static image references share the same scanner with the distribution checker. Referenced files must stay in the package; all icon assets have a current hash/MIT record, and handwritten source retains GPL/copyright headers. MIT SVGs are never given GPL source headers.
 - Kit helper has no normal/runtime dependency edges. Gallery's same-repository Kit path build dependency is allowed. Product packages and source patches/replacements fail; resolved Slint stays at 1.17.1.
 
@@ -25,10 +25,10 @@ The Cargo module also has fixtures for future Tasks Git+full-SHA, alias, workspa
 
 ## Reviewed baselines
 
-Current navigation Phase 2 implementation, API review, native evidence and check
-results are recorded in [NAVIGATION_REBUILD_PHASE2.md](NAVIGATION_REBUILD_PHASE2.md).
+Current navigation Phase 3 implementation, API review, native evidence and check
+results are recorded in [NAVIGATION_REBUILD_PHASE3.md](NAVIGATION_REBUILD_PHASE3.md).
 
-`scripts/kit_api_v1.json` schema 1 currently records **36 names, 249 explicitly declared properties, 21 callbacks, seven enums and one ten-field struct**. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 adds NavigationView with 15 properties and six callbacks; all previously declared signatures/defaults are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.
+`scripts/kit_api_v1.json` schema 1 currently records **35 names, 240 explicitly declared properties, 20 callbacks, seven enums and one ten-field struct**. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 added NavigationView with 15 properties and six callbacks. Phase 3 removes SidebarItem and three legacy sidebar tokens, rebinding two navigation defaults to their identical resolved values; all other surviving contracts are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.
 
 Initial migration differences are explicitly authorized by SPEC v2:
 

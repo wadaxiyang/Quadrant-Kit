@@ -3,7 +3,7 @@
 import {
     Elevation, Motion, Theme, ThemeMode, Typography, UiConstants, FluentIcons,
     FluentIcon, TooltipHost, SurfaceCard, Badge, BadgeKind, FluentButton, IconButton,
-    SegmentButton, FluentTextField, FluentTextArea, SettingRow, SidebarItem,
+    SegmentButton, FluentTextField, FluentTextArea, SettingRow,
     WindowControlButton, SectionHeader, PageHeader, EmptyState, MetricCard,
     ToastHost, ToastKind, ModalManager, ModalKind,
     NavigationPaneMode, NavigationContentSurfaceMode, NavigationEntryKind, NavigationEntry,
@@ -37,7 +37,6 @@ export component KitApiProbe inherits Window {
         FluentTextField { text <=> root.sample_text; accepted(value) => { root.sample_text = value; } edited(value) => { root.sample_text = value; } }
         FluentTextArea { text <=> root.sample_text; edited(value) => { root.sample_text = value; } }
         SettingRow { title: "Preference"; description: "Sample"; }
-        SidebarItem { text: "Preferences"; icon: FluentIcons.settings_regular; clicked => { root.activated = true; } }
         NavigationBackButton { accessible_name: "Go back"; enabled: root.activated; clicked => { root.activated = false; } }
         NavigationView {
             height: 100px; items: root.navigation_entries; selected_id: "preferences";
