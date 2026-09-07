@@ -301,7 +301,7 @@ class CargoFixtures(unittest.TestCase):
 class CurrentRepositoryTests(unittest.TestCase):
     def test_reviewed_current_api_and_assets(self):
         result = check(Path(__file__).resolve().parents[2], metadata=False)
-        self.assertEqual(result['exports'], 28)
+        self.assertEqual(result['exports'], 35)
         self.assertEqual(result['distribution']['svg_assets'], 32)
 
 

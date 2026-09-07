@@ -6,6 +6,8 @@ import {
     SegmentButton, FluentTextField, FluentTextArea, SettingRow, SidebarItem,
     WindowControlButton, SectionHeader, PageHeader, EmptyState, MetricCard,
     ToastHost, ToastKind, ModalManager, ModalKind,
+    NavigationPaneMode, NavigationContentSurfaceMode, NavigationEntryKind, NavigationEntry,
+    NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface,
 } from "@quadrant-kit";
 
 // Compiled through gallery.slint; normal Gallery startup does not instantiate it.
@@ -14,6 +16,12 @@ export component KitApiProbe inherits Window {
     in-out property <bool> activated: false;
     in-out property <ThemeMode> mode: ThemeMode.system;
     out property <duration> motion_duration: Motion.fast;
+    in-out property <NavigationPaneMode> pane_mode: NavigationPaneMode.expanded;
+    out property <[NavigationEntry]> navigation_entries: [
+        { id: "preferences", parent_id: "", depth: 0, text: "Preferences",
+          icon: FluentIcons.settings_regular, selected_icon: FluentIcons.settings_filled,
+          kind: NavigationEntryKind.destination, enabled: true, has_children: false, expanded: false },
+    ];
     background: Elevation.card_surface;
     default-font-size: Typography.body;
     default-font-family: Theme.ui_font_family;
@@ -30,6 +38,16 @@ export component KitApiProbe inherits Window {
         FluentTextArea { text <=> root.sample_text; edited(value) => { root.sample_text = value; } }
         SettingRow { title: "Preference"; description: "Sample"; }
         SidebarItem { text: "Preferences"; icon: FluentIcons.settings_regular; clicked => { root.activated = true; } }
+        NavigationBackButton { accessible_name: "Go back"; enabled: root.activated; clicked => { root.activated = false; } }
+        NavigationPaneToggleButton {
+            pane_mode: root.pane_mode;
+            clicked => { root.pane_mode = root.pane_mode == NavigationPaneMode.expanded ? NavigationPaneMode.compact : NavigationPaneMode.expanded; }
+        }
+        NavigationContentSurface {
+            mode: NavigationContentSurfaceMode.fluent;
+            height: 40px;
+            Text { text: root.navigation_entries[0].text; color: Theme.text_primary; }
+        }
         WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; clicked => { root.activated = false; } }
         SectionHeader { title: "Section"; badge_text: "New"; badge_kind: BadgeKind.neutral; }
         PageHeader { title: "Page"; show_action: true; action_text: "Add"; action_clicked => { root.activated = true; } }

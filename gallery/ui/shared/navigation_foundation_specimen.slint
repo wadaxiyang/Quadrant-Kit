@@ -1,0 +1,94 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { Switch } from "std-widgets.slint";
+import { NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, NavigationPaneMode, NavigationContentSurfaceMode, SegmentButton, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { Specimen } from "specimen.slint";
+
+export component NavigationFoundationSpecimen inherits Specimen {
+    in property <int> preview_mode: 1;
+    private property <bool> show_back: true;
+    private property <bool> show_toggle: true;
+    private property <bool> controls_enabled: true;
+    private property <bool> compact: false;
+    private property <int> back_actions: 0;
+    private property <int> toggle_actions: 0;
+    private property <NavigationContentSurfaceMode> surface_mode: NavigationContentSurfaceMode.fluent;
+
+    specimen_title: "Navigation foundations";
+    specimen_description: "Standalone controls and content framing. The host owns visibility and pane mode.";
+    keyboard_info: "Tab focuses enabled buttons; Enter/Space invokes once. Hidden controls leave no row or gap.";
+    accessibility_info: "Buttons expose names and enabled state; the pane toggle reports expanded state. Surface content belongs to the host.";
+
+    HorizontalLayout {
+        spacing: UiConstants.space_12;
+        Switch { text: "Show Back"; checked <=> root.show_back; }
+        Switch { text: "Show Toggle"; checked <=> root.show_toggle; }
+        Switch { text: "Enabled"; checked <=> root.controls_enabled; }
+    }
+
+    HorizontalLayout {
+        spacing: UiConstants.space_4;
+        SegmentButton { text: "Fluent"; selected: root.surface_mode == NavigationContentSurfaceMode.fluent; clicked => { root.surface_mode = NavigationContentSurfaceMode.fluent; } }
+        SegmentButton { text: "Flat"; selected: root.surface_mode == NavigationContentSurfaceMode.flat; clicked => { root.surface_mode = NavigationContentSurfaceMode.flat; } }
+        SegmentButton { text: "Transparent"; selected: root.surface_mode == NavigationContentSurfaceMode.transparent; clicked => { root.surface_mode = NavigationContentSurfaceMode.transparent; } }
+        Switch { text: "Compact"; checked <=> root.compact; }
+    }
+
+    // Conditional layout, not visible:false on a fixed-height wrapper.
+    if root.show_back || root.show_toggle: HorizontalLayout {
+        height: UiConstants.navigation_item_height;
+        spacing: UiConstants.space_4;
+        alignment: start;
+
+        if root.show_back: NavigationBackButton {
+            enabled: root.controls_enabled;
+            clicked => { root.back_actions += 1; }
+        }
+        if root.show_toggle: NavigationPaneToggleButton {
+            enabled: root.controls_enabled;
+            pane_mode: root.compact ? NavigationPaneMode.compact : NavigationPaneMode.expanded;
+            clicked => {
+                root.toggle_actions += 1;
+                root.compact = !root.compact;
+            }
+        }
+    }
+
+    Text {
+        text: "Back: " + root.back_actions + " · Toggle: " + root.toggle_actions + " · Pane: " + (root.compact ? "compact" : "expanded");
+        color: Theme.text_primary;
+        font-size: Typography.body;
+        wrap: word-wrap;
+    }
+
+    Rectangle {
+        height: 120px;
+        background: Theme.selected_bg;
+
+        NavigationContentSurface {
+            x: UiConstants.space_8;
+            y: UiConstants.space_8;
+            width: min(parent.width - UiConstants.space_16, root.preview_mode == 0 ? 280px : root.preview_mode == 1 ? 480px : 720px);
+            height: parent.height - UiConstants.space_16;
+            mode: root.surface_mode;
+
+            VerticalLayout {
+                padding: UiConstants.space_16;
+                spacing: UiConstants.space_4;
+                Text {
+                    text: root.surface_mode == NavigationContentSurfaceMode.fluent ? "Fluent · top + left frame" : root.surface_mode == NavigationContentSurfaceMode.flat ? "Flat · content background" : "Transparent · host background";
+                    color: Theme.text_primary;
+                    font-size: Typography.body;
+                    wrap: word-wrap;
+                }
+                Text {
+                    text: "Host-owned content · no page scrolling added";
+                    color: Theme.text_secondary;
+                    font-size: Typography.caption;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+}

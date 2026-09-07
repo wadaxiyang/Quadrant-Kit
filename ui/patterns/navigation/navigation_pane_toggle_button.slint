@@ -1,0 +1,40 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { UiConstants } from "../../foundation/constants.slint";
+import { Theme } from "../../foundation/theme.slint";
+import { FluentIcons } from "../../foundation/fluent_icons.slint";
+import { IconButton } from "../../primitives/icon_button.slint";
+import { FluentIcon } from "../../primitives/fluent_icon.slint";
+import { NavigationPaneMode } from "navigation_types.slint";
+
+export component NavigationPaneToggleButton inherits Rectangle {
+    in property <bool> enabled: true;
+    in property <NavigationPaneMode> pane_mode: NavigationPaneMode.expanded;
+    in property <string> accessible_name: "Toggle navigation pane";
+    callback clicked();
+
+    width: UiConstants.navigation_item_height;
+    height: UiConstants.navigation_item_height;
+    forward-focus: button;
+    accessible-role: none;
+
+    button := IconButton {
+        width: 100%;
+        height: 100%;
+        enabled: root.enabled;
+        tooltip: root.accessible_name;
+        accessible-expandable: true;
+        accessible-expanded: root.pane_mode == NavigationPaneMode.expanded;
+        clicked => { if (root.enabled) { button.focus(); root.clicked(); } }
+    }
+
+    FluentIcon {
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        size: UiConstants.navigation_icon_size;
+        source: FluentIcons.menu;
+        icon_color: Theme.navigation_item_foreground;
+        opacity: root.enabled ? 1 : 0.45;
+    }
+}

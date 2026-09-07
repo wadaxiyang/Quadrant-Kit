@@ -1,0 +1,21 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+export enum NavigationPaneMode { expanded, compact }
+export enum NavigationContentSurfaceMode { fluent, flat, transparent }
+export enum NavigationEntryKind { destination, group, destination_group, separator, header }
+
+// Complete depth-first preorder trees; depth is 0, 1 or 2. IDs are unique across
+// primary/footer models. Hosts explicitly supply enabled and expansion state.
+export struct NavigationEntry {
+    id: string,
+    parent_id: string,
+    depth: int,
+    text: string,
+    icon: image,
+    selected_icon: image,
+    kind: NavigationEntryKind,
+    enabled: bool,
+    has_children: bool,
+    expanded: bool,
+}

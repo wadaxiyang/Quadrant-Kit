@@ -1,0 +1,42 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+
+import { Theme } from "../../foundation/theme.slint";
+import { UiConstants } from "../../foundation/constants.slint";
+import { IconButton } from "../../primitives/icon_button.slint";
+
+export component NavigationBackButton inherits Rectangle {
+    in property <bool> enabled: true;
+    in property <string> accessible_name: "Back";
+    callback clicked();
+
+    width: UiConstants.navigation_item_height;
+    height: UiConstants.navigation_item_height;
+    forward-focus: button;
+    accessible-role: none;
+
+    button := IconButton {
+        width: 100%;
+        height: 100%;
+        enabled: root.enabled;
+        tooltip: root.accessible_name;
+        clicked => { if (root.enabled) { button.focus(); root.clicked(); } }
+    }
+
+    // Original geometric arrow, drawn in source; no font glyph or new asset.
+    Path {
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        width: UiConstants.navigation_icon_size;
+        height: UiConstants.navigation_icon_size;
+        viewbox-width: 20;
+        viewbox-height: 20;
+        commands: "M 9 4 L 3 10 L 9 16 M 3 10 L 17 10";
+        fill: transparent;
+        stroke: Theme.navigation_item_foreground;
+        stroke-width: 1.5px;
+        stroke-line-cap: round;
+        stroke-line-join: round;
+        opacity: root.enabled ? 1 : 0.45;
+    }
+}

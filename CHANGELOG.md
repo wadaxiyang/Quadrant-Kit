@@ -1,5 +1,18 @@
 # Changelog
 
+## Navigation rebuild Phase 1 — local, unpublished
+
+- Add NavigationPaneMode, NavigationContentSurfaceMode, NavigationEntryKind and
+  NavigationEntry, plus standalone NavigationBackButton, NavigationPaneToggleButton
+  and NavigationContentSurface. Add seven semantic Theme aliases and four navigation
+  constants. The reviewed facade now has 35 names; old declarations/defaults remain.
+- Reuse IconButton input/focus/tooltip behavior; draw the Back arrow in Slint source.
+  Content surfaces provide Fluent top-left framing, flat and transparent modes,
+  without owning page scrolling or routes. Existing 32 SVG assets are unchanged.
+- Add a live Navigation foundation specimen and compile-only API probe coverage.
+  Keep SidebarItem and the old main Gallery shell until the later cutover phases.
+- This does not change the retained extraction source or authorize publication.
+
 ## 0.1.0 — unreleased extraction candidate
 
 - Extract generic Slint source and Gallery into an independent workspace. Root Rust helper exposes only the facade library name and build-time file location.

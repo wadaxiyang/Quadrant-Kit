@@ -1,8 +1,8 @@
-# Public API — 0.1.0 extraction candidate
+# Public API — local navigation rebuild, Phase 1
 
-`ui/kit.slint` is the only supported Slint entry. All 28 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer.
+`ui/kit.slint` is the only supported Slint entry. All 35 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The seven navigation additions are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
 
-Signatures below are copied from the candidate sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 28 exported names, 217 properties, 13 callbacks and four enum value lists. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
+Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 35 exported names, 234 properties, 15 callbacks, seven enum value lists and one ten-field struct. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
 
 ## Coverage and behavior
 
@@ -10,7 +10,7 @@ Signatures below are copied from the candidate sources, including declared defau
 - Controls demonstrates buttons, segments, fields, text areas, badge, settings composition, tooltip usage, and existing preview states. Text editing remains delegated to std-widgets.
 - Surfaces demonstrates interactive/decorative SurfaceCard and state variants.
 - Feedback demonstrates all Toast/Modal kinds and text boundaries. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks, and screen-reader behavior remain unverified.
-- Navigation demonstrates SidebarItem, PageHeader, MetricCard, EmptyState, and WindowControlButton. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
+- Navigation demonstrates NavigationBackButton, NavigationPaneToggleButton, NavigationContentSurface, SidebarItem, PageHeader, MetricCard, EmptyState, and WindowControlButton. NavigationView and hierarchy rendering are Phase 2 work. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
 - IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
 - Existing keyboard/focus/disabled semantics are retained in component code. Native keyboard/IME/screen-reader tests and every state/size combination have not all been executed. Screenshot rendering is not interaction or accessibility proof.
 
@@ -77,6 +77,13 @@ export global Theme {
     out property <color> main_color: dark_mode ? #55555a : #c6c6c6;
     out property <color> hover_bg: dark_mode ? #2a2d2e : #eaeaea;
     out property <color> selected_bg: dark_mode ? #37373d : #e6e6e6;
+    out property <color> navigation_pane_bg: sidebar_bg;
+    out property <color> navigation_content_bg: content_bg;
+    out property <color> navigation_content_border: border_color;
+    out property <color> navigation_item_hover_bg: hover_bg;
+    out property <color> navigation_item_selected_bg: selected_bg;
+    out property <color> navigation_item_foreground: text_secondary;
+    out property <color> navigation_item_foreground_selected: text_primary;
     out property <color> card_hover: dark_mode ? #323237 : #f7f7f7;
     out property <color> accent: dark_mode ? #60cdff : #005fb8;
     out property <color> accent_foreground: dark_mode ? #000000 : #ffffff;
@@ -154,6 +161,10 @@ export global UiConstants {
     out property <length> navigation_item_padding: 11px;
     out property <length> navigation_icon_slot_width: 24px;
     out property <length> navigation_icon_size: 20px;
+    out property <length> navigation_pane_compact_width: sidebar_collapsed_width;
+    out property <length> navigation_pane_default_width: 260px;
+    out property <length> navigation_item_indent: 28px;
+    out property <length> navigation_content_radius: content_radius;
     out property <length> button_height: 32px;
     out property <length> icon_button_size: 32px;
     out property <length> input_height: 36px;
@@ -380,6 +391,89 @@ export component SidebarItem inherits Rectangle {
     callback clicked;
 }
 ```
+
+### Navigation types
+
+[Source](../ui/patterns/navigation/navigation_types.slint)
+
+```slint
+export enum NavigationPaneMode { expanded, compact }
+export enum NavigationContentSurfaceMode { fluent, flat, transparent }
+export enum NavigationEntryKind { destination, group, destination_group, separator, header }
+
+export struct NavigationEntry {
+    id: string,
+    parent_id: string,
+    depth: int,
+    text: string,
+    icon: image,
+    selected_icon: image,
+    kind: NavigationEntryKind,
+    enabled: bool,
+    has_children: bool,
+    expanded: bool,
+}
+```
+
+These declarations establish the Phase 2 model contract; Phase 1 does not render
+or validate a tree. Supply complete depth-first preorder trees with depth 0–2,
+parent links, nonempty unique IDs across primary/footer models, and explicit
+`enabled`/`expanded` values. Struct fields have no assumed `enabled = true` default.
+Selection and expansion belong to the host; these types create no route/history API.
+
+### NavigationBackButton
+
+[Source](../ui/patterns/navigation/navigation_back_button.slint)
+
+```slint
+export component NavigationBackButton inherits Rectangle {
+    in property <bool> enabled: true;
+    in property <string> accessible_name: "Back";
+    callback clicked();
+}
+```
+
+A 40 px button reusing IconButton input and tooltip behavior, with focus forwarded
+to the inner button on activation. Its geometric
+arrow is drawn in Slint source, with no new static asset or font glyph. The host
+handles `clicked`; there is no back stack. `accessible_name` also supplies the tooltip.
+
+### NavigationPaneToggleButton
+
+[Source](../ui/patterns/navigation/navigation_pane_toggle_button.slint)
+
+```slint
+export component NavigationPaneToggleButton inherits Rectangle {
+    in property <bool> enabled: true;
+    in property <NavigationPaneMode> pane_mode: NavigationPaneMode.expanded;
+    in property <string> accessible_name: "Toggle navigation pane";
+    callback clicked();
+}
+```
+
+The 40 px menu button uses the 20 px navigation icon, forwards focus on activation,
+reports the supplied expanded state and emits `clicked`
+without changing it. Its name is also its tooltip. Both navigation buttons gate
+callback delivery when disabled. Hosts remove hidden controls with conditional
+composition, including the enclosing row if empty; setting only `visible: false`
+on a fixed-size container does not establish zero-space layout.
+
+### NavigationContentSurface
+
+[Source](../ui/patterns/navigation/navigation_content_surface.slint)
+
+```slint
+export component NavigationContentSurface inherits Rectangle {
+    in property <NavigationContentSurfaceMode> mode: NavigationContentSurfaceMode.fluent;
+}
+```
+
+`fluent` paints the content background, 8 px top-left radius and 1 px top/left
+border. Other corners are square; an open Path draws only the top/left edges
+and their connecting arc. `flat` paints only the content background. `transparent`
+shows the host background. The clipped `@children` viewport retains the host's
+logical width/height; the component adds no page padding, scrolling or routing.
+Pages should remain transparent so they do not cover the frame.
 
 ### WindowControlButton
 

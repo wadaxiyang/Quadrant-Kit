@@ -8,6 +8,7 @@ import { Specimen } from "../shared/specimen.slint";
 import { PropertyPanel } from "../shared/property_panel.slint";
 import { CodeSample } from "../shared/code_sample.slint";
 import { PreviewContainer } from "../shared/preview_container.slint";
+import { NavigationFoundationSpecimen } from "../shared/navigation_foundation_specimen.slint";
 
 export component NavigationPage inherits GalleryPage {
     in property <int> preview_mode: 1;
@@ -19,6 +20,8 @@ export component NavigationPage inherits GalleryPage {
 
     page_title: "Navigation & shell";
     page_description: "Reusable navigation, page framing, window controls, empty states, and generic application framing.";
+
+    NavigationFoundationSpecimen { preview_mode: root.preview_mode; }
 
     Specimen {
         specimen_title: "SidebarItem · interactive";

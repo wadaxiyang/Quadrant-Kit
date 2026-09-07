@@ -1068,6 +1068,188 @@
         }
       }
     },
+    "NavigationBackButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "accessible-name": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "accessible-name": {
+          "binding": ":",
+          "expression": "\"Back\""
+        }
+      }
+    },
+    "NavigationContentSurface": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "mode": {
+            "kind": "property",
+            "direction": "in",
+            "type": "NavigationContentSurfaceMode"
+          }
+        }
+      },
+      "defaults": {
+        "mode": {
+          "binding": ":",
+          "expression": "NavigationContentSurfaceMode . fluent"
+        }
+      }
+    },
+    "NavigationContentSurfaceMode": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "fluent",
+          "flat",
+          "transparent"
+        ]
+      },
+      "defaults": {}
+    },
+    "NavigationEntry": {
+      "signature": {
+        "kind": "struct",
+        "inherits": null,
+        "fields": [
+          {
+            "name": "depth",
+            "type": "int"
+          },
+          {
+            "name": "enabled",
+            "type": "bool"
+          },
+          {
+            "name": "expanded",
+            "type": "bool"
+          },
+          {
+            "name": "has-children",
+            "type": "bool"
+          },
+          {
+            "name": "icon",
+            "type": "image"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "NavigationEntryKind"
+          },
+          {
+            "name": "parent-id",
+            "type": "string"
+          },
+          {
+            "name": "selected-icon",
+            "type": "image"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          }
+        ]
+      },
+      "defaults": {}
+    },
+    "NavigationEntryKind": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "destination",
+          "group",
+          "destination-group",
+          "separator",
+          "header"
+        ]
+      },
+      "defaults": {}
+    },
+    "NavigationPaneMode": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "expanded",
+          "compact"
+        ]
+      },
+      "defaults": {}
+    },
+    "NavigationPaneToggleButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "pane-mode": {
+            "kind": "property",
+            "direction": "in",
+            "type": "NavigationPaneMode"
+          },
+          "accessible-name": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "pane-mode": {
+          "binding": ":",
+          "expression": "NavigationPaneMode . expanded"
+        },
+        "accessible-name": {
+          "binding": ":",
+          "expression": "\"Toggle navigation pane\""
+        }
+      }
+    },
     "PageHeader": {
       "signature": {
         "kind": "component",
@@ -1521,6 +1703,41 @@
             "direction": "out",
             "type": "color"
           },
+          "navigation-pane-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "navigation-content-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "navigation-content-border": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "navigation-item-hover-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "navigation-item-selected-bg": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "navigation-item-foreground": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "navigation-item-foreground-selected": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
           "card-hover": {
             "kind": "property",
             "direction": "out",
@@ -1716,6 +1933,34 @@
         "selected-bg": {
           "binding": ":",
           "expression": "dark-mode ? # 37373d : # e6e6e6"
+        },
+        "navigation-pane-bg": {
+          "binding": ":",
+          "expression": "sidebar-bg"
+        },
+        "navigation-content-bg": {
+          "binding": ":",
+          "expression": "content-bg"
+        },
+        "navigation-content-border": {
+          "binding": ":",
+          "expression": "border-color"
+        },
+        "navigation-item-hover-bg": {
+          "binding": ":",
+          "expression": "hover-bg"
+        },
+        "navigation-item-selected-bg": {
+          "binding": ":",
+          "expression": "selected-bg"
+        },
+        "navigation-item-foreground": {
+          "binding": ":",
+          "expression": "text-secondary"
+        },
+        "navigation-item-foreground-selected": {
+          "binding": ":",
+          "expression": "text-primary"
         },
         "card-hover": {
           "binding": ":",
@@ -2096,6 +2341,26 @@
             "direction": "out",
             "type": "length"
           },
+          "navigation-pane-compact-width": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "navigation-pane-default-width": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "navigation-item-indent": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
+          "navigation-content-radius": {
+            "kind": "property",
+            "direction": "out",
+            "type": "length"
+          },
           "button-height": {
             "kind": "property",
             "direction": "out",
@@ -2229,6 +2494,22 @@
         "navigation-icon-size": {
           "binding": ":",
           "expression": "20px"
+        },
+        "navigation-pane-compact-width": {
+          "binding": ":",
+          "expression": "sidebar-collapsed-width"
+        },
+        "navigation-pane-default-width": {
+          "binding": ":",
+          "expression": "260px"
+        },
+        "navigation-item-indent": {
+          "binding": ":",
+          "expression": "28px"
+        },
+        "navigation-content-radius": {
+          "binding": ":",
+          "expression": "content-radius"
         },
         "button-height": {
           "binding": ":",

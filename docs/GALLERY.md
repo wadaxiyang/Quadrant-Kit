@@ -6,14 +6,14 @@ The Gallery is a development, verification, and learning application with no Pro
 
 | Page | Content |
 |---:|---|
-| 0 | Overview: 28-name catalog and public import example |
+| 0 | Overview: 35-name local catalog and public import example |
 | 1 | Tokens: generic theme, spacing, elevation, motion |
 | 2 | Typography: generic text roles and content boundaries |
 | 3 | Icons: 32 generic SVGs and action-button states |
 | 4 | Controls: buttons, segments, input wrappers, settings, badges |
 | 5 | Surfaces: decorative/interactive cards and variants |
 | 6 | Feedback: Toast and single confirmation Modal |
-| 7 | Navigation: generic sidebar, page framing, metrics, empty state, window controls |
+| 7 | Navigation: standalone Back/pane toggle/content surface, legacy sidebar, page framing, metrics, empty state, window controls |
 
 The old page 8 and Task patterns filter are removed. Inbox components and
 Product window probes belong to Tasks after cutover. Kit has no Inbox models,
@@ -22,6 +22,24 @@ product brand, task navigation aliases, or quadrant colors.
 Use Light / Dark / System, Compact / Medium / Wide, and the per-page live settings. Existing preview properties remain specimen inputs; they do not assert that real pointer, focus, IME, or assistive-technology paths have been tested. The modal specimen no longer claims a complete Tab trap.
 
 ## Observable action specimens
+
+The Navigation page starts with the Phase 1 foundation specimen. Show Back and
+Show Toggle conditionally mount the controls and their row. Enabled gates both
+buttons; Fluent/Flat/Transparent switches the actual public content surface, and
+Compact supplies the pane-toggle state. Back and Toggle counters expose callback
+delivery; toggling mode is Gallery-owned. The C/M/W utility constrains the sample
+surface to 280/480/720 px, bounded by available width. The main sidebar still uses
+SidebarItem; NavigationView assembly and tree rendering belong to Phase 2.
+
+To verify this specimen, click each enabled button, use Tab/Shift+Tab to focus it,
+then press Enter and Space; its counter must advance once per action. Disable
+both and attempt pointer activation; counters must stay unchanged and Tab must
+skip them. Hide each control separately, then both: the row and its layout gap
+must disappear. Inspect all three surface modes in Light/Dark and C/M, including
+the top-left curve, straight remaining corners, and absence of right/bottom borders.
+The existing source-keyed capture tool can capture its default state with
+`--mode Smoke --page 7 --preview 1`. Interactive state evidence is recorded in
+[the Phase 1 report](NAVIGATION_REBUILD_PHASE1.md).
 
 The Icons page wires every enabled IconButton state to an action count and last
 action label. The disabled specimen has the same callback wiring, so an unexpected
