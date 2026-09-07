@@ -28,6 +28,15 @@ are tracked in docs/VALIDATION.md and docs/CONSUMER_GUIDE.md.
 - Keep native accessibility/focus/IME limitations explicit. Documentation
   handoff is not a new component release or a waiver of those follow-ups.
 
+## Gallery interaction follow-up — 2026-09-07
+
+- Wire IconButton, PageHeader and WindowControlButton specimens to visible
+  action counts and labels. Window-action specimens keep Gallery open for
+  repeated input checks; the window-button specimen row has an explicit height.
+- Verify native mouse/Enter/Space feedback and disabled IconButton suppression;
+  record reproducible steps in docs/GALLERY.md. This changes only Gallery and
+  documentation, with no public component/API/default/asset or consumer pin change.
+
 For future changes, document compatible fixes and reviewed visual impact in a
 patch; record compatible additions with facade/docs/probe coverage. Breaking
 names/types/callbacks or important behavior require the next minor (for example

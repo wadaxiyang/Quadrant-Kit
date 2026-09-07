@@ -13,6 +13,9 @@ export component NavigationPage inherits GalleryPage {
     in property <int> preview_mode: 1;
     private property <bool> sidebar_selected: true;
     private property <bool> sidebar_collapsed: false;
+    private property <int> header_actions: 0;
+    private property <int> window_actions: 0;
+    private property <string> last_window_action: "None";
 
     page_title: "Navigation & shell";
     page_description: "Reusable navigation, page framing, window controls, empty states, and generic application framing.";
@@ -50,7 +53,7 @@ export component NavigationPage inherits GalleryPage {
     Specimen {
         specimen_title: "PageHeader and EmptyState";
         specimen_description: "Both patterns derive height from their content and remain valid in Compact, Medium, and Wide containers.";
-        specimen_kind: "Responsive";
+        specimen_kind: "Interactive";
         keyboard_info: "PageHeader action follows FluentButton keyboard behavior; EmptyState is not interactive.";
         accessibility_info: "The action is labeled; empty-state meaning is carried by visible title and message, not icon alone.";
 
@@ -62,6 +65,13 @@ export component NavigationPage inherits GalleryPage {
                 subtitle: "Configure the workspace display and interaction preferences.";
                 show_action: true;
                 action_text: "Add item";
+                action_clicked => { root.header_actions += 1; }
+            }
+            Text {
+                text: "Add item actions: " + root.header_actions;
+                color: Theme.text_secondary;
+                font-size: Typography.body;
+                wrap: word-wrap;
             }
             GridLayout {
                 spacing: UiConstants.space_8;
@@ -80,17 +90,24 @@ export component NavigationPage inherits GalleryPage {
 
     Specimen {
         specimen_title: "Window controls";
-        specimen_description: "Native-feeling actions retain a stable 46×40 target and explicit accessible labels.";
-        specimen_kind: "States";
-        keyboard_info: "Tab focuses; Enter or Space activates each window action.";
+        specimen_description: "Actions update the result below. The Gallery window stays open so each action can be tested repeatedly.";
+        specimen_kind: "Interactive";
+        keyboard_info: "Tab focuses; Enter or Space records each window action.";
         accessibility_info: "Every action exposes button role and Minimize, Maximize, or Close label.";
 
         HorizontalLayout {
+            height: 40px;
             spacing: 0px;
-            WindowControlButton { icon: FluentIcons.minimize; label: "Minimize"; }
-            WindowControlButton { icon: FluentIcons.maximize; label: "Maximize"; }
-            WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; close_button: true; }
+            WindowControlButton { icon: FluentIcons.minimize; label: "Minimize"; clicked => { root.window_actions += 1; root.last_window_action = "Minimize"; } }
+            WindowControlButton { icon: FluentIcons.maximize; label: "Maximize"; clicked => { root.window_actions += 1; root.last_window_action = "Maximize"; } }
+            WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; close_button: true; clicked => { root.window_actions += 1; root.last_window_action = "Close"; } }
             Rectangle { horizontal-stretch: 1; }
+        }
+        Text {
+            text: "Window actions: " + root.window_actions + " · Last: " + root.last_window_action;
+            color: Theme.text_secondary;
+            font-size: Typography.body;
+            wrap: word-wrap;
         }
     }
 

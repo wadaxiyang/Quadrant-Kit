@@ -18,6 +18,8 @@ export component ControlsPage inherits GalleryPage {
     private property <bool> button_danger: false;
     private property <bool> button_enabled: true;
     private property <int> selected_segment: 0;
+    private property <int> icon_actions: 0;
+    private property <string> last_icon_action: "None";
 
     page_title: "Controls";
     page_description: "Interactive input and command primitives with deterministic state, variant, content-boundary, keyboard, and accessibility coverage.";
@@ -80,10 +82,16 @@ export component ControlsPage inherits GalleryPage {
                 StateSpecimen { label: "Danger"; FluentButton { text: "Delete"; danger: true; primary: true; } }
             }
             Row {
-                StateSpecimen { label: "Icon normal"; IconButton { icon: FluentIcons.add; tooltip: "Add"; } }
-                StateSpecimen { label: "Icon focus"; IconButton { icon: FluentIcons.edit; tooltip: "Edit"; preview_focus: true; } }
-                StateSpecimen { label: "Icon danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; preview_hover: true; } }
+                StateSpecimen { label: "Icon normal"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.icon_actions += 1; root.last_icon_action = "Add"; } } }
+                StateSpecimen { label: "Icon focus"; IconButton { icon: FluentIcons.edit; tooltip: "Edit"; preview_focus: true; clicked => { root.icon_actions += 1; root.last_icon_action = "Edit"; } } }
+                StateSpecimen { label: "Icon danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; preview_hover: true; clicked => { root.icon_actions += 1; root.last_icon_action = "Delete"; } } }
             }
+        }
+        Text {
+            text: "Icon actions: " + root.icon_actions + " · Last: " + root.last_icon_action;
+            color: Theme.text_secondary;
+            font-size: Typography.body;
+            wrap: word-wrap;
         }
     }
 

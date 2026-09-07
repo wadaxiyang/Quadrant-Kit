@@ -21,6 +21,40 @@ product brand, task navigation aliases, or quadrant colors.
 
 Use Light / Dark / System, Compact / Medium / Wide, and the per-page live settings. Existing preview properties remain specimen inputs; they do not assert that real pointer, focus, IME, or assistive-technology paths have been tested. The modal specimen no longer claims a complete Tab trap.
 
+## Observable action specimens
+
+The Icons page wires every enabled IconButton state to an action count and last
+action label. The disabled specimen has the same callback wiring, so an unexpected
+activation would also be visible. Controls provides a separate Add/Edit/Delete
+counter. Navigation exposes the PageHeader action count and a shared window-action
+count with the last Minimize/Maximize/Close label. Window actions are demonstrations:
+they keep Gallery open for repeated testing. Counters reset when the page is recreated.
+
+To reproduce the focused native smoke check, start a fresh Gallery:
+
+1. On Icons, click normal Add: expect `Icon actions: 1 · Last: Add`. Use Tab or
+   Shift+Tab to focus Delete, then press Enter and Space: expect counts 2 and 3,
+   both with `Last: Delete`. Click disabled Dismiss: count stays 3. Tab from Delete
+   skips Dismiss and returns to the Gallery controls.
+2. On Controls, scroll to the icon states and click Add, Edit, Delete: expect
+   counts 1, 2, 3 and the corresponding last-action label.
+3. On Navigation, click Add item, focus it with Tab/Shift+Tab, then press Enter
+   and Space: expect `Add item actions` to advance 1, 2, 3.
+4. Scroll to Window controls. Click Minimize, Maximize, Close: expect counts
+   1, 2, 3 with matching labels. Focus Close and press Enter then Space: expect
+   counts 4 and 5. The real Gallery window remains open throughout.
+5. Switch Light/Dark and Medium/Compact to inspect the feedback text. Use the
+   real title-bar close action to exit Gallery after testing.
+
+All listed input checks passed on native Windows on 2026-09-07 after a locked
+Gallery build, using its ordinary backend selection (renderer not separately
+instrumented). Screenshots and accessibility-tree snapshots are retained as local
+evidence under ignored `target/specimen-interaction-20260907/`. Navigation feedback
+was also visually checked in Light/Medium, Dark/Medium and Dark/Compact. This is a
+focused interaction check, not the full keyboard/IME/screen-reader/backend matrix.
+The disabled check applies to IconButton; PageHeader and WindowControlButton do
+not declare an enabled input. Public component code and API baselines are unchanged.
+
 ## Theme host
 
 Rust applies the known font, selected theme, and initial system preference before showing Gallery, even when its theme equals the default. On Windows it retains Segoe UI Variable Text; elsewhere Slint's system font fallback remains. Font files are not bundled.

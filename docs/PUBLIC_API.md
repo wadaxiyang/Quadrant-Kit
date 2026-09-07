@@ -11,6 +11,7 @@ Signatures below are copied from the candidate sources, including declared defau
 - Surfaces demonstrates interactive/decorative SurfaceCard and state variants.
 - Feedback demonstrates all Toast/Modal kinds and text boundaries. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks, and screen-reader behavior remain unverified.
 - Navigation demonstrates SidebarItem, PageHeader, MetricCard, EmptyState, and WindowControlButton. SectionHeader is also exercised by specimen headings. TooltipHost is exercised through labeled icon/navigation controls and directly compiled in the API probe.
+- IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
 - Existing keyboard/focus/disabled semantics are retained in component code. Native keyboard/IME/screen-reader tests and every state/size combination have not all been executed. Screenshot rendering is not interaction or accessibility proof.
 
 The intentional difference from the embedded API removes Branding, TaskRowShell, InboxItem, and InboxPane, plus Q1–Q4 colors, Typography.timer, UiConstants.focus_wide_breakpoint, and 11 product icon aliases. No generic component callbacks or behavior were redesigned.
