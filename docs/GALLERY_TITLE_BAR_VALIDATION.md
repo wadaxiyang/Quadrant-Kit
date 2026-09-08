@@ -1,5 +1,8 @@
 # Gallery unified Windows title bar
 
+Historical report for the hand-drawn caption implementation. The current native
+window adapters supersede it; see [native chrome validation](GALLERY_NATIVE_CHROME_VALIDATION.md).
+
 Authority: the user's post-Phase-8 request to make the navigation operation row,
 Gallery toolbar and Windows title bar one visual/interactive row.
 Starting commit: `5155f7ea62a8b90719cbcbac4113fecc3c2530e5`.

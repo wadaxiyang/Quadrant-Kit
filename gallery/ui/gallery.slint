@@ -3,7 +3,7 @@
 
 import { Palette } from "std-widgets.slint";
 import { ModalKind, ModalManager, NavigationView, NavigationPaneMode, Theme, ThemeMode, Typography, SegmentButton, UiConstants } from "@quadrant-kit";
-import { GalleryTitleBar } from "shared/gallery_title_bar.slint";
+import { GalleryToolbar } from "shared/gallery_toolbar.slint";
 import { GalleryNavigation } from "shared/gallery_catalog.slint";
 import { HomePage } from "pages/home_page.slint";
 import { AllComponentsPage } from "pages/all_components_page.slint";
@@ -46,17 +46,28 @@ export component GallerySystemTheme inherits Window {
 
 export component DesignGalleryWindow inherits Window {
     title: "Quadrant Kit Gallery";
-    in property <bool> custom_chrome: false;
+    in property <bool> native_caption_surface;
+    in property <bool> client_caption_input;
+    callback caption_pressed();
+    in property <length> toolbar_leading_inset;
+    in property <length> toolbar_trailing_inset;
+    out property <bool> chrome_dark: Theme.dark_mode;
+    out property <color> chrome_background: Theme.background;
+    out property <length> chrome_min_width: root.min-width;
+    out property <length> chrome_min_height: root.min-height;
     out property <length> title_drag_x: title_bar.drag_x;
     out property <length> title_drag_width: title_bar.drag_width;
-    out property <length> title_drag_top: root.maximized ? 0px : 5px;
-    no-frame: root.custom_chrome;
-    resize-border-width: root.custom_chrome && !root.maximized ? 5px : 0px;
+    // Native decorations stay enabled on every platform.
+    no-frame: false;
     preferred-width: 1040px;
     preferred-height: 800px;
     min-width: 760px;
     min-height: 520px;
-    background: Theme.background;
+    background: root.native_caption_surface ? transparent : Theme.background;
+    // Leave the native caption-button surface unpainted. DWM composites it
+    // beneath the Slint surface; an opaque clear would cover the system buttons.
+    Rectangle { width: parent.width - root.toolbar_trailing_inset; height: 48px; background: Theme.background; }
+    Rectangle { y: 48px; width: parent.width; height: parent.height - 48px; background: Theme.background; }
     default-font-family: root.ui_font_family;
     default-font-size: Typography.body;
     default-font-weight: Typography.regular;
@@ -83,15 +94,15 @@ export component DesignGalleryWindow inherits Window {
 
     VerticalLayout {
         spacing: 0px;
-        title_bar := GalleryTitleBar {
-            custom_chrome: root.custom_chrome; maximized: root.maximized;
+        title_bar := GalleryToolbar {
+            client_caption_input: root.client_caption_input;
+            caption_pressed => { root.caption_pressed(); }
+            leading_inset: root.toolbar_leading_inset;
+            trailing_inset: root.toolbar_trailing_inset;
             back_enabled: GalleryNavigation.can_go_back; pane_mode: root.pane_mode;
             gallery_theme <=> root.gallery_theme; preview_mode <=> root.preview_mode;
             back_requested => { GalleryNavigation.back_requested(); }
             pane_toggle_requested => { root.pane_mode = root.pane_mode == NavigationPaneMode.expanded ? NavigationPaneMode.compact : NavigationPaneMode.expanded; }
-            minimize_requested => { root.minimized = true; }
-            maximize_requested => { root.maximized = !root.maximized; }
-            close_requested => { root.close(); }
         }
         NavigationView {
             vertical-stretch: 1;

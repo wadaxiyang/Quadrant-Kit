@@ -1,26 +1,26 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
-import { Theme, Typography, FluentIcons, NavigationBackButton, NavigationPaneToggleButton, NavigationPaneMode, SegmentButton, WindowControlButton, ThemeMode } from "@quadrant-kit";
+import { Theme, Typography, NavigationBackButton, NavigationPaneToggleButton, NavigationPaneMode, SegmentButton, ThemeMode } from "@quadrant-kit";
 
 // Gallery window composition, not a public Kit title-bar or navigation API.
-export component GalleryTitleBar inherits Rectangle {
-    in property <bool> custom_chrome;
-    in property <bool> maximized;
+export component GalleryToolbar inherits Rectangle {
+    // Native button exclusion areas are supplied by the host adapter.
+    in property <length> leading_inset;
+    in property <length> trailing_inset;
     in property <bool> back_enabled;
     in property <NavigationPaneMode> pane_mode;
     in-out property <ThemeMode> gallery_theme;
     in-out property <int> preview_mode;
+    in property <bool> client_caption_input;
+    callback caption_pressed();
     callback back_requested();
     callback pane_toggle_requested();
     out property <length> drag_x: title_region.x;
     out property <length> drag_width: title_region.width;
-    callback minimize_requested();
-    callback maximize_requested();
-    callback close_requested();
     height: 48px;
     min-width: 0px;
     HorizontalLayout {
-        spacing: 0px; padding-left: 4px;
+        spacing: 0px; padding-left: root.leading_inset + 4px; padding-right: root.trailing_inset;
         Rectangle {
             width: 40px;
             NavigationBackButton { y: (parent.height - self.height) / 2; enabled: root.back_enabled; clicked => { root.back_requested(); } }
@@ -30,6 +30,12 @@ export component GalleryTitleBar inherits Rectangle {
             NavigationPaneToggleButton { y: (parent.height - self.height) / 2; pane_mode: root.pane_mode; clicked => { root.pane_toggle_requested(); } }
         }
         title_region := Rectangle {
+            TouchArea {
+                enabled: root.client_caption_input;
+                pointer-event(event) => {
+                    if event.button == PointerEventButton.left && event.kind == PointerEventKind.down { root.caption_pressed(); }
+                }
+            }
             horizontal-stretch: 1; min-width: 108px;
             Text {
                 x: 8px; width: max(0px, parent.width - 16px); height: 100%;
@@ -46,12 +52,6 @@ export component GalleryTitleBar inherits Rectangle {
             SegmentButton { width: 32px; text: "C"; accessible-label: "Compact preview (C)"; selected: root.preview_mode == 0; clicked => { root.preview_mode = 0; } }
             SegmentButton { width: 32px; text: "M"; accessible-label: "Medium preview (M)"; selected: root.preview_mode == 1; clicked => { root.preview_mode = 1; } }
             SegmentButton { width: 32px; text: "W"; accessible-label: "Wide preview (W)"; selected: root.preview_mode == 2; clicked => { root.preview_mode = 2; } }
-        }
-        if root.custom_chrome: HorizontalLayout {
-            spacing: 0px;
-            WindowControlButton { label: "Minimize"; icon: FluentIcons.minimize; clicked => { root.minimize_requested(); } }
-            WindowControlButton { label: root.maximized ? "Restore" : "Maximize"; icon: root.maximized ? FluentIcons.restore_window : FluentIcons.maximize; clicked => { root.maximize_requested(); } }
-            WindowControlButton { label: "Close"; icon: FluentIcons.dismiss; close_button: true; clicked => { root.close_requested(); } }
         }
     }
 }

@@ -1,5 +1,8 @@
 # Validation and boundary contracts
 
+Current native-window integration checks and platform limits are recorded in
+[GALLERY_NATIVE_CHROME_VALIDATION.md](GALLERY_NATIVE_CHROME_VALIDATION.md).
+
 The extraction architecture authority is SPEC v2; the current local navigation
 work follows the NavigationView/Gallery rebuild SPEC and its reviewed phase gates.
 Kit's Python standard-library

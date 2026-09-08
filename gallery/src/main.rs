@@ -28,13 +28,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if config.navigation_validation.is_some() {
         return navigation_validation::run(&config);
     }
-    // Native caption integration uses winit; its renderer follows SLINT_BACKEND.
-    #[cfg(target_os = "windows")]
-    slint::BackendSelector::new()
-        .backend_name("winit".into())
-        .select()?;
+    window_chrome::configure_backend()?;
     let gallery = DesignGalleryWindow::new()?;
-    gallery.set_custom_chrome(cfg!(target_os = "windows"));
+    window_chrome::configure_toolbar(&gallery);
     gallery.global::<GalleryNavigationExamples>().on_entries(
         |case, footer, controls, inputs, settings, icon, selected_icon| {
             slint::ModelRc::new(slint::VecModel::from(navigation_samples::entries(

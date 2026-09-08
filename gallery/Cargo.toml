@@ -14,7 +14,12 @@ slint = { workspace = true, features = ["unstable-winit-030"] }
 png.workspace = true
 
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "=0.61.2", features = ["Win32_Graphics_Gdi", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }
+windows-sys = { version = "=0.61.2", features = ["Win32_Graphics_Gdi", "Win32_Graphics_Dwm", "Win32_UI_Controls", "Win32_UI_HiDpi", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "=0.6.4"
+objc2-app-kit = { version = "=0.3.2", default-features = false, features = ["std", "NSAppearance", "NSApplication", "NSEvent", "NSWindow", "NSView", "NSButton", "NSResponder", "NSControl"] }
+objc2-foundation = { version = "=0.3.2", default-features = false, features = ["std", "NSString", "NSUserDefaults"] }
 
 [build-dependencies]
 slint-build.workspace = true

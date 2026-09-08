@@ -2,30 +2,40 @@
 
 The Gallery is a development, verification, and learning application with no Product dependencies. Build it with `cargo build --locked -p quadrant-kit-gallery`; run with `cargo run --locked -p quadrant-kit-gallery`. It opens DesignGalleryWindow. The compiled KitApiProbe is not shown during normal startup.
 
-## Unified Windows title bar
+## Native window chrome and shared toolbar
 
-On Windows the main Gallery uses one 48 px top row for Back, pane toggle,
-Kit Gallery title, System/Light/Dark, C/M/W preview and the real window controls.
-The old decorative menu icon, separate native caption and duplicate NavigationView
-operation row are removed. Search starts directly below this row. The title text
-and its adjacent empty space support native drag, double-click maximize/restore
-and a right-click system menu. Edges/corners resize the window; maximized windows
-disable the resize border. Window buttons in this top row act on the real window;
-the dedicated WindowControlButton page still demonstrates counters only.
+The main Gallery shares application controls through `shared/gallery_toolbar.slint`:
+Back, pane toggle, title, theme and preview. It accepts native button exclusion
+insets and draws no minimize/maximize/close buttons. Kit's NavigationView API is
+unchanged: Gallery disables its internal operation row and composes the public
+standalone navigation controls above it. Search starts directly below this row.
+The WindowControlButton page remains a component demonstration with counters.
 
-Gallery owns this composition in `shared/gallery_title_bar.slint` and the native
-bridge in `src/window_chrome.rs`. Kit's NavigationView API remains unchanged:
-Gallery turns off its internal Back/toggle and uses the public standalone buttons
-in the top row. Compact search continues to expand the pane and focus its editor.
-The main Windows host selects winit while retaining the configured renderer.
-Only Gallery enables Slint's pinned `unstable-winit-030` accessor feature; no
-dependency version or Kit runtime dependency changes. A small Windows-only
-window subclass uses the already locked windows-sys 0.61.2 to identify the title
-region as a native Windows caption. Other platforms retain
-native decorations, with navigation and utilities combined in their client toolbar.
-The opt-in navigation validation host remains independently decorated.
+The host's `src/window_chrome.rs` selects the pinned winit backend on Windows and
+macOS; platform adapters live in `src/window_chrome/`. The configured renderer
+is retained. Native decorations stay enabled on every platform.
 
-Current evidence and limits: [title-bar correction](GALLERY_TITLE_BAR_VALIDATION.md).
+- Windows extends the client into the native caption and keeps DWM-drawn window
+  controls. The 48 px application toolbar reserves their measured physical bounds.
+  Only their area is left transparent for DWM composition; the application body
+  remains opaque. DWM colors follow the Gallery theme. Windows owns button actions,
+  title dragging, double-click and the system menu; the host supplies resize hit
+  regions and maximized work-area constraints for the extended client.
+- macOS uses a transparent native titlebar with a full-size content view and the
+  real AppKit traffic lights. Their live view bounds determine the leading inset;
+  AppKit appearance follows the Gallery theme. The adapter invokes native dragging
+  and zoom/minimize actions. Apple Silicon cross-checks are available; native Mac
+  rendering, Retina, Spaces/full-screen and accessibility remain **NOT_RUN** locally.
+- Other platforms retain the normal system titlebar and one application toolbar.
+
+Window behavior belongs to the Gallery host, not Kit. Only Gallery enables the
+pinned `unstable-winit-030` feature and platform bindings; no dependency versions
+or public Kit APIs change. The opt-in navigation validation host remains independent.
+Slint snapshots contain the application surface, so the DWM button area is transparent
+in their PNGs. Use a desktop/window capture to inspect the actual native buttons.
+
+Current evidence and limits: [native window chrome](GALLERY_NATIVE_CHROME_VALIDATION.md).
+The [earlier hand-drawn caption report](GALLERY_TITLE_BAR_VALIDATION.md) is historical.
 
 ## Pages and controls
 

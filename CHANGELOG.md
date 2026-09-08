@@ -1,5 +1,18 @@
 # Changelog
 
+## Gallery native window chrome — local, unpublished
+
+- Separate the shared GalleryToolbar from Windows/macOS window adapters. Remove
+  hand-drawn window controls from the main toolbar; Kit's public API is unchanged.
+- Retain the decorated Windows HWND and DWM-rendered caption buttons, measuring
+  their exclusion area and matching the Gallery theme. Keep native caption actions
+  and handle extended-client resize/work-area geometry in the host.
+- Add macOS transparent-titlebar/full-size-content integration with native traffic
+  lights, measured leading insets, AppKit appearance and native window actions.
+  Native macOS runtime verification remains pending.
+- Add macOS bindings using versions already in Cargo.lock; expand Windows API
+  features without upgrading dependencies or adding Kit runtime responsibilities.
+
 ## Gallery title-bar correction — local, unpublished
 
 - Combine Back, pane toggle, Gallery title, theme/preview and actual window
