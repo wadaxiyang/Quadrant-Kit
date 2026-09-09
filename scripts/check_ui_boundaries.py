@@ -135,13 +135,16 @@ def check(root=ROOT, metadata=True):
     findings = baseline_findings(api, baseline)
     if findings:
         raise ContractError('\n'.join(findings))
+    from check_native_reuse import verify as verify_native
+    native_reuse = verify_native(root)
     distribution = verify(root)
     manifests(root)
     if metadata:
         host = next(line.split(': ', 1)[1] for line in subprocess.check_output(['rustc', '-vV'], cwd=root, text=True).splitlines() if line.startswith('host: '))
         resolved = json.loads(subprocess.check_output(['cargo', 'metadata', '--locked', '--format-version', '1', '--filter-platform', host], cwd=root, text=True, encoding='utf-8'))
         check_metadata(resolved)
-    return {'exports': len(api), 'distribution': distribution, 'resolved_cargo_checked': metadata}
+    return {'exports': len(api), 'distribution': distribution, 'resolved_cargo_checked': metadata,
+            'native_reuse': native_reuse}
 
 
 def main():

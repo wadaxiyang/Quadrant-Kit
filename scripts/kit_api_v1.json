@@ -249,17 +249,12 @@
             "direction": "in",
             "type": "image"
           },
-          "show-icon": {
+          "accessible-name": {
             "kind": "property",
             "direction": "in",
-            "type": "bool"
+            "type": "string"
           },
           "primary": {
-            "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "accent": {
             "kind": "property",
             "direction": "in",
             "type": "bool"
@@ -274,19 +269,14 @@
             "direction": "in",
             "type": "bool"
           },
-          "preview-hover": {
+          "has-focus": {
             "kind": "property",
-            "direction": "in",
+            "direction": "out",
             "type": "bool"
           },
-          "preview-pressed": {
+          "pressed": {
             "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "preview-focus": {
-            "kind": "property",
-            "direction": "in",
+            "direction": "out",
             "type": "bool"
           },
           "clicked": {
@@ -306,15 +296,11 @@
           "binding": null,
           "expression": ""
         },
-        "show-icon": {
-          "binding": ":",
-          "expression": "false"
+        "accessible-name": {
+          "binding": null,
+          "expression": ""
         },
         "primary": {
-          "binding": ":",
-          "expression": "false"
-        },
-        "accent": {
           "binding": ":",
           "expression": "false"
         },
@@ -326,17 +312,13 @@
           "binding": ":",
           "expression": "true"
         },
-        "preview-hover": {
+        "has-focus": {
           "binding": ":",
-          "expression": "false"
+          "expression": "command . has-focus"
         },
-        "preview-pressed": {
+        "pressed": {
           "binding": ":",
-          "expression": "false"
-        },
-        "preview-focus": {
-          "binding": ":",
-          "expression": "false"
+          "expression": "command . pressed"
         }
       }
     },

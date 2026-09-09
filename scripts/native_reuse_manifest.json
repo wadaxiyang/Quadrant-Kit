@@ -1,0 +1,546 @@
+{
+  "schema_version": 1,
+  "slint_version": "1.17.1",
+  "review_scope": "P2 current-source migration; runtime evidence in P2 report is scoped separately",
+  "records": [
+    {
+      "component": "ModalManager",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/overlays/modal.slint",
+      "public": true,
+      "status": "reviewed-exception",
+      "native_dependencies": [
+        "Button"
+      ],
+      "missing_capability": "No complete public std confirmation-overlay container.",
+      "permitted_custom_behavior": [
+        "single shown confirmation overlay",
+        "scrim and bounded focus coordination; Return conflict pending P5B"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "ec553dbedf048e57a48add373bc9c936bdb844ca8fc52da1d172528414cde058"
+    },
+    {
+      "component": "ToastHost",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/overlays/toast.slint",
+      "public": true,
+      "status": "reviewed-exception",
+      "native_dependencies": [],
+      "missing_capability": "No public std transient toast presenter.",
+      "permitted_custom_behavior": [
+        "visibility and timeout dismissal request",
+        "hover-based timeout pause"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "f661b2a2ab444ad659bdcb79f7950eed7b69fd7f519f3672979c6030cba2e043"
+    },
+    {
+      "component": "NavigationBackButton",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/navigation/navigation_back_button.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "Tooltip"
+      ],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "NavigationContentSurface",
+      "classification": "presentation",
+      "implementation": "ui/patterns/navigation/navigation_content_surface.slint",
+      "public": true,
+      "status": "presenter",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "NavigationPaneToggleButton",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/navigation/navigation_pane_toggle_button.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "Tooltip"
+      ],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "NavigationView",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/navigation/navigation_view.slint",
+      "public": true,
+      "status": "reviewed-exception",
+      "native_dependencies": [
+        "LineEdit",
+        "ScrollView",
+        "Tooltip"
+      ],
+      "missing_capability": "No public std hierarchical NavigationView.",
+      "permitted_custom_behavior": [
+        "hierarchy projection",
+        "host-controlled navigation/expansion requests",
+        "navigation focus recovery"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "4b8dd247375667719dc72d07c4677f8b67c2e59c06aa284a85ac1221051b5047"
+    },
+    {
+      "component": "NavigationItemRow",
+      "classification": "standard-control-pending",
+      "implementation": "ui/patterns/navigation/private/navigation_item_row.slint",
+      "public": false,
+      "status": "custom/pending-migration",
+      "native_dependencies": [
+        "Tooltip"
+      ],
+      "missing_capability": "Hierarchy-specific row is missing; ordinary label/chevron activation still needs native migration.",
+      "permitted_custom_behavior": [
+        "hierarchy traversal and expansion requests",
+        "existing label/chevron input until P5C"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "58d658a789eb32d2676ab8ca89081b20ee005ed4304bf169d8bfc437417c12c8"
+    },
+    {
+      "component": "EmptyState",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/page/empty_state.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "MetricCard",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/page/metric_card.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "PageHeader",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/page/page_header.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "Button"
+      ],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "SectionHeader",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/page/section_header.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "SettingRow",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/settings/setting_row.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "WindowControlButton",
+      "classification": "standard-control-pending",
+      "implementation": "ui/patterns/window/window_control_button.slint",
+      "public": true,
+      "status": "custom/pending-migration",
+      "native_dependencies": [],
+      "missing_capability": "Standard Button exists; current custom activation is audited transition debt, not an exception to native-first.",
+      "permitted_custom_behavior": [
+        "existing command activation until its scoped migration"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "bb3835e5eaa41017c59af03a44271b64148399d9794f0b711c18b64c6b17ba56"
+    },
+    {
+      "component": "Badge",
+      "classification": "presentation",
+      "implementation": "ui/primitives/badge.slint",
+      "public": true,
+      "status": "presenter",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentButton",
+      "classification": "standard-control-wrapper",
+      "implementation": "ui/primitives/fluent_button.slint",
+      "public": true,
+      "status": "native-wrapper",
+      "native_dependencies": [
+        "Button"
+      ],
+      "missing_capability": "No public per-instance danger palette; neutral native surface with passive danger outline.",
+      "permitted_custom_behavior": [
+        "non-interactive danger outline",
+        "enabled guard on the sole native clicked forwarding path"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "native_owner": "Button"
+    },
+    {
+      "component": "FluentIcon",
+      "classification": "presentation",
+      "implementation": "ui/primitives/fluent_icon.slint",
+      "public": true,
+      "status": "presenter",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "IconButton",
+      "classification": "standard-control-pending",
+      "implementation": "ui/primitives/icon_button.slint",
+      "public": true,
+      "status": "custom/pending-migration",
+      "native_dependencies": [],
+      "missing_capability": "Standard Button exists; current custom activation is audited transition debt, not an exception to native-first.",
+      "permitted_custom_behavior": [
+        "existing command activation until its scoped migration"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "618ba1d330d0eabc786537e559a016f67fb4b8f6af2ca95da05526f1ca18a3f5"
+    },
+    {
+      "component": "SegmentButton",
+      "classification": "standard-control-pending",
+      "implementation": "ui/primitives/segment_button.slint",
+      "public": true,
+      "status": "custom/pending-migration",
+      "native_dependencies": [],
+      "missing_capability": "Standard Button exists; current custom activation is audited transition debt, not an exception to native-first.",
+      "permitted_custom_behavior": [
+        "existing command activation until its scoped migration"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "cdbab1cc9044043b006d1dcc4fcf0062f47df073c2fff319e4e859548e8e1fb9"
+    },
+    {
+      "component": "SurfaceCard",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/primitives/surface_card.slint",
+      "public": true,
+      "status": "reviewed-exception",
+      "native_dependencies": [],
+      "missing_capability": "No std card with arbitrary host child content and optional interaction.",
+      "permitted_custom_behavior": [
+        "card-specific interactive/selected presentation and activation; pending native command design"
+      ],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "705e4603a3aa963c0895c9c9400cf776c6b90c4b6a5fdc6057b6d5a326d3b1af"
+    },
+    {
+      "component": "FluentTextArea",
+      "classification": "standard-control-wrapper",
+      "implementation": "ui/primitives/text_area.slint",
+      "public": true,
+      "status": "native-wrapper",
+      "native_dependencies": [
+        "TextEdit"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "native_owner": "TextEdit"
+    },
+    {
+      "component": "FluentTextField",
+      "classification": "standard-control-wrapper",
+      "implementation": "ui/primitives/text_field.slint",
+      "public": true,
+      "status": "native-wrapper",
+      "native_dependencies": [
+        "LineEdit"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true,
+      "native_owner": "LineEdit"
+    },
+    {
+      "component": "TooltipHost",
+      "classification": "presentation",
+      "implementation": "ui/primitives/tooltip_host.slint",
+      "public": true,
+      "status": "presenter",
+      "native_dependencies": [],
+      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "new ordinary button activation",
+        "text editing",
+        "scrollbar implementation",
+        "hidden native proxies"
+      ],
+      "validation": [
+        "current-api-probe",
+        "native-reuse-guard",
+        "component-specific runtime: NOT_RUN in P1"
+      ],
+      "review_on_slint_upgrade": true
+    }
+  ]
+}

@@ -15,7 +15,7 @@ export component ButtonStatesSpecimen inherits Specimen {
 
     specimen_title: "Button and IconButton states";
     source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Unavailable\"; enabled: false; }\nFluentButton { text: \"Delete\"; danger: true; primary: true; }";
-    specimen_description: "Preview inputs are development-only visual overrides and remain false in Product code.";
+    specimen_description: "FluentButton uses real pointer and keyboard states. IconButton static previews remain pending P3. Danger keeps a neutral native surface with a red outline.";
     specimen_kind: "States";
     keyboard_info: "Enter and Space activate; pointer hover and press use the same visual hierarchy.";
     accessibility_info: "Disabled controls expose disabled state; danger is reinforced by label and color.";
@@ -24,11 +24,11 @@ export component ButtonStatesSpecimen inherits Specimen {
         spacing: UiConstants.space_12;
         Row {
             StateSpecimen { label: "Normal"; FluentButton { text: "Button"; } }
-            StateSpecimen { label: "Hover"; FluentButton { text: "Button"; preview_hover: true; } }
-            StateSpecimen { label: "Pressed"; FluentButton { text: "Button"; preview_pressed: true; } }
+            StateSpecimen { label: "Primary"; FluentButton { text: "Button"; primary: true; } }
+            StateSpecimen { label: "Icon + text"; FluentButton { text: "Add"; icon: FluentIcons.add; } }
         }
         Row {
-            StateSpecimen { label: "Keyboard focus"; FluentButton { text: "Button"; preview_focus: true; } }
+            StateSpecimen { label: "Tab to focus"; FluentButton { text: "Button"; } }
             StateSpecimen { label: "Disabled"; FluentButton { text: "Button"; enabled: false; } }
             StateSpecimen { label: "Danger"; FluentButton { text: "Delete"; danger: true; primary: true; } }
         }

@@ -1,5 +1,20 @@
 # Consumer guide
 
+## Current-version API evolution
+
+The facade isolates implementation paths, not version differences. New components
+are implemented in their proper layer and statically exported from ui/kit.slint;
+already integrated hosts import and instantiate them without a registration hook.
+The Gallery catalog and native manifest are developer metadata, never host setup.
+
+When upgrading, read the current PUBLIC_API/Breaking changes and update affected
+names, bindings, callbacks, defaults, bases or ownership semantics. Each version
+contains one implementation without old aliases/adapters or frozen consumer tests.
+Developers requiring the old contract select its old retained version. Current
+Gallery/probes follow current Kit. P2 removes FluentButton show_icon/accent/preview
+inputs and adds native state outputs and accessible_name; see PUBLIC_API Breaking changes. This policy does
+not retarget the historical verified Git+SHA example below or authorize Tasks edits.
+
 Quadrant Kit is a Slint source library compiled by each consumer. The root helper exports `SLINT_LIBRARY_NAME` (`quadrant-kit`) and `slint_library_path() -> PathBuf`. It has no Slint runtime types: generated windows, enums, globals, and DTOs belong to the consumer's `slint::include_modules!()` module.
 
 ## Candidate status

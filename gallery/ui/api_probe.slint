@@ -12,6 +12,21 @@ import {
 
 // Compiled through gallery.slint; normal Gallery startup does not instantiate it.
 export component KitApiProbe inherits Window {
+    width: 760px;
+    height: 800px;
+    in-out property <bool> controls_enabled: true;
+    in-out property <string> selection: "preferences";
+    callback navigation_requested(string);
+    out property <bool> command_focused: command.has-focus;
+    out property <bool> command_pressed: command.pressed;
+    public function focus-command() { command.focus(); }
+    public function focus-editor() { editor.focus(); }
+    public function apply-host-state() {
+        Theme.mode = root.mode;
+        root.selection = "preferences";
+        root.activated = false;
+        root.sample_text = "程序赋值 / host update";
+    }
     in-out property <string> sample_text: "Sample";
     in-out property <bool> activated: false;
     in-out property <ThemeMode> mode: ThemeMode.system;
@@ -29,17 +44,21 @@ export component KitApiProbe inherits Window {
         spacing: UiConstants.space_8;
         FluentIcon { source: FluentIcons.menu; icon_color: Theme.accent; }
         TooltipHost { shown: false; text: "Help"; }
-        SurfaceCard { interactive: true; accessible_name: "Sample"; clicked => { root.activated = true; } }
+        SurfaceCard { interactive: true; accessible_name: "Sample"; clicked => { root.activated = true; } Text { text: "Card child"; } }
         Badge { text: "Sample"; kind: BadgeKind.accent; }
-        FluentButton { text: "Apply"; primary: true; clicked => { root.activated = true; } }
+        command := FluentButton { text: "Apply"; icon: FluentIcons.add; enabled: root.controls_enabled; primary: true; clicked => { root.activated = true; } }
         IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.activated = true; } }
         SegmentButton { text: "Select"; selected: root.activated; clicked => { root.activated = !root.activated; } }
-        FluentTextField { text <=> root.sample_text; accepted(value) => { root.sample_text = value; } edited(value) => { root.sample_text = value; } }
+        editor := FluentTextField { width: 160px; enabled: root.controls_enabled; text <=> root.sample_text; accepted(value) => { root.sample_text = value; } edited(value) => { root.sample_text = value; } }
         FluentTextArea { text <=> root.sample_text; edited(value) => { root.sample_text = value; } }
-        SettingRow { title: "Preference"; description: "Sample"; }
+        SettingRow { title: "Preference"; description: "Sample"; enabled: root.controls_enabled;
+            FluentButton { text: "Slot command"; enabled: root.controls_enabled; }
+        }
         NavigationBackButton { accessible_name: "Go back"; enabled: root.activated; clicked => { root.activated = false; } }
         NavigationView {
-            height: 100px; items: root.navigation_entries; selected_id: "preferences";
+            height: 100px; items: root.navigation_entries; selected_id: root.selection;
+            pane_mode: root.pane_mode;
+            item_invoked(id) => { root.navigation_requested(id); }
             Text { text: "Host content"; }
         }
         NavigationPaneToggleButton {
@@ -52,7 +71,7 @@ export component KitApiProbe inherits Window {
             Text { text: root.navigation_entries[0].text; color: Theme.text_primary; }
         }
         WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; clicked => { root.activated = false; } }
-        SectionHeader { title: "Section"; badge_text: "New"; badge_kind: BadgeKind.neutral; }
+        SectionHeader { title: "Section"; badge_text: "New"; badge_kind: BadgeKind.neutral; Text { text: "Trailing content"; } }
         PageHeader { title: "Page"; show_action: true; action_text: "Add"; action_clicked => { root.activated = true; } }
         EmptyState { title: "Empty"; message: "No items"; }
         MetricCard { label: "Items"; value: "0"; hint: "Sample"; }

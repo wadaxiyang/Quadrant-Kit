@@ -1,10 +1,52 @@
 # Validation and boundary contracts
 
+## Fluent evolution P2 — current checks
+
+P2 migrates FluentButton to a visible native Button. The explicitly reviewed current
+snapshot removes show_icon/accent/preview inputs and adds accessible_name plus
+read-only native state outputs. Other component declarations are unchanged. Run
+`python scripts/run_button_checks.py` for the isolated current event/geometry host;
+it saves source, build/runtime logs and light/dark state images. Windows indexed
+and physical input is separately recorded in the P2 report. Performance schema 2
+separates software frame-buffer readiness from unsupported AfterRendering/present.
+
+## P1 foundation checks retained
+
+Current API checks compare the facade, reviewed current snapshot, PUBLIC_API
+declarations/defaults and actual probe imports/uses. Export/member/type counts
+derive from those current artifacts; historical counts below are measurements,
+not permanent API restrictions. Keep valid behavioral assertions when changing
+current call sites; do not maintain frozen old/new consumer fixtures.
+
+`python scripts/check_native_reuse.py` is implemented and covered by positive/
+negative fixtures in normal Python test discovery. `check_ui_boundaries.py` also
+calls it, so the existing Linux/Windows/macOS CI boundary steps inherit enforcement.
+It checks component-record coverage/public ownership, real native references,
+aliases/composition, duplicate input, literal hidden proxies and reviewed current
+custom-input debt. It prints pending migrations and runtime_verified=false.
+See NATIVE_REUSE.md for limits; native runtime/a11y is never inferred from its PASS.
+
+The scanner additionally retains balanced implementation bodies for that checker
+and resolves only verified Slint 1.17.1 Date/Time public type exports. Builtin model
+references are accepted as declarations; the locked compiler checks their semantics.
+Unsupported public syntax/unknown std re-exports still fail. The native compilation
+probe exercises aliases/re-exports and actual type bindings.
+
+The existing Kit API probe includes host-controlled selection/state, explicit
+slot enabled bindings, child content, focus entry methods and a narrow editor.
+This proves compilation only. The status/manifest/catalog set and README's editable
+SPEC Mermaid source also have tests. No public API/default or baseline changes
+are adopted by P1. Phase-specific results belong in
+[P1.md](implementation/kit-fluent-v1/P1.md); historical sections below keep their
+original facts. Package checks still require clean committed source; no automatic
+commit or baseline acceptance is authorized by a test failure.
+
 Current native-window integration checks and platform limits are recorded in
 [GALLERY_NATIVE_CHROME_VALIDATION.md](GALLERY_NATIVE_CHROME_VALIDATION.md).
 
-The extraction architecture authority is SPEC v2; the current local navigation
-work follows the NavigationView/Gallery rebuild SPEC and its reviewed phase gates.
+The current evolution authority is [Fluent SPEC v1.1](specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md)
+and its [stage ledger](implementation/kit-fluent-v1/STATE.md). Extraction SPEC v2
+and the NavigationView/Gallery rebuild gates retain their historical scope.
 Kit's Python standard-library
 scanner checks its own import, dependency, cycle, API and asset contracts. Tasks
 has completed its separate cutover and owns its Product/runtime guards. Kit can

@@ -1,0 +1,63 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+// Compile-only public Slint 1.17.1 capability probe; not a Gallery page.
+import { Button, Palette, RadioGroup, ListView, DatePickerPopup, Date as ProbeDate,
+    TimePickerPopup, Time as ProbeTime, StandardTableView, LineEdit } from "std-widgets.slint";
+export { ProbeDate as NativeProbeDate, ProbeTime as NativeProbeTime }
+
+export component NativeControlProbe inherits Window {
+    width: 640px;
+    height: 480px;
+    in-out property <bool> checked: false;
+    out property <bool> button-pressed: command.pressed;
+    out property <bool> button-focused: command.has-focus;
+    in-out property <bool> first-choice: true;
+    in-out property <ProbeDate> date: { year: 2026, month: 9, day: 9 };
+    in-out property <ProbeTime> time: { hour: 12, minute: 30, second: 0 };
+    in-out property <[TableColumn]> columns: [{ title: "Name", width: 160px }];
+    in property <[[StandardListViewItem]]> rows: [[{ text: "Example" }]];
+    out property <brush> accent-brush: Palette.accent-background;
+    callback activated();
+    callback canceled();
+    callback sorted(int);
+    init => { Palette.color-scheme = ColorScheme.light; }
+    public function focus-command() { command.focus(); }
+    public function open-date() { date-popup.show(); }
+    public function open-time() { time-popup.show(); }
+    public function close-popups() { date-popup.close(); time-popup.close(); }
+    VerticalLayout {
+        command := Button {
+            text: "Native command"; primary: true; enabled: true;
+            icon-size: 20px; colorize-icon: true; checkable: true;
+            checked <=> root.checked;
+            clicked => { root.activated(); }
+        }
+        RadioGroup {
+            title: "Choice"; orientation: Orientation.horizontal;
+            RadioButton { text: "One"; checked <=> root.first-choice; }
+            RadioButton { text: "Two"; }
+            selected(value) => { root.activated(); }
+        }
+        ListView {
+            height: 100px;
+            for value in ["One", "Two", "Three"]: Text { text: value; height: 24px; }
+        }
+        StandardTableView {
+            columns <=> root.columns; rows: root.rows; current-row: 0;
+            sort-ascending(column) => { root.sorted(column); }
+            sort-descending(column) => { root.sorted(column); }
+            current-row-changed(row) => { root.activated(); }
+        }
+        LineEdit { text: "Native input"; }
+    }
+    date-popup := DatePickerPopup {
+        date: root.date;
+        accepted(value) => { root.date = value; }
+        canceled => { root.canceled(); }
+    }
+    time-popup := TimePickerPopup {
+        time: root.time; use-24-hour-format: true;
+        accepted(value) => { root.time = value; }
+        canceled => { root.canceled(); }
+    }
+}

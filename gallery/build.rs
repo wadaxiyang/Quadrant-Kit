@@ -7,6 +7,11 @@ fn main() {
         PathBuf::from(std::env::var_os("CARGO_MANIFEST_DIR").expect("Cargo manifest directory"));
     let entry = quadrant_kit::slint_library_path();
     assert!(entry.is_file(), "Kit facade is missing");
+    slint_build::compile_with_config(
+        manifest.join("ui/native_control_probe.slint"),
+        slint_build::CompilerConfiguration::new().with_style("fluent".into()),
+    )
+    .expect("failed to compile locked public native capability probe");
     let libraries = HashMap::from([(quadrant_kit::SLINT_LIBRARY_NAME.to_owned(), entry)]);
     let config = slint_build::CompilerConfiguration::new()
         .with_style("fluent".into())

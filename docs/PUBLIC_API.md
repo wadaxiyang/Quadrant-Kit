@@ -2,7 +2,7 @@
 
 `ui/kit.slint` is the only supported Slint entry. All 35 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The navigation rebuild additions and SidebarItem removal are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
 
-Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` freezes all 35 exported names, 240 properties, 20 callbacks, seven enum value lists and one ten-field struct. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
+Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` records the reviewed current contract (P2: 35 names, 238 properties, 20 callbacks, seven enums and one struct). These counts and historical signatures are not permanent invariants. APIs can be added, removed, renamed or adjusted with a concrete reason, synchronized current callers/docs/probes and an explicitly reviewed snapshot. Each version keeps one implementation, without old aliases or compatibility branches. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
 
 Phase 3 removes SidebarItem, Theme.sidebar_bg and the two UiConstants.sidebar_* widths.
 The new pane tokens retain their resolved transparent/54 px values; content_radius
@@ -291,17 +291,44 @@ export enum BadgeKind { neutral, accent, success, warning, danger }
 export component FluentButton inherits Rectangle {
     in property <string> text;
     in property <image> icon;
-    in property <bool> show_icon: false;
+    in property <string> accessible_name;
     in property <bool> primary: false;
-    in property <bool> accent: false;
     in property <bool> danger: false;
     in property <bool> enabled: true;
-    in property <bool> preview_hover: false;
-    in property <bool> preview_pressed: false;
-    in property <bool> preview_focus: false;
+    out property <bool> has-focus: command.has-focus;
+    out property <bool> pressed: command.pressed;
     callback clicked;
 }
 ```
+
+The visible std Button owns pointer, keyboard, focus, disabled visuals, animation
+and the sole accessible button node. `clicked` forwards once per native activation
+only when enabled; programmatic changes emit no command. Native key-repeat policy
+is retained. `focus()` forwards to the native owner. `has-focus` is the native
+focus flag and can stay true while disabled; native focus visuals/commands remain
+disabled. `pressed` is the native pointer-pressed output, not a synthetic keyboard
+or preview state. There is no checkable/selected application state in this wrapper.
+
+The empty native control is 32×32 logical pixels. Defaults use native content
+minimums; explicit width/height remain host inputs. Long labels need sufficient
+host width (no automatic wrapping or truncation API); abbreviate the visible label
+and set `accessible_name` to the full action if necessary. The P2 negative sizing
+case confirms that forcing 160px on a longer label can paint text outside both
+std Button and Kit bounds; this is not a supported automatic-elision contract.
+An empty/invalid image
+renders no icon; valid icons use native 20px geometry and native text-color tint.
+For an icon-only command, provide `accessible_name`; otherwise the text is its
+accessible label. The component has no supported arbitrary-content slot.
+
+**P2 Breaking changes:** `show_icon` is removed (image presence decides), `accent`
+is removed (choose normal or primary), and all three `preview_*` inputs are removed.
+`has-focus`, `pressed`, and `accessible_name` are added. Text/icon/primary/danger/
+enabled and clicked retain their directions; the public Rectangle base is retained.
+`danger` now chooses a neutral native button even when primary is true, with a
+passive red outline 2px outside its bounds. It does not recreate the old red fill
+or modify the shared Palette. Leave 2px surrounding space and use an explicit
+hazard label. Disabled danger outlines use Theme.text_tertiary. Font,
+focus and hover/press visuals follow native Fluent and the host Palette/font.
 
 ### IconButton
 
@@ -629,3 +656,20 @@ Back and pane-toggle buttons clear focus when disabled. Compact tooltips expose
 ancestor-qualified labels outside the pane clip.
 
 Native coverage and limits: [Phase 7 report](NAVIGATION_REBUILD_PHASE7.md).
+
+## Current-version change protocol (P1)
+
+For any component/type/member change, explain the concrete benefit and scope, then
+update its sole implementation, facade when names change, internal callers,
+Gallery/catalog, this document and the existing API probe. Review the candidate
+signature/default diff (including direction, type, base, callback order and state
+ownership), deliberately adopt it only after reconciliation, and document Breaking
+changes and current use. Remove replaced code; no old/new consumer matrix or
+no-op compatibility properties. P1 adopts no new snapshot and changes no public API.
+
+Define inputs/defaults, outputs/action timing, programmatic updates, empty/invalid
+models, focus/keyboard/disabled/read-only, sizing/long text and slot ownership before
+implementing each new contract. SettingRow's slot controls explicitly bind enabled;
+NavigationView/SegmentButton retain host-controlled state. API probe focus methods,
+slot children, narrow editor and host setters compile without claiming runtime
+behavior. Native wrapper decisions and public type limits are in NATIVE_REUSE.md.

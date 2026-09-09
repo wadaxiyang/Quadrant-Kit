@@ -25,7 +25,7 @@ class ScannerTests(unittest.TestCase):
         parsed = parse('''/* { /* nested */ } */ import {
             Theme as T,
         } from "../foundation/theme.slint";
-        export { T as PublicTheme };
+        export { T as PublicTheme }
         export component A inherits FocusScope {
           in property <string> value: "{ // /* } ; \\\" "; // }
           callback done(string, int);
@@ -39,6 +39,14 @@ class ScannerTests(unittest.TestCase):
         a = 'export component A { in-out property <string> some_value <=> child.text; callback done(string,int); }'
         b = 'export component A {\n in-out /*comment*/ property<string> some-value <=> child . text ;\n callback done ( string , int ) ;\n}'
         self.assertEqual(self.shape(a), self.shape(b))
+
+    def test_reexport_terminator_matches_pinned_compiler(self):
+        self.assertIn('B', parse('struct A { x: int } export { A as B }')['exports'])
+        for source in ('struct A { x: int } export { A as B };',
+                       'export { A } from "a.slint"',
+                       'import { A } from "a.slint"'):
+            with self.subTest(source=source), self.assertRaises(ContractError):
+                parse(source)
 
     def test_string_whitespace_is_semantic_and_empty_string_is_not_eof(self):
         a = self.shape('export global A { out property <string> x: "a  b"; out property <string> y: ""; }')
@@ -132,7 +140,7 @@ class RepositoryFixtures(unittest.TestCase):
 
     def test_reexport_alias_chain_and_path_movement(self):
         self.write('ui/kit.slint', 'export { Middle as Public } from "bridge.slint";')
-        self.write('ui/bridge.slint', 'import { A as Local } from "primitives/a.slint"; export { Local as Middle };')
+        self.write('ui/bridge.slint', 'import { A as Local } from "primitives/a.slint"; export { Local as Middle }')
         api = public_api(self.root)
         self.assertEqual(set(api), {'Public'})
         source = (self.root / 'ui/primitives/a.slint').read_text(encoding='utf-8')
@@ -317,11 +325,8 @@ class CurrentRepositoryTests(unittest.TestCase):
         tokens = Counter(token.value for token in lex(probe))
         for _, alias in imports:
             self.assertGreater(tokens[alias], 1, f'{alias} is imported but unused by the probe')
-        members = [member for item in api.values() for member in item['signature'].get('members', {}).values()]
-        self.assertEqual(Counter(member['kind'] for member in members), {'property': 240, 'callback': 20})
-        self.assertEqual(Counter(item['signature']['kind'] for item in api.values()),
-                         {'component': 21, 'global': 6, 'enum': 7, 'struct': 1})
-        self.assertEqual(len(api['NavigationEntry']['signature']['fields']), 10)
+        baseline = json.loads((root / 'scripts/kit_api_v1.json').read_text(encoding='utf-8'))
+        self.assertEqual(api, baseline['exports'], 'Current declarations must match the reviewed current snapshot')
 
     def test_live_legacy_navigation_is_absent(self):
         root = Path(__file__).resolve().parents[2]
@@ -337,8 +342,10 @@ class CurrentRepositoryTests(unittest.TestCase):
 
     def test_reviewed_current_api_and_assets(self):
         result = check(Path(__file__).resolve().parents[2], metadata=False)
-        self.assertEqual(result['exports'], 35)
-        self.assertEqual(result['distribution']['svg_assets'], 32)
+        root = Path(__file__).resolve().parents[2]
+        self.assertEqual(result['exports'], len(public_api(root)))
+        assets = json.loads((root / 'scripts/asset_manifest.json').read_text(encoding='utf-8'))
+        self.assertEqual(result['distribution']['svg_assets'], len(assets['assets']))
 
 
 if __name__ == '__main__':

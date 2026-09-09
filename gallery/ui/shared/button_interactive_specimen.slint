@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Switch } from "std-widgets.slint";
+import { Button, Switch } from "std-widgets.slint";
 import { FluentButton, FluentTextField, Theme, Typography, UiConstants } from "@quadrant-kit";
 import { Specimen } from "specimen.slint";
 import { PropertyPanel } from "property_panel.slint";
@@ -15,26 +15,38 @@ export component ButtonInteractiveSpecimen inherits Specimen {
     private property <bool> button_primary: true;
     private property <bool> button_danger: false;
     private property <bool> button_enabled: true;
+    private property <int> kit_actions: 0;
+    private property <int> native_actions: 0;
 
     specimen_title: "FluentButton · interactive";
     source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Save\"; primary: true; clicked => { /* Save in the host. */ } }";
-    specimen_description: "Live properties exercise the same public inputs used by Product surfaces.";
+    specimen_description: "Same label and enabled state, using a real std Button and FluentButton. Danger adds a red outline to a neutral native surface.";
     keyboard_info: "Tab focuses; Enter or Space invokes clicked.";
     accessibility_info: "Role button; text is the label; enabled state and default action are exposed.";
 
     PreviewContainer {
         preview_mode: root.preview_mode;
         preview_title: "Live button preview";
-        HorizontalLayout {
-            spacing: UiConstants.space_8;
+        VerticalLayout {
+            spacing: UiConstants.space_12;
+            Text { text: "std Button"; color: Theme.text_secondary; }
+            Button {
+                width: self.min-width;
+                height: self.min-height;
+                text: root.sample_text == "" ? "Empty label" : root.sample_text;
+                primary: root.button_primary && !root.button_danger;
+                enabled: root.button_enabled;
+                clicked => { if root.button_enabled { root.native_actions += 1; } }
+            }
+            Text { text: "FluentButton"; color: Theme.text_secondary; }
             FluentButton {
                 text: root.sample_text == "" ? "Empty label" : root.sample_text;
                 primary: root.button_primary;
                 danger: root.button_danger;
                 enabled: root.button_enabled;
+                clicked => { root.kit_actions += 1; }
             }
-            FluentButton { text: "Secondary"; accent: true; }
-            Rectangle { horizontal-stretch: 1; }
+            Text { text: "Native actions: " + root.native_actions + " · Kit actions: " + root.kit_actions; color: Theme.text_secondary; }
         }
     }
 

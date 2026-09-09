@@ -243,7 +243,7 @@ def members(tokens):
 
 def parse(source):
     cursor = Cursor(lex(source))
-    definitions, exports, imports = {}, {}, []
+    definitions, exports, imports, bodies = {}, {}, [], {}
 
     def expose(name, target):
         if name in exports:
@@ -278,7 +278,10 @@ def parse(source):
                 imports.append((source_path, aliases))
             elif not exported:
                 raise ContractError('Import requires from')
-            cursor.take(';')
+            if source_path is not None:
+                cursor.take(';')
+            elif cursor.peek(';'):
+                raise ContractError('Local re-export must not have a semicolon')
             if exported:
                 for original, alias in aliases:
                     expose(alias, (source_path, original))
@@ -308,11 +311,12 @@ def parse(source):
             if name in definitions:
                 raise ContractError(f'Duplicate definition: {name}')
             definitions[name] = {'signature': signature, 'defaults': defaults}
+            bodies[name] = body
             if exported:
                 expose(name, (None, name))
         else:
             raise ContractError(f'Unrecognized top-level declaration: {cursor.peek()}')
-    return {'definitions': definitions, 'exports': exports, 'imports': imports}
+    return {'definitions': definitions, 'exports': exports, 'imports': imports, 'bodies': bodies}
 
 
 def local_path(owner, source, root):
@@ -336,7 +340,38 @@ def images(source):
     return result
 
 
-def public_api(root):
+# Only public upstream structs verified by the pinned native compilation probe.
+# Builtin TableColumn/StandardListViewItem can occur in property types, but are
+# not std-widgets exports. Do not guess or silently accept other upstream exports.
+NATIVE_STRUCT_FIELDS = {'Date': ('day', 'month', 'year'), 'Time': ('hour', 'minute', 'second')}
+
+
+def native_type(name):
+    if name not in NATIVE_STRUCT_FIELDS:
+        raise ContractError(f'Unverified Slint 1.17.1 public re-export: {name}')
+    return {'signature': {'kind': 'struct', 'inherits': None,
+            'fields': [{'name': field, 'type': 'int'} for field in NATIVE_STRUCT_FIELDS[name]]}, 'defaults': {}}
+
+
+def implementation_facts(body):
+    """Lexical evidence only; shares the declaration scanner, not a UI compiler."""
+    instances = [token.value for i, token in enumerate(body[:-1])
+                 if token.kind == 'identifier' and token.value[:1].isupper()
+                 and body[i + 1].kind == 'symbol' and body[i + 1].value == '{']
+    handlers = {token.value for i, token in enumerate(body)
+                if token.kind == 'identifier' and token.value in
+                {'key-pressed', 'key-released', 'capture-key-pressed', 'capture-key-released', 'accessible-action-default'}
+                and i + 1 < len(body) and body[i + 1].value in ('(', '=>')}
+    hidden = False
+    for i, token in enumerate(body[:-2]):
+        if token.kind == 'identifier' and token.value in ('opacity', 'visible') and body[i + 1].value == ':':
+            expression = Cursor(body[i + 2:]).until({';'})
+            literal = ''.join(t.value for t in expression if t.value not in ('(', ')'))
+            hidden |= literal == 'false' or bool(re.fullmatch(r'0+(?:\.0*)?%?', literal))
+    return {'instances': instances, 'handlers': handlers, 'literal_hidden': hidden}
+
+
+def public_exports(root):
     root = Path(root).resolve()
     cache = {}
 
@@ -357,13 +392,19 @@ def public_api(root):
             raise ContractError(f'Unresolved public export {name} in {path}')
         source, original = parsed['exports'][name]
         if source is None and original in parsed['definitions']:
-            return parsed['definitions'][original]
+            return {'definition': parsed['definitions'][original], 'path': path, 'name': original}
         if source is None:
             matches = [(s, n) for s, pairs in parsed['imports'] for n, a in pairs if a == original]
             if len(matches) != 1:
                 raise ContractError(f'Unresolved/ambiguous re-export: {original}')
             source, original = matches[0]
+        if source == 'std-widgets.slint':
+            return {'definition': native_type(original), 'path': source, 'name': original}
         return resolve(local_path(path, source, root), original, trail | {key})
 
     facade = root / 'ui/kit.slint'
     return {name: resolve(facade, name, set()) for name in sorted(module(facade)['exports'])}
+
+
+def public_api(root):
+    return {name: item['definition'] for name, item in public_exports(root).items()}

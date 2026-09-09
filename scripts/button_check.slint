@@ -1,0 +1,83 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+// Test host only, copied under target/ by run_button_checks.py.
+import { Button, CheckBox, Palette } from "std-widgets.slint";
+import { FluentButton, FluentIcons, Theme, ThemeMode, PageHeader, ModalManager } from "@quadrant-kit";
+
+export component ButtonCheck inherits Window {
+    title: "Kit P2 Button Verification";
+    width: 640px;
+    height: 580px;
+    default-font-family: "Segoe UI Variable Text";
+    default-font-size: 14px;
+    background: Theme.background;
+    in-out property <bool> buttons-enabled: true;
+    in-out property <bool> dangerous: false;
+    in-out property <bool> dark: false;
+    in-out property <string> command-text: "Kit command";
+    in-out property <bool> modal-shown: false;
+    in-out property <bool> narrow-case: false;
+    in-out property <int> kit-count: 0;
+    in-out property <int> native-count: 0;
+    in-out property <int> header-count: 0;
+    in-out property <int> accepted-count: 0;
+    in-out property <int> dismissed-count: 0;
+    out property <bool> kit-focused: kit.has-focus;
+    out property <bool> kit-pressed: kit.pressed;
+    out property <bool> native-focused: native.has-focus;
+    out property <length> empty-width: empty.width;
+    out property <length> empty-height: empty.height;
+    public function focus-kit() { kit.focus(); }
+    public function focus-native() { native.focus(); }
+    init => {
+        Theme.mode = ThemeMode.light;
+        Theme.system-dark = false;
+        Theme.ui-font-family = "Segoe UI Variable Text";
+        Palette.color-scheme = ColorScheme.light;
+    }
+    changed dark => {
+        Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light;
+        Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light;
+    }
+    Text { x: 24px; y: 16px; text: "Native-owned input · no production preview flags"; color: Theme.text_primary; }
+    native := Button {
+        x: 24px; y: 60px; width: root.narrow-case ? 160px : 240px; height: 36px;
+        text: root.narrow-case ? root.command-text : "Native command"; primary: true; enabled: root.buttons-enabled;
+        icon: FluentIcons.add; colorize-icon: true;
+        clicked => { if root.buttons-enabled { root.native-count += 1; } }
+    }
+    kit := FluentButton {
+        x: 24px; y: 120px; width: root.narrow-case ? 160px : 240px; height: 36px;
+        text: root.command-text; primary: true; danger: root.dangerous;
+        enabled: root.buttons-enabled; icon: FluentIcons.add;
+        clicked => { root.kit-count += 1; }
+    }
+    Text {
+        x: 290px; y: 66px; width: 320px; height: 110px;
+        text: "Native actions: " + root.native-count + "\nKit actions: " + root.kit-count +
+              "\nKit focused: " + (root.kit-focused ? "true" : "false") + "\nKit pressed: " + (root.kit-pressed ? "true" : "false");
+        color: Theme.text_primary;
+    }
+    CheckBox { x: 24px; y: 185px; text: "Buttons enabled"; checked <=> root.buttons-enabled; }
+    CheckBox { x: 220px; y: 185px; text: "Danger"; checked <=> root.dangerous; }
+    CheckBox { x: 360px; y: 185px; text: "Dark theme"; checked <=> root.dark; }
+    Text { x: 24px; y: 225px; text: "Empty / icon-only / minimum native size"; color: Theme.text_secondary; }
+    empty := FluentButton { x: 24px; y: 260px; text: ""; accessible_name: "Empty geometry test"; }
+    FluentButton { x: 90px; y: 260px; icon: FluentIcons.add; text: ""; accessible_name: "Add item"; }
+    FluentButton { x: 160px; y: 260px; text: "短标签"; }
+    PageHeader {
+        x: 24px; y: 315px; width: 580px; height: 80px;
+        title: "Composition"; action_text: "Header action"; show_action: true;
+        action_clicked => { root.header-count += 1; }
+    }
+    Button { x: 24px; y: 420px; text: "Show confirmation"; clicked => { root.modal-shown = true; } }
+    Text { x: 24px; y: 480px; text: "Header: " + root.header-count + " · Accepted: " + root.accepted-count + " · Dismissed: " + root.dismissed-count; color: Theme.text_primary; }
+    ModalManager {
+        width: 100%; height: 100%; shown: root.modal-shown;
+        title: "Test confirmation"; message: "Only counters change. No data is deleted.";
+        primary_text: "Confirm test"; secondary_text: "Cancel test";
+        danger_primary: true; show_secondary: true;
+        accepted => { root.accepted-count += 1; root.modal-shown = false; }
+        dismissed => { root.dismissed-count += 1; root.modal-shown = false; }
+    }
+}
