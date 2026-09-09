@@ -175,7 +175,8 @@ export global NavigationModel {
     }
     public pure function entry-valid(model: [NavigationEntry], other: [NavigationEntry], index: int) -> bool {
         if (model[index].id == "" || model[index].depth < 0 || model[index].depth > 2) { return false; }
-        if (count-id(model, model[index].id, 0, model.length) + count-id(other, model[index].id, 0, other.length) != 1) { return false; }
+        // Earlier own rows suffice: each later duplicate is rejected when visited.
+        if (count-id(model, model[index].id, 0, index) > 0 || count-id(other, model[index].id, 0, other.length) > 0) { return false; }
         let p = parent(model, model[index].depth, 0, index);
         if (model[index].depth == 0) {
             if (model[index].parent_id != "") { return false; }
@@ -210,5 +211,78 @@ export global NavigationModel {
         if (shown(model, p) && model[p].enabled) { return model[p].id; }
         let grand = parent(model, model[p].depth, 0, p);
         return grand >= 0 && model[grand].enabled ? model[grand].id : "";
+    }
+    public pure function focusable(model: [NavigationEntry], index: int) -> bool {
+        return index >= 0 && index < model.length && model[index].enabled && shown(model, index)
+            && model[index].kind != NavigationEntryKind.header && model[index].kind != NavigationEntryKind.separator;
+    }
+    public pure function find-focus-0(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        return -1;
+    }
+    public pure function find-focus-1(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-0(model, middle, end, reverse) : find-focus-0(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-0(model, begin, middle, reverse) : find-focus-0(model, middle, end, reverse);
+    }
+    public pure function find-focus-2(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-1(model, middle, end, reverse) : find-focus-1(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-1(model, begin, middle, reverse) : find-focus-1(model, middle, end, reverse);
+    }
+    public pure function find-focus-3(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-2(model, middle, end, reverse) : find-focus-2(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-2(model, begin, middle, reverse) : find-focus-2(model, middle, end, reverse);
+    }
+    public pure function find-focus-4(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-3(model, middle, end, reverse) : find-focus-3(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-3(model, begin, middle, reverse) : find-focus-3(model, middle, end, reverse);
+    }
+    public pure function find-focus-5(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-4(model, middle, end, reverse) : find-focus-4(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-4(model, begin, middle, reverse) : find-focus-4(model, middle, end, reverse);
+    }
+    public pure function find-focus-6(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-5(model, middle, end, reverse) : find-focus-5(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-5(model, begin, middle, reverse) : find-focus-5(model, middle, end, reverse);
+    }
+    public pure function find-focus-7(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-6(model, middle, end, reverse) : find-focus-6(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-6(model, begin, middle, reverse) : find-focus-6(model, middle, end, reverse);
+    }
+    public pure function find-focus(model: [NavigationEntry], begin: int, end: int, reverse: bool) -> int {
+        if begin >= end { return -1; }
+        if end - begin == 1 { return focusable(model, begin) ? begin : -1; }
+        let middle = floor((begin + end) / 2);
+        let first = reverse ? find-focus-7(model, middle, end, reverse) : find-focus-7(model, begin, middle, reverse);
+        if first >= 0 { return first; }
+        return reverse ? find-focus-7(model, begin, middle, reverse) : find-focus-7(model, middle, end, reverse);
     }
 }

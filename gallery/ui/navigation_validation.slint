@@ -77,7 +77,7 @@ export component NavigationValidationWindow inherits Window {
                 Text { text: "Public NavigationView input/render harness"; color: Theme.text_primary; font-size: Typography.subtitle; wrap: word-wrap; }
                 Text { text: "Invoke " + root.invokes + " · Expand " + root.expands + " · Back " + root.backs + " · Toggle " + root.toggles + " · Edit " + root.edits + " · Submit " + root.submits; color: Theme.text_primary; wrap: word-wrap; }
                 Text { text: "Selected: " + root.selection; color: Theme.text_primary; wrap: word-wrap; }
-                Text { text: "Tab / Shift+Tab traverse controls. Enter / Space activate. Right expands; Left collapses or focuses an enabled ancestor. Up / Down use standard scrolling, not item selection."; color: Theme.text_secondary; wrap: word-wrap; }
+                Text { text: "Tab / Shift+Tab traverse controls. Enter / Space activate. Right expands; Left collapses or focuses an enabled ancestor. Up / Down focus eligible rows; Home / End focus region endpoints. Selection stays host-owned."; color: Theme.text_secondary; wrap: word-wrap; }
                 Switch { text: "Disable button destination"; checked <=> root.disable_selected; }
                 Switch { text: "Controls expanded"; checked <=> root.controls_open; }
                 Switch { text: "Inputs expanded"; checked <=> root.inputs_open; }

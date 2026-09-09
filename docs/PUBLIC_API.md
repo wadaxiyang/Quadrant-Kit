@@ -16,9 +16,9 @@ and other shared tokens remain. See [Phase 3 cutover](NAVIGATION_REBUILD_PHASE3.
 - Feedback overview compares outcomes; ToastHost, ModalManager and TooltipHost have dedicated pages. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks and screen-reader behavior remain unverified.
 - NavigationView demonstrates controlled three-level primary and two-level footer models. Navigation foundations composes NavigationBackButton, NavigationPaneToggleButton and NavigationContentSurface. PageHeader, SectionHeader, EmptyState and WindowControlButton have dedicated destinations.
 - IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
-- Navigation keyboard/focus polish and its Windows input/render evidence are recorded in [Phase 7](NAVIGATION_REBUILD_PHASE7.md). Up/Down/Home/End item traversal is not implemented; full IME/screen-reader/platform coverage remains unverified. Screenshot rendering is not interaction or accessibility proof.
+- Navigation keyboard/focus polish and its Windows input/render evidence are recorded in [Phase 7](NAVIGATION_REBUILD_PHASE7.md). P5C adds bounded Up/Down/Home/End item traversal; full IME/screen-reader/platform coverage remains unverified. Screenshot rendering is not interaction or accessibility proof.
 
-The historical extraction removed Branding, TaskRowShell, InboxItem and InboxPane, plus Q1–Q4 colors, Typography.timer, UiConstants.focus_wide_breakpoint and 11 product icon aliases. The subsequent local navigation rebuild intentionally replaces SidebarItem with the controlled NavigationView API. Its reviewed 35-name contract remains unchanged since Phase 3; Phase 7 refines focus and keyboard behavior without changing signatures/defaults.
+The historical extraction removed Branding, TaskRowShell, InboxItem and InboxPane, plus Q1–Q4 colors, Typography.timer, UiConstants.focus_wide_breakpoint and 11 product icon aliases. The subsequent local navigation rebuild intentionally replaces SidebarItem with the controlled NavigationView API. That historical 35-name contract has since evolved through the Fluent phases below.
 
 ## Declarations
 
@@ -618,6 +618,7 @@ export component NavigationView inherits Rectangle {
     in property <bool> show_top_separator: false;
     in property <bool> show_footer_separator: true;
     in property <NavigationContentSurfaceMode> content_surface_mode: NavigationContentSurfaceMode.fluent;
+    out property <bool> model_valid: root.valid;
     callback item_invoked(string);
     callback expansion_requested(string, bool);
     callback back_requested();
@@ -646,13 +647,19 @@ host-owned. Pane geometry clamps to available width.
 
 Private implementation: [navigation_view.slint](../ui/patterns/navigation/navigation_view.slint).
 Tab/Shift+Tab traverse labels and independent chevrons; Enter/Space activate them.
-Right requests expansion. Left requests collapse or focuses an enabled visible
+Up/Down focus enabled visible rows, crossing primary/footer ends. Home/End focus
+the first/last eligible row in the current region. Focus scrolls into view without
+changing host selection. Right requests expansion. Left requests collapse or focuses an enabled visible
 ancestor. These direction keys never invoke a destination. Disabling or hiding
 a focused row recovers to a visible enabled ancestor or the pane focus scope.
 Back and pane-toggle buttons suppress commands and visible native focus when disabled; native logical focus may remain. Compact tooltips expose
 ancestor-qualified labels outside the pane clip.
 
-Native coverage and limits: [Phase 7 report](NAVIGATION_REBUILD_PHASE7.md).
+Current native row/model coverage: [P5C report](implementation/kit-fluent-v1/P5C.md).
+The visible native Button paints each label and separate arrow surface; passive
+left-aligned eliding labels/icons do not intercept input. Native checked/focus
+visuals replace the old custom row background. Models remain bounded to 256
+combined entries, using ScrollView; this is not unbounded virtual navigation.
 
 ## Current-version change protocol (P1)
 
@@ -1004,3 +1011,8 @@ actual opener buttons. No restoration callback is inferred from opacity or scrim
 The host owns routing and lifecycle. This is not arbitrary-content ContentDialog,
 screen-reader containment or a universal focus manager. Native accessibility and
 actual OS reader behavior remain separate from the finite WindowEvent tests.
+
+NavigationView.model_valid is a read-only diagnostic for the current combined
+primary/footer validation. Both whole-model replacement and row-change notifications
+re-evaluate it; invalid models suppress rows and their commands. The host still
+owns repair. Changing selected_id does not invalidate structural validation.

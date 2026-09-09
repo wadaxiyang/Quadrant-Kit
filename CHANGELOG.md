@@ -1,5 +1,13 @@
 # Changelog
 
+## Fluent evolution P5C — local, unpublished
+
+- NavigationView now rejects invalid row notifications reactively and exposes model_valid.
+- Native label/arrow buttons replace custom row activation and painting.
+- Up/Down/Home/End move focus without taking host selection; focus scrolls into view.
+- Bounded model validation reduces duplicate scans; the 256-entry limit remains.
+
+
 ## Fluent evolution P5B — local, unpublished
 
 - ModalManager Return/Space now activates the focused native button. Initial focus

@@ -1817,6 +1817,11 @@
             "direction": "in",
             "type": "NavigationContentSurfaceMode"
           },
+          "model-valid": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
           "item-invoked": {
             "kind": "callback",
             "arguments": [
@@ -1924,6 +1929,10 @@
         "content-surface-mode": {
           "binding": ":",
           "expression": "NavigationContentSurfaceMode . fluent"
+        },
+        "model-valid": {
+          "binding": ":",
+          "expression": "root . valid"
         }
       }
     },

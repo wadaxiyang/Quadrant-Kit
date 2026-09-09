@@ -18,7 +18,8 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P4D | PASS — scoped table and picker contract | [P4D.md](P4D.md): 18 runtime assertions, full 20 Rust/75 Python core gate, 40 captures and 30 release pairs. [P4 summary](P4.md). |
 | P5A | PASS — scoped tooltip/Toast lifecycle | [P5A.md](P5A.md): old duplicate-request reproducer; 11 runtime assertions, 75 Python tests, Gallery build/41 captures; current API unchanged. |
 | P5B | PARTIAL — finite confirmation contract PASS | [P5B.md](P5B.md): Return conflict removed; 20 modal and current button runtime assertions, 75 Python tests, Gallery/40 captures. Reader/full dialog NOT_RUN. Scoped unit complete. |
-| P5C–P5E, P6 | NOT_STARTED | Authorized continuation in order. |
+| P5C | PASS — scoped bounded navigation | [P5C.md](P5C.md): reactive invalidation, native actions, 152 runtime assertions, full core, 40 captures; 256 validation p95 8.13 ms. |
+| P5D–P5E, P6 | NOT_STARTED | Authorized continuation in order. |
 | P7–P8 | NOT_STARTED | Not part of this request. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
@@ -42,3 +43,6 @@ commands passed. P5A is complete; next is P5B.
 
 P5A was committed as `69bbab67f70bec3684f3b4f70b73cac6bb30bf31`; both package
 commands passed. P5B scoped delivery is complete; next is P5C.
+
+P5B was committed as `c73c1e4ce98e44ef350d1675bc3cddcc8dbf263f`; both package
+commands passed. P5C scoped delivery is complete; next is P5D.

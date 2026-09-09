@@ -157,40 +157,38 @@
         "hidden native proxies"
       ],
       "validation": [
-        "current-api-probe",
-        "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "P5C release model/keyboard/current UI evidence",
+        "Current API/probe/native guard"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "d44da7c60dc0e7403fe9d4d81d9d213da74b9a1f9f36bb0752d300472f10a74f"
+      "reviewed_implementation_sha256": "6f904d4e4d4b9ff194367f53501fbfbf44e9f34e1e5f6dbc035cf74623217bdf"
     },
     {
       "component": "NavigationItemRow",
-      "classification": "standard-control-pending",
+      "classification": "composed-missing-standard-control",
       "implementation": "ui/patterns/navigation/private/navigation_item_row.slint",
       "public": false,
-      "status": "custom/pending-migration",
+      "status": "reviewed-exception",
       "native_dependencies": [
+        "Button",
         "Tooltip"
       ],
-      "missing_capability": "Hierarchy-specific row is missing; ordinary label/chevron activation still needs native migration.",
+      "missing_capability": "No public native compound navigation row with separate expansion, left-aligned eliding content and inter-row keyboard focus",
       "permitted_custom_behavior": [
-        "hierarchy traversal and expansion requests",
-        "existing label/chevron input until P5C"
+        "Visible native Button surface/focus/activation; passive eliding row content and chevron",
+        "Only compound direction-key focus/expansion requests and visibility recovery"
       ],
       "forbidden_custom_behavior": [
-        "new ordinary button activation",
-        "text editing",
-        "scrollbar implementation",
-        "hidden native proxies"
+        "Custom Return/Space/pointer/accessibility activation",
+        "Hidden native proxy or duplicate active input",
+        "Host selection/model mutation"
       ],
       "validation": [
-        "current-api-probe",
-        "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "P5C release model/keyboard/current UI evidence",
+        "Current API/probe/native guard"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "58d658a789eb32d2676ab8ca89081b20ee005ed4304bf169d8bfc437417c12c8"
+      "reviewed_implementation_sha256": "95405b9d77e8f9e20d56ef7ba59e846ac17f81c12e5e4474f4982ab88e65e1aa"
     },
     {
       "component": "EmptyState",

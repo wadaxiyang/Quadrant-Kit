@@ -1,0 +1,30 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette } from "std-widgets.slint";
+import { NavigationView, NavigationEntry, NavigationPaneMode, FluentButton, Theme, ThemeMode } from "@quadrant-kit";
+export component NavigationCheck inherits Window {
+    width: 760px; height: 520px; default-font-family: "Segoe UI Variable Text";
+    background: Theme.background;
+    in-out property <[NavigationEntry]> entries: [];
+    in-out property <[NavigationEntry]> footer: [];
+    in-out property <string> selected;
+    in-out property <bool> dark: false;
+    in-out property <bool> compact: false;
+    out property <bool> model_valid: nav.model_valid;
+    out property <int> commands: 0;
+    out property <string> last_id;
+    out property <string> last_expansion;
+    out property <bool> requested_expanded;
+    out property <int> expansions: 0;
+    out property <bool> anchor_focused: anchor.has-focus;
+    public function focus_anchor() { anchor.focus(); }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    changed dark => { Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light; Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light; }
+    nav := NavigationView { width: 100%; height: 100%; show_pane_toggle: false;
+        items: root.entries; footer_items: root.footer; selected_id: root.selected;
+        pane_mode: root.compact ? NavigationPaneMode.compact : NavigationPaneMode.expanded;
+        item_invoked(id) => { root.commands += 1; root.last_id = id; }
+        expansion_requested(id, expanded) => { root.expansions += 1; root.last_expansion = id; root.requested_expanded = expanded; }
+        anchor := FluentButton { x: 24px; y: 20px; width: 180px; height: 32px; text: "Focus anchor"; }
+    }
+}

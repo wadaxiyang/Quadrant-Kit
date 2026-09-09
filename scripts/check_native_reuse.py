@@ -14,7 +14,7 @@ from slint_contract import ContractError, canonical, implementation_facts, local
 ROOT = Path(__file__).resolve().parents[1]
 # P1 admits only this already-audited command debt, never future custom buttons.
 # Remove each allowance when its migration lands; do not extend to excuse new input.
-PENDING_COMPONENTS = frozenset({'NavigationItemRow'})
+PENDING_COMPONENTS = frozenset()
 INPUT_ELEMENTS = frozenset({'TouchArea', 'FocusScope', 'TextInput', 'Flickable'})
 NATIVE_CONTROLS = frozenset({'Button', 'LineEdit', 'TextEdit', 'CheckBox', 'Switch', 'RadioGroup', 'ComboBox', 'Slider', 'SpinBox', 'Spinner', 'ProgressIndicator', 'ScrollView', 'ListView', 'StandardListView', 'GroupBox', 'TabWidget', 'StandardTableView', 'DatePickerPopup', 'TimePickerPopup'})
 NATIVE_BUILTINS = frozenset({'Tooltip', 'PopupWindow', 'ContextMenuArea', 'Menu'})

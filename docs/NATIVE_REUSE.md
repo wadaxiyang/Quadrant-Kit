@@ -31,7 +31,7 @@ debt, never compliant). Component composition may contain pending children; this
 does not make the compound component native-compliant. Four exceptions record
 SurfaceCard, NavigationView, ToastHost and ModalManager with explicit scope.
 
-The only remaining pending-command allowance is private NavigationItemRow (P5C). New pending commands fail.
+P5C removes the last pending-command allowance. New pending commands fail.
 Reviewed exceptions and pending implementations have canonical declaration/body
 digests; comments/formatting do not change them, new behavior does. There is no
 automatic refresh command. Review changes with concrete scope/behavior evidence,
@@ -97,7 +97,7 @@ Menu/ContextMenuArea wrapping and popup focus contracts remain P5 work.
 
 ## Current exceptions and migration state
 
-Only NavigationItemRow remains `custom/pending-migration` for P5C. IconButton and
+NavigationItemRow now uses visible native label/arrow Buttons (P5C). IconButton and
 SegmentButton are native Button wrappers; WindowControlButton composes IconButton.
 PageHeader and ModalManager now use native Button through FluentButton. Text wrappers already use actual native editors. Badge, FluentIcon,
 TooltipHost content, surfaces, headings, metrics and empty state are presentation
@@ -180,3 +180,8 @@ shows it explicitly alongside the separately labeled passive presenter.
 P5B removes Modal Return interception and ordinary activation duplication. Its
 reviewed exception is only the fixed action focus cycle, Escape, passive scrim,
 conditional lifetime and host restore callback. Each action remains a native Button.
+
+P5C replaces row TouchArea and Return/Space activation with visible native Button
+surfaces. Only missing compound direction-key focus/expansion, scroll-into-view
+and passive left-aligned/eliding content remain custom. Model validation observes
+row notifications; no Rust adapter, router or selection owner was added.

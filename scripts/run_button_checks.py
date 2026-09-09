@@ -17,8 +17,9 @@ from run_perf import ROOT, execute, generate, resolved_fingerprint, source_ident
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-only', action='store_true', help='Build an interactive host without claiming input PASS')
-    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric', 'containers', 'pickers', 'toast', 'modal'], default='button')
+    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric', 'containers', 'pickers', 'toast', 'modal', 'navigation'], default='button')
     parser.add_argument('--timeout-seconds', type=int, default=30, help='Bounded runtime allowance for lifecycle/idle suites (1..300)')
+    parser.add_argument('--profile', choices=['debug', 'release'], default='debug')
     args = parser.parse_args(argv)
     if not 1 <= args.timeout_seconds <= 300:
         parser.error('timeout-seconds must be 1..300')
@@ -36,9 +37,11 @@ def main(argv=None):
         stem, executable_name = 'toast_check', 'kit-p5a-toast-check'
     if args.suite == 'modal':
         stem, executable_name = 'modal_check', 'kit-p5b-modal-check'
+    if args.suite == 'navigation':
+        stem, executable_name = 'navigation_check', 'kit-p5c-navigation-check'
     output = ROOT / 'target/button-checks' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     source = source_identity(ROOT)
-    report = {'suite': args.suite, 'source': source, 'status': 'IN_PROGRESS', 'commands': [], 'backend': 'winit-software', 'input': 'public WindowEvent dispatch; OS input/accessibility is separate'}
+    report = {'suite': args.suite, 'profile': args.profile, 'source': source, 'status': 'IN_PROGRESS', 'commands': [], 'backend': 'winit-software', 'input': 'public WindowEvent dispatch; OS input/accessibility is separate'}
     project = output / 'consumer'
     generate(project, (ROOT / ('scripts/' + stem + '.slint')).read_text(encoding='utf-8'), executable_name, True)
     manifest = project / 'Cargo.toml'
@@ -52,11 +55,11 @@ def main(argv=None):
         with (output / 'resolved.json').open('w', encoding='utf-8') as stdout, (output / 'resolve.log').open('w', encoding='utf-8') as stderr:
             subprocess.run(['cargo', 'metadata', '--offline', '--format-version', '1'], cwd=project, env=env, stdout=stdout, stderr=stderr, check=True, timeout=120)
         report['external_graph_sha256'] = resolved_fingerprint(json.loads((output / 'resolved.json').read_text(encoding='utf-8')))
-        build = execute(['cargo', 'build', '--locked', '--offline'], project, output / 'build.log', env)
+        build = execute(['cargo', 'build', '--locked', '--offline'] + (['--release'] if args.profile == 'release' else []), project, output / 'build.log', env)
         report['commands'].append(build)
         if build['exit_code']:
             raise RuntimeError('Button verification build failed')
-        binary = ROOT / 'target/debug' / (executable_name + '.exe' if os.name == 'nt' else executable_name)
+        binary = ROOT / 'target' / args.profile / (executable_name + '.exe' if os.name == 'nt' else executable_name)
         saved = output / binary.name
         shutil.copyfile(binary, saved)
         report['binary'] = str(saved)

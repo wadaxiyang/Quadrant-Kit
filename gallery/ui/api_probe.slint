@@ -79,7 +79,7 @@ export component KitApiProbe inherits Window {
             FluentButton { text: "Slot command"; enabled: root.controls_enabled; }
         }
         NavigationBackButton { accessible_name: "Go back"; enabled: root.activated; clicked => { root.activated = false; } }
-        NavigationView {
+        NavigationView { init => { if !self.model_valid { root.activated = false; } }
             height: 100px; items: root.navigation_entries; selected_id: root.selection;
             pane_mode: root.pane_mode;
             item_invoked(id) => { root.navigation_requested(id); }

@@ -201,7 +201,7 @@ The current API snapshot intentionally changes seven declarations; the component
 set stays at 35 names/21 visuals, now 234 properties and 20 callbacks. The P3 report
 records reviewed removals/additions, true input evidence, all-page rendering and
 retained intermediate failures. Historical API counts above remain historical.
-Only NavigationItemRow retains pending native-command debt. Full reader/IME,
+No pending native-command allowance remains after P5C. Full reader/IME,
 WinUI runtime reference, modal lifecycle and P5 navigation acceptance remain separate.
 
 ### P4C native containers
@@ -238,3 +238,11 @@ programmatic/rapid close, one request per cycle and host restore callback counts
 `python scripts/run_button_checks.py --suite button` retains the current upstream
 button/composition regression, now navigating from initial Cancel to Confirm.
 These are finite WindowEvent contracts, separate from actual OS reader containment.
+
+### P5C bounded navigation
+
+`python scripts/run_button_checks.py --suite navigation --profile release` runs
+16/64/256/257 model replacement/row-change/selected-only checks, real public
+WindowEvent keyboard/pointer sequences, and 30 cold validation timings per size.
+Raw BENCH lines retain every sample. `--profile` defaults to debug for other suites.
+This is bounded ScrollView composition, not a virtualized infinite tree.

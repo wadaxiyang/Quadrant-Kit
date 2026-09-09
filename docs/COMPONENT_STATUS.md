@@ -26,7 +26,7 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | NavigationBackButton | IMPLEMENTED / composed; Button, Tooltip | IconButton forwards name/tooltip; passive arrow; native disabled behavior | navigation-foundations | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
 | NavigationContentSurface | IMPLEMENTED / presenter; builtin presentation / composition | Retained clipped host viewport; no routing, implicit padding or new effects | navigation-foundations | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
 | NavigationPaneToggleButton | IMPLEMENTED / composed; Button, Tooltip | Visible native Button owns icon/action/expanded semantics; pane_mode stays controlled | navigation-foundations | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
-| NavigationView | IMPLEMENTED / reviewed-exception; Button, LineEdit, ScrollView, Tooltip | Only migrated search name and button dependencies; row command/model work remains P5C | navigation-view | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| NavigationView | IMPLEMENTED / reviewed-exception; Button, LineEdit, ScrollView, Tooltip | Native label/arrow actions; bounded focus and reactive combined model validation | navigation-view | VERIFIED: P5C runtime | VERIFIED: P5C runtime/Matrix | VERIFIED: 256 validation p95 8.13 ms | PARTIAL: reader NOT_RUN |
 | PageHeader | IMPLEMENTED / composed; Button | Native action stacks below 420px; title/subtitle wrap | page-header | P2 regression suite | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
 | SectionHeader | IMPLEMENTED / composed; builtin presentation / composition | Title/description wrap; retained passive badge and trailing slot | section-header | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
 | SegmentButton | IMPLEMENTED / native-wrapper; Button | Native non-toggling Button; selected remains host input; native checked fill | segment-button | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | P3 paired Release; steady memory NOT_RUN | PARTIAL: native Windows actions; no reader
@@ -57,7 +57,7 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | FluentTimePicker | IMPLEMENTED / native composition; TimePickerPopup | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
 
 Private NavigationItemRow is separately recorded by the native guard (ordinary
-input pending P5C); NavigationModel is a pure private global, not a visual export.
+input migrated P5C); NavigationModel is a pure private global, not a visual export.
 Existing historical navigation input observations do not become P1 runtime tests.
 
 ## Planned names and independently gated batches
@@ -79,7 +79,7 @@ No placeholder exports or historical compatibility paths are introduced; compile
 | P4D | FluentStandardTableView, FluentDatePicker, FluentTimePicker | StandardTableView, DatePickerPopup/TimePickerPopup; actual structs and finite popup contract | PASS — P4D scoped contract |
 | P5A | Tooltip service and existing ToastHost | Builtin Tooltip plus content; finite toast lifecycle | PASS — P5A scoped contract |
 | P5B | Existing ModalManager | Fixed confirmation, explicit focus protocol; not complete ContentDialog | PARTIAL — finite P5B input PASS; reader NOT_RUN |
-| P5C | Existing NavigationView/rows | Measure 16/64/256/257 before optimization; no host router | NOT_STARTED |
+| P5C | Existing NavigationView/rows | Measure 16/64/256/257 before optimization; no host router | PASS — P5C scoped contract |
 | P5D | FluentFlyout, FluentDropDownButton, FluentSplitButton; menu composition examples | PopupWindow/Menu/ContextMenuArea and native Button; no new Menu runtime service | BACKLOG |
 | P5E | FluentExpander, FluentInfoBar | Native command plus bounded composition; not a custom input framework | BACKLOG |
 

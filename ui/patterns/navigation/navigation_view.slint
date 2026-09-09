@@ -31,6 +31,7 @@ export component NavigationView inherits Rectangle {
     in property <bool> show_top_separator: false;
     in property <bool> show_footer_separator: true;
     in property <NavigationContentSurfaceMode> content_surface_mode: NavigationContentSurfaceMode.fluent;
+    out property <bool> model_valid: root.valid;
     callback item_invoked(string);
     callback expansion_requested(string, bool);
     callback back_requested();
@@ -41,12 +42,13 @@ export component NavigationView inherits Rectangle {
     private property <bool> compact: root.pane_mode == NavigationPaneMode.compact;
     // Reject both models together: duplicate IDs across regions cannot select an
     // arbitrary row. Optional controls and host content remain available.
-    private property <bool> valid: false;
+    private property <bool> valid: NavigationModel.valid(root.items, root.footer_items);
     private property <int> primary_count: 0;
     private property <int> footer_count: 0;
     init => { root.sync-models(); }
     changed items => { root.sync-models(); }
     changed footer_items => { root.sync-models(); }
+    changed valid => { root.sync-models(); }
     private property <string> recovery_id;
     private property <int> recovery_epoch;
     private property <bool> search_focus_requested: false;
@@ -109,7 +111,7 @@ export component NavigationView inherits Rectangle {
                 if root.show_top_separator && root.has_header && root.valid && (root.items.length > 0 || root.footer_items.length > 0): Rectangle {
                     height: 1px; background: Theme.navigation_content_border;
                 }
-                ScrollView {
+                primary_scroll := ScrollView {
                     vertical-stretch: 1; horizontal-scrollbar-policy: always-off;
                     VerticalLayout {
                         spacing: 0px; padding-left: 4px; padding-right: 4px; alignment: start;
@@ -119,8 +121,13 @@ export component NavigationView inherits Rectangle {
                             context_label: root.valid ? NavigationModel.label(root.items, index) : "";
                             selected: root.valid && root.selected_id == self.entry.id && (self.entry.kind == NavigationEntryKind.destination || self.entry.kind == NavigationEntryKind.destination_group);
                             recovery_id: root.recovery_id; recovery_epoch: root.recovery_epoch;
-                            invoked => { root.item_invoked(self.entry.id); }
-                            expand => { root.expansion_requested(self.entry.id, !self.entry.expanded); }
+                            invoked => { if root.valid { root.item_invoked(self.entry.id); } }
+                            expand => { if root.valid { root.expansion_requested(self.entry.id, !self.entry.expanded); } }
+                            navigate(direction) => { root.move-focus(false, index, direction); }
+                            focus_visible(y, height) => {
+                                if y + primary_scroll.viewport-y < 0px { primary_scroll.viewport-y = -y; }
+                                else if y + height + primary_scroll.viewport-y > primary_scroll.visible-height { primary_scroll.viewport-y = primary_scroll.visible-height - y - height; }
+                            }
                             recover => { root.recover-focus(root.valid ? NavigationModel.visible-parent(root.items, index) : ""); }
                         }
                     }
@@ -130,19 +137,24 @@ export component NavigationView inherits Rectangle {
                     if root.show_footer_separator && (root.has_header || root.items.length > 0): Rectangle {
                         x: 0px; y: 0px; height: 1px; width: 100%; background: Theme.navigation_content_border;
                     }
-                    ScrollView {
+                    footer_scroll := ScrollView {
                         y: root.show_footer_separator && (root.has_header || root.items.length > 0) ? 1px : 0px;
                         height: max(0px, parent.height - self.y); width: 100%; horizontal-scrollbar-policy: always-off;
                         footer_layout := VerticalLayout {
                             spacing: 0px; padding-left: 4px; padding-right: 4px; alignment: start;
                             for index in root.footer_count: NavigationItemRow {
-                                entry: root.footer_items[index]; presented: NavigationModel.shown(root.footer_items, index);
-                                compact: root.compact; context_label: NavigationModel.label(root.footer_items, index);
+                                entry: root.footer_items[index]; presented: root.valid && NavigationModel.shown(root.footer_items, index);
+                                compact: root.compact; context_label: root.valid ? NavigationModel.label(root.footer_items, index) : "";
                                 selected: root.selected_id == self.entry.id && (self.entry.kind == NavigationEntryKind.destination || self.entry.kind == NavigationEntryKind.destination_group);
                                 recovery_id: root.recovery_id; recovery_epoch: root.recovery_epoch;
-                                invoked => { root.item_invoked(self.entry.id); }
-                                expand => { root.expansion_requested(self.entry.id, !self.entry.expanded); }
-                                recover => { root.recover-focus(NavigationModel.visible-parent(root.footer_items, index)); }
+                                invoked => { if root.valid { root.item_invoked(self.entry.id); } }
+                                expand => { if root.valid { root.expansion_requested(self.entry.id, !self.entry.expanded); } }
+                                navigate(direction) => { root.move-focus(true, index, direction); }
+                                focus_visible(y, height) => {
+                                    if y + footer_scroll.viewport-y < 0px { footer_scroll.viewport-y = -y; }
+                                    else if y + height + footer_scroll.viewport-y > footer_scroll.visible-height { footer_scroll.viewport-y = footer_scroll.visible-height - y - height; }
+                                }
+                                recover => { root.recover-focus(root.valid ? NavigationModel.visible-parent(root.footer_items, index) : ""); }
                             }
                         }
                     }
@@ -158,9 +170,28 @@ export component NavigationView inherits Rectangle {
     // Assign equal scalar counts without replacing repeater models. Binding the
     // repeater directly to model.length recreates rows on whole-model assignment.
     function sync-models() {
-        root.valid = NavigationModel.valid(root.items, root.footer_items);
         root.primary_count = root.valid ? root.items.length : 0;
         root.footer_count = root.valid ? root.footer_items.length : 0;
+    }
+    function move-focus(footer: bool, index: int, direction: int) {
+        if !root.valid { return; }
+        let length = footer ? root.footer_items.length : root.items.length;
+        let next = NavigationModel.find-focus(footer ? root.footer_items : root.items,
+            direction == 1 ? index + 1 : 0, direction == -1 ? index : length,
+            direction == -1 || direction == 2);
+        if next >= 0 { root.recover-index(footer, next); }
+        else if direction == 1 && !footer {
+            let footer_length = root.footer_items.length;
+            let first = NavigationModel.find-focus(root.footer_items, 0, footer_length, false);
+            if first >= 0 { root.recover-index(true, first); }
+        } else if direction == -1 && footer {
+            let primary_length = root.items.length;
+            let last = NavigationModel.find-focus(root.items, 0, primary_length, true);
+            if last >= 0 { root.recover-index(false, last); }
+        }
+    }
+    function recover-index(footer: bool, index: int) {
+        root.recover-focus(footer ? root.footer_items[index].id : root.items[index].id);
     }
     function recover-focus(id: string) {
         root.recovery_id = id;
