@@ -1,8 +1,8 @@
-# Public API — local NavigationView / Gallery rebuild
+# Public API — current Quadrant Kit
 
-`ui/kit.slint` is the only supported Slint entry. All 35 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The navigation rebuild additions and SidebarItem removal are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
+`ui/kit.slint` is the only supported Slint entry. All current public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The navigation rebuild additions and SidebarItem removal are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
 
-Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` records the reviewed current contract (P3: 35 names, 234 properties, 20 callbacks, seven enums and one struct). These counts and historical signatures are not permanent invariants. APIs can be added, removed, renamed or adjusted with a concrete reason, synchronized current callers/docs/probes and an explicitly reviewed snapshot. Each version keeps one implementation, without old aliases or compatibility branches. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
+Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` records the reviewed current contract (see the current snapshot and facade for the exact set). These counts and historical signatures are not permanent invariants. APIs can be added, removed, renamed or adjusted with a concrete reason, synchronized current callers/docs/probes and an explicitly reviewed snapshot. Each version keeps one implementation, without old aliases or compatibility branches. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
 
 Phase 3 removes SidebarItem, Theme.sidebar_bg and the two UiConstants.sidebar_* widths.
 The new pane tokens retain their resolved transparent/54 px values; content_radius
@@ -10,10 +10,10 @@ and other shared tokens remain. See [Phase 3 cutover](NAVIGATION_REBUILD_PHASE3.
 
 ## Coverage and behavior
 
-- Home and All components share the Gallery catalog: 25 destinations cover all 21 public visual components. Theme / Colors, Typography and Icons provide conceptual guidance for globals and resources.
+- Home and All components share the Gallery catalog: reachable destinations cover every current public visual component. Theme / Colors, Typography and Icons provide conceptual guidance for globals and resources.
 - Controls overview compares inputs and commands. Dedicated FluentButton, IconButton, SegmentButton, FluentTextField and FluentTextArea pages provide their specimens. Text editing remains delegated to std-widgets.
 - SurfaceCard, Badge, MetricCard and SettingRow have dedicated pages. Non-interactive reference specimens are labeled Reference.
-- Feedback overview compares outcomes; ToastHost, ModalManager and TooltipHost have dedicated pages. ModalManager is one confirmation overlay, with Escape/Return handling; complete focus containment, restoration, nested modal stacks and screen-reader behavior remain unverified.
+- Feedback overview compares outcomes; ToastHost, ModalManager and TooltipHost have dedicated pages. ModalManager is one finite confirmation overlay with native action activation, scoped Tab/Escape handling and an explicit host focus-restore callback; full dialog and screen-reader semantics remain unverified.
 - NavigationView demonstrates controlled three-level primary and two-level footer models. Navigation foundations composes NavigationBackButton, NavigationPaneToggleButton and NavigationContentSurface. PageHeader, SectionHeader, EmptyState and WindowControlButton have dedicated destinations.
 - IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
 - Navigation keyboard/focus polish and its Windows input/render evidence are recorded in [Phase 7](NAVIGATION_REBUILD_PHASE7.md). P5C adds bounded Up/Down/Home/End item traversal; full IME/screen-reader/platform coverage remains unverified. Screenshot rendering is not interaction or accessibility proof.
@@ -1099,7 +1099,7 @@ export component FluentSplitButton inherits Rectangle {
     width: primary.min-width + 36px; height: primary.min-height;
     horizontal-stretch: 0; vertical-stretch: 0;
     forward-focus: primary;
-    primary := Button { x:0px;y:0px;width:max(0px,parent.width - 36px);height:100%;text:root.text;enabled:root.enabled;clicked=>{root.clicked();} }
+    primary := Button { x:0px;y:0px;width:max(0px,parent.width - 36px);height:100%;text:root.text;enabled:root.enabled;clicked=>{if root.enabled && root.visible {root.clicked();}} }
     secondary := Button { x:parent.width - 36px;y:0px;width:36px;height:100%;icon:FluentIcons.chevron_down;icon-size:16px;colorize-icon:true;accessible-label:root.secondary_label;enabled:root.enabled;clicked=>{root.open();} }
     popup := FluentFlyout { x:0px;y:root.height;width:root.popup_width;@children }
 }
@@ -1108,3 +1108,111 @@ export component FluentSplitButton inherits Rectangle {
 Drop-down uses the native Button icon slot for the local chevron (before text);
 SplitButton uses an icon-only native secondary button. Native colorize-icon keeps
 these SVGs visible across themes without depending on text-symbol font coverage.
+
+## P5E controlled inline compositions
+
+FluentExpander expanded is host-owned. A native header Button requests the next
+value through expanded_requested(bool); ignoring the request keeps current state.
+Slint 1.17.1 forbids a conditional @children placeholder. Hosts MUST supply
+`if expanded: Content { ... }` inside this slot, binding the same host state,
+to unmount child input/timers on collapse. Hiding the slot alone is not cleanup.
+Use the host page activity in that condition too when retaining hidden pages.
+The slot has vertical layout/padding; header_enabled controls only the header,
+and children own their enabled state. Native user header activation focuses it
+before requesting collapse. For programmatic collapse while focus is in content,
+hosts call focus_header() first or focus a known fallback when the header is disabled.
+Kit does not keep arbitrary child references or silently take background focus.
+
+FluentInfoBar is an inline message, initially shown, with optional native close.
+It has no automatic dismissal timer. Host owns shown; at most one dismissed()
+request is admitted in each shown cycle. Changing message/kind while still shown
+does not reset that guard; hide and show to begin another cycle. Hidden content
+is unmounted. Title/message wrap within the supplied width; this is not an OS
+notification, modal or verified screen-reader live region.
+
+```slint
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button } from "std-widgets.slint";
+import { Theme } from "../../foundation/theme.slint";
+import { FluentIcons } from "../../foundation/fluent_icons.slint";
+export component FluentExpander inherits Rectangle {
+    in property <string> text: "Details";
+    in property <bool> expanded: false;
+    in property <bool> header_enabled: true;
+    out property <bool> header_has_focus: header.has-focus;
+    callback expanded_requested(bool);
+    public function focus_header() { if root.header_enabled && root.visible { header.focus(); } }
+    preferred-width: 320px;
+    vertical-stretch: 0;
+    forward-focus: header;
+    VerticalLayout {
+        spacing: 0px;
+        header := Button {
+            height: 40px; text: root.text; enabled: root.header_enabled;
+            icon: root.expanded ? FluentIcons.chevron_up : FluentIcons.chevron_down;
+            icon-size: 16px; colorize-icon: true;
+            accessible-expandable: true; accessible-expanded: root.expanded;
+            clicked => { if root.header_enabled && root.visible { self.focus(); root.expanded_requested(!root.expanded); } }
+        }
+        Rectangle {
+            visible: root.expanded && root.visible;
+            height: root.expanded && root.visible ? content_layout.min-height : 0px;
+            background: Theme.card_bg;
+            border-width: 1px; border-color: Theme.border_color; border-radius: 6px;
+            content_layout := VerticalLayout { padding: 12px; spacing: 8px; @children }
+        }
+    }
+}
+```
+
+```slint
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Theme, Typography } from "../../foundation/theme.slint";
+import { FluentIcons } from "../../foundation/fluent_icons.slint";
+import { FluentIcon } from "../../primitives/fluent_icon.slint";
+import { IconButton } from "../../primitives/icon_button.slint";
+export enum InfoBarKind { info, success, warning, error }
+export component FluentInfoBar inherits Rectangle {
+    in property <bool> shown: true;
+    in property <string> title;
+    in property <string> message;
+    in property <InfoBarKind> kind: InfoBarKind.info;
+    in property <bool> closable: true;
+    callback dismissed();
+    private property <bool> close_requested: false;
+    private property <color> status_color: root.kind == InfoBarKind.error ? Theme.danger : root.kind == InfoBarKind.warning ? Theme.warning : root.kind == InfoBarKind.success ? Theme.success : Theme.accent;
+    changed shown => { root.close_requested = false; }
+    preferred-width: 400px;
+    vertical-stretch: 0;
+    VerticalLayout {
+        if root.shown && root.visible: Rectangle {
+            background: Theme.card_bg; border-width: 1px;
+            border-color: root.status_color; border-radius: 6px;
+            HorizontalLayout {
+                padding: 12px; spacing: 12px;
+                FluentIcon {
+                    size: 24px; icon_color: root.status_color;
+                    source: root.kind == InfoBarKind.error ? FluentIcons.status_error : root.kind == InfoBarKind.warning ? FluentIcons.status_warning : root.kind == InfoBarKind.success ? FluentIcons.status_success : FluentIcons.status_info;
+                }
+                VerticalLayout {
+                    horizontal-stretch: 1; spacing: 4px;
+                    if root.title != "": Text { text: root.title; color: Theme.text_primary; font-size: Typography.body; font-weight: Typography.semibold; wrap: word-wrap; }
+                    Text { text: root.message; color: Theme.text_primary; font-size: Typography.body; wrap: word-wrap; }
+                }
+                if root.closable: IconButton {
+                    icon: FluentIcons.dismiss; tooltip: "Dismiss message"; accessible_name: "Dismiss message";
+                    enabled: !root.close_requested;
+                    clicked => {
+                        if root.shown && root.visible && !root.close_requested {
+                            root.close_requested = true;
+                            root.dismissed();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```

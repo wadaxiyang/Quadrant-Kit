@@ -1,3 +1,4 @@
+import { FluentExpander, FluentInfoBar, InfoBarKind } from "@quadrant-kit";
 import { FluentFlyout, FluentDropDownButton, FluentSplitButton } from "@quadrant-kit";
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
@@ -62,6 +63,8 @@ export component KitApiProbe inherits Window {
         FluentSlider { value: 20; minimum: 0; maximum: 100; step: 5; enabled: root.controls_enabled; }
         FluentDropDownButton { text:"More"; FluentButton {text:"Option";} }
         FluentSplitButton { text:"Apply"; clicked=>{root.activated=true;} FluentButton {text:"Alternative";} }
+        FluentExpander { text:"Details"; expanded:root.activated; expanded_requested(value)=>{root.activated=value;} if root.activated: FluentButton {text:"Slot";} }
+        FluentInfoBar { shown:root.activated; title:"Status"; message:"Message"; kind:InfoBarKind.warning; dismissed=>{root.activated=false;} }
         FluentSpinBox { value: 12; read-only: true; step-size: 2; }
         FluentProgressBar { progress: 0.5; running: false; indeterminate: true; }
         FluentProgressRing { progress: 0.5; running: false; }

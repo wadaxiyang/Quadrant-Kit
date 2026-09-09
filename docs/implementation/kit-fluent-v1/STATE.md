@@ -20,7 +20,8 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P5B | PARTIAL — finite confirmation contract PASS | [P5B.md](P5B.md): Return conflict removed; 20 modal and current button runtime assertions, 75 Python tests, Gallery/40 captures. Reader/full dialog NOT_RUN. Scoped unit complete. |
 | P5C | PASS — scoped bounded navigation | [P5C.md](P5C.md): reactive invalidation, native actions, 152 runtime assertions, full core, 40 captures; 256 validation p95 8.13 ms. |
 | P5D | PASS — scoped native popups | [P5D.md](P5D.md): three exports, 115 scaled runtime assertions, Windows menu input subset, 76 Python tests, Gallery/40 captures. |
-| P5E, P6 | NOT_STARTED | Authorized continuation in order. |
+| P5E | PASS — scoped inline contract | [P5E.md](P5E.md): host-conditional Expander, InfoBar, 19 runtime + 23 popup regressions; full core and 40 captures. |
+| P6 | NOT_STARTED | Authorized next; P5 summary/limits in [P5.md](P5.md). |
 | P7–P8 | NOT_STARTED | Not part of this request. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
@@ -50,3 +51,6 @@ commands passed. P5C scoped delivery is complete; next is P5D.
 
 P5C was committed as `701fc1f309bab7bad0a5ccc56f88482037e402da`; both package
 commands passed. P5D scoped delivery is complete; next is P5E.
+
+P5D was committed as `ddbffbc54ed8d4c7501f12a981293824cad30575`; both package
+commands passed. P5E completes the scoped P5 implementation; next is P6.

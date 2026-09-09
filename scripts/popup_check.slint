@@ -22,6 +22,7 @@ export component PopupCheck inherits Window {
     out property <int> primary_commands: 0;
     out property <int> menu_commands: 0;
     public function open_fly() { if root.controls_enabled { opener.focus(); fly.show(); } }
+    public function focus_split() { split.focus(); }
     public function close_fly() { fly.close(); }
     public function open_menu() { menu.show({x: 0px,y: 32px}); }
     changed controls_enabled => { if !root.controls_enabled { fly.close();drop.close();split.close(); } }

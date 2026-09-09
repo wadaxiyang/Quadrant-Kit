@@ -30,7 +30,7 @@ release tag.
 
 The local NavigationView/Gallery rebuild is a different, unpublished API contract.
 The dependency below selects the historical extraction API, not the current
-35-name navigation API described in PUBLIC_API.md. Phase 8 local packaging does
+current API described in PUBLIC_API.md. Phase 8 local packaging does
 not make the rebuild available for Tasks adoption; a separately authorized
 publication and same-SHA remote-consumer verification must precede that change.
 
@@ -97,3 +97,11 @@ Native icon sizing and window-button default height changed; honor preferred siz
 See PUBLIC_API for controlled selection, error layout and SettingRow child-enabled
 bindings. Initialize Theme and Palette per window from one host decision; no new
 runtime registry, source override, font bundle or root runtime dependency is needed.
+
+## P5 inline ownership
+
+Expander slots require an explicit `if expanded: Content { ... }` using the same
+host-controlled expanded value; this is the supported way to unload native child
+input/timers with Slint 1.17.1. Before programmatic collapse with focus in content,
+focus its header or a host fallback. InfoBar owns only a once-per-shown-cycle
+dismissal guard, while the host owns removing the inline message.

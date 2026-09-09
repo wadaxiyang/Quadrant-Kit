@@ -939,6 +939,49 @@
         "Gallery/current API probe and boundary checks"
       ],
       "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentExpander",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/page/expander.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "Button"
+      ],
+      "missing_capability": "Missing inline composition; ordinary input remains native",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Custom command activation",
+        "Silent host state mutation"
+      ],
+      "validation": [
+        "P5E native capability and current runtime",
+        "Gallery/current API probe and boundary checks"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentInfoBar",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/page/info_bar.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "Button",
+        "Tooltip"
+      ],
+      "missing_capability": "Missing inline composition; ordinary input remains native",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Custom command activation",
+        "Silent host state mutation"
+      ],
+      "validation": [
+        "P5E native capability and current runtime",
+        "Gallery/current API probe and boundary checks"
+      ],
+      "review_on_slint_upgrade": true
     }
   ]
 }

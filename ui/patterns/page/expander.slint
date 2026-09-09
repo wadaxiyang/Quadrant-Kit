@@ -1,0 +1,33 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button } from "std-widgets.slint";
+import { Theme } from "../../foundation/theme.slint";
+import { FluentIcons } from "../../foundation/fluent_icons.slint";
+export component FluentExpander inherits Rectangle {
+    in property <string> text: "Details";
+    in property <bool> expanded: false;
+    in property <bool> header_enabled: true;
+    out property <bool> header_has_focus: header.has-focus;
+    callback expanded_requested(bool);
+    public function focus_header() { if root.header_enabled && root.visible { header.focus(); } }
+    preferred-width: 320px;
+    vertical-stretch: 0;
+    forward-focus: header;
+    VerticalLayout {
+        spacing: 0px;
+        header := Button {
+            height: 40px; text: root.text; enabled: root.header_enabled;
+            icon: root.expanded ? FluentIcons.chevron_up : FluentIcons.chevron_down;
+            icon-size: 16px; colorize-icon: true;
+            accessible-expandable: true; accessible-expanded: root.expanded;
+            clicked => { if root.header_enabled && root.visible { self.focus(); root.expanded_requested(!root.expanded); } }
+        }
+        Rectangle {
+            visible: root.expanded && root.visible;
+            height: root.expanded && root.visible ? content_layout.min-height : 0px;
+            background: Theme.card_bg;
+            border-width: 1px; border-color: Theme.border_color; border-radius: 6px;
+            content_layout := VerticalLayout { padding: 12px; spacing: 8px; @children }
+        }
+    }
+}

@@ -40,27 +40,23 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | FluentSwitch | IMPLEMENTED / native-wrapper; Switch | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
 | FluentRadioGroup | IMPLEMENTED / native-wrapper; RadioGroup | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
 | FluentComboBox | IMPLEMENTED / native-wrapper; ComboBox | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
-
 | FluentSlider | IMPLEMENTED / native-wrapper; Slider | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
 | FluentSpinBox | IMPLEMENTED / native-wrapper; SpinBox | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
 | FluentProgressBar | IMPLEMENTED / native-wrapper; ProgressIndicator | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
 | FluentProgressRing | IMPLEMENTED / native-wrapper; Spinner | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
-
 | FluentScrollView | IMPLEMENTED / native-wrapper; ScrollView | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
 | FluentListView | IMPLEMENTED / native-wrapper; ListView | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
 | FluentStandardListView | IMPLEMENTED / native-wrapper; StandardListView | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
 | FluentGroupBox | IMPLEMENTED / native-wrapper; GroupBox | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
 | FluentTabWidget | IMPLEMENTED / native-wrapper; TabWidget | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
-
 | FluentStandardTableView | IMPLEMENTED / native composition; StandardTableView | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
 | FluentDatePicker | IMPLEMENTED / native composition; DatePickerPopup | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
 | FluentTimePicker | IMPLEMENTED / native composition; TimePickerPopup | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
-
 | FluentFlyout | IMPLEMENTED / composed; native PopupWindow | Native popup ownership; host content actions | native-popups | VERIFIED: P5D runtime + Windows menu subset | VERIFIED: P5D Matrix/scales | NOT_RUN | Reader NOT_RUN |
-
 | FluentDropDownButton | IMPLEMENTED / composed; native PopupWindow and Button | Native popup ownership; host content actions | native-popups | VERIFIED: P5D runtime + Windows menu subset | VERIFIED: P5D Matrix/scales | NOT_RUN | Reader NOT_RUN |
-
 | FluentSplitButton | IMPLEMENTED / composed; native PopupWindow and Button | Native popup ownership; host content actions | native-popups | VERIFIED: P5D runtime + Windows menu subset | VERIFIED: P5D Matrix/scales | NOT_RUN | Reader NOT_RUN |
+| FluentExpander | IMPLEMENTED / composed; Button | Controlled header; mandatory host conditional slot lifetime | native-inline | VERIFIED: P5E runtime | VERIFIED: P5E runtime/Matrix | NOT_RUN | Host focus protocol; reader NOT_RUN |
+| FluentInfoBar | IMPLEMENTED / composed; Button, Tooltip | Inline status; once-per-cycle close request; no auto timer | native-inline | VERIFIED: P5E runtime | VERIFIED: P5E runtime/Matrix | No own Timer | Reader live-region NOT_RUN |
 
 Private NavigationItemRow is separately recorded by the native guard (ordinary
 input migrated P5C); NavigationModel is a pure private global, not a visual export.
@@ -68,7 +64,7 @@ Existing historical navigation input observations do not become P1 runtime tests
 
 ## Planned names and independently gated batches
 
-P4A selection names above are now implemented; later batches below remain planned.
+P4 and P5 batches below are implemented within their recorded contracts.
 
 The following names are the P1 plan, not exports or implemented APIs. Use Fluent
 for new wrappers; no cosmetic renaming of current components. Property/direction/
@@ -87,7 +83,7 @@ No placeholder exports or historical compatibility paths are introduced; compile
 | P5B | Existing ModalManager | Fixed confirmation, explicit focus protocol; not complete ContentDialog | PARTIAL — finite P5B input PASS; reader NOT_RUN |
 | P5C | Existing NavigationView/rows | Measure 16/64/256/257 before optimization; no host router | PASS — P5C scoped contract |
 | P5D | FluentFlyout, FluentDropDownButton, FluentSplitButton; menu composition examples | PopupWindow/Menu/ContextMenuArea and native Button; no new Menu runtime service | PASS — P5D scoped contract |
-| P5E | FluentExpander, FluentInfoBar | Native command plus bounded composition; not a custom input framework | BACKLOG |
+| P5E | FluentExpander, FluentInfoBar | Native command plus bounded composition; required host-conditional Expander slot | PASS — P5E scoped contract |
 
 ## Explicitly outside this evolution's completion claim
 

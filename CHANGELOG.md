@@ -1,5 +1,13 @@
 # Changelog
 
+## Fluent evolution P5E — local, unpublished
+
+- Add controlled FluentExpander with explicit host-conditional slot and focus protocol.
+- Add inline FluentInfoBar / InfoBarKind, with no automatic dismissal timer.
+- Guard disabled Expander and Split primary callbacks against forced native focus.
+- Reconcile P5 current API, Gallery and scoped evidence; full dialog/reader limits remain.
+
+
 ## Fluent evolution P5D — local, unpublished
 
 - Add native PopupWindow-based FluentFlyout and anchored FluentDropDownButton / FluentSplitButton.

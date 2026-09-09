@@ -190,3 +190,11 @@ P5D FluentFlyout inherits public PopupWindow, including actual is-open, Escape,
 outside-click close and focus restoration. DropDown/Split compose visible native
 Button owners with that popup. Slots own native children and scrolling; native
 Menu/ContextMenuArea remains direct Gallery composition, with no Kit dispatcher.
+
+P5E Expander uses a native header Button. Slint prohibits conditional @children,
+so the host MUST conditionally instantiate its slot on the controlled expanded
+value (and retained-page activity); the example verifies timer/input teardown.
+InfoBar uses native IconButton closure, no timer, and a per-shown-cycle guard.
+Forced programmatic focus on a disabled native Button can still enter its native
+key handler; Expander and Split primary suppress the resulting callback when
+disabled/hidden. This guard does not implement keyboard activation itself.

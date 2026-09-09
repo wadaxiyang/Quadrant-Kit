@@ -113,7 +113,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 12 => {check("drop-down child acts and closes",ui.get_drop_commands()==1&&!ui.get_drop_open());click(80.,276.);}
                 13 => {check("split primary is independent",ui.get_primary_commands()==1&&!ui.get_split_open());click(180.,276.);}
                 14 => {check("split secondary opens only popup",ui.get_primary_commands()==1&&ui.get_split_open());shot("split");key(w,Key::Tab.into());key(w,Key::Return.into());}
-                15 => {check("split option command closes popup",ui.get_split_commands()==1&&!ui.get_split_open());ui.set_controls_enabled(false);click(80.,276.);click(180.,276.);}
+                15 => {check("split option command closes popup",ui.get_split_commands()==1&&!ui.get_split_open());ui.set_controls_enabled(false);ui.invoke_focus_split();key(w,Key::Space.into());click(80.,276.);click(180.,276.);}
                 16 => {check("disabled split suppresses both regions",ui.get_primary_commands()==1&&!ui.get_split_open());ui.set_controls_enabled(true);select_native_menu();ui.invoke_open_menu();}
                 17 => {shot("after-native-menu");}
                 18 => {check("native menu keyboard activates first command",ui.get_menu_commands()==1);for _ in 0..10 {ui.invoke_open_fly();ui.invoke_close_fly();}}

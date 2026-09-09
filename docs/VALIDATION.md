@@ -103,7 +103,7 @@ ten-field NavigationEntry; and reject live legacy navigation/shell identifiers.
 The catalog test separately requires all 21 visual exports to have real typed
 destinations. Probe compilation complements these declaration/token checks.
 
-`scripts/kit_api_v1.json` schema 1 currently records **35 names, 240 explicitly declared properties, 20 callbacks, seven enums and one ten-field struct**. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 added NavigationView with 15 properties and six callbacks. Phase 3 removes SidebarItem and three legacy sidebar tokens, rebinding two navigation defaults to their identical resolved values; all other surviving contracts are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.
+`scripts/kit_api_v1.json` schema 1 records the exact current facade. The historical navigation baseline had 35 names; Fluent additions/removals are reviewed in the staged reports. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 added NavigationView with 15 properties and six callbacks. Phase 3 removes SidebarItem and three legacy sidebar tokens, rebinding two navigation defaults to their identical resolved values; all other surviving contracts are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.
 
 Initial migration differences are explicitly authorized by SPEC v2:
 
@@ -202,7 +202,7 @@ set stays at 35 names/21 visuals, now 234 properties and 20 callbacks. The P3 re
 records reviewed removals/additions, true input evidence, all-page rendering and
 retained intermediate failures. Historical API counts above remain historical.
 No pending native-command allowance remains after P5C. Full reader/IME,
-WinUI runtime reference, modal lifecycle and P5 navigation acceptance remain separate.
+WinUI runtime reference and full native accessibility remain separate; current finite modal/navigation evidence is recorded in P5B/P5C.
 
 ### P4C native containers
 
@@ -255,3 +255,12 @@ scroll content. On Windows, native Menu uses an OS modal loop; the test sends
 Down/Return only after verifying that its own process owns the foreground window.
 This is a real Windows input subset, not reader verification. Raw logs retain the
 foreground check and all native/current failures.
+
+### P5E inline lifetime
+
+`python scripts/run_button_checks.py --suite inline --profile release` verifies
+controlled requests, required host-conditional Expander slots, child mount/timer
+teardown, explicit header focus, native disabled behavior and InfoBar close cycles.
+The popup suite additionally forces disabled Split focus before Space to guard
+the native edge found by the P5E reproducer. Native reader/live-region semantics
+remain a separate verification category.

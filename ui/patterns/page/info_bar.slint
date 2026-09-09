@@ -1,0 +1,48 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Theme, Typography } from "../../foundation/theme.slint";
+import { FluentIcons } from "../../foundation/fluent_icons.slint";
+import { FluentIcon } from "../../primitives/fluent_icon.slint";
+import { IconButton } from "../../primitives/icon_button.slint";
+export enum InfoBarKind { info, success, warning, error }
+export component FluentInfoBar inherits Rectangle {
+    in property <bool> shown: true;
+    in property <string> title;
+    in property <string> message;
+    in property <InfoBarKind> kind: InfoBarKind.info;
+    in property <bool> closable: true;
+    callback dismissed();
+    private property <bool> close_requested: false;
+    private property <color> status_color: root.kind == InfoBarKind.error ? Theme.danger : root.kind == InfoBarKind.warning ? Theme.warning : root.kind == InfoBarKind.success ? Theme.success : Theme.accent;
+    changed shown => { root.close_requested = false; }
+    preferred-width: 400px;
+    vertical-stretch: 0;
+    VerticalLayout {
+        if root.shown && root.visible: Rectangle {
+            background: Theme.card_bg; border-width: 1px;
+            border-color: root.status_color; border-radius: 6px;
+            HorizontalLayout {
+                padding: 12px; spacing: 12px;
+                FluentIcon {
+                    size: 24px; icon_color: root.status_color;
+                    source: root.kind == InfoBarKind.error ? FluentIcons.status_error : root.kind == InfoBarKind.warning ? FluentIcons.status_warning : root.kind == InfoBarKind.success ? FluentIcons.status_success : FluentIcons.status_info;
+                }
+                VerticalLayout {
+                    horizontal-stretch: 1; spacing: 4px;
+                    if root.title != "": Text { text: root.title; color: Theme.text_primary; font-size: Typography.body; font-weight: Typography.semibold; wrap: word-wrap; }
+                    Text { text: root.message; color: Theme.text_primary; font-size: Typography.body; wrap: word-wrap; }
+                }
+                if root.closable: IconButton {
+                    icon: FluentIcons.dismiss; tooltip: "Dismiss message"; accessible_name: "Dismiss message";
+                    enabled: !root.close_requested;
+                    clicked => {
+                        if root.shown && root.visible && !root.close_requested {
+                            root.close_requested = true;
+                            root.dismissed();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

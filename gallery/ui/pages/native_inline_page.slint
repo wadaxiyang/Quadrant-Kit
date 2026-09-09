@@ -1,0 +1,34 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { FluentExpander, FluentInfoBar, InfoBarKind, FluentButton, FluentTextField, Theme } from "@quadrant-kit";
+export component NativeInlinePage inherits GalleryPage {
+    private property <bool> expanded: true;
+    private property <bool> notice_shown: true;
+    private property <string> result: "No command";
+    page_description: "Host-controlled expansion and inline status. No auto-dismiss timer, route state or notification service.";
+    Specimen {
+        specimen_title: "Controlled content lifetime";
+        specimen_description: "The host conditionally creates the slot with the same expanded value. Collapse unloads its editing/input state; reopening creates fresh content.";
+        expander := FluentExpander {
+            text: "Details"; expanded: root.expanded;
+            expanded_requested(value) => { root.expanded = value; }
+            if root.expanded: VerticalLayout {
+                FluentTextField { placeholder-text: "This local editor is recreated on reopen"; }
+                FluentButton { text: "Content command"; clicked => { root.result = "Content command"; } }
+            }
+        }
+        Text { text: root.result; color: Theme.text_primary; }
+    }
+    Specimen {
+        specimen_title: "Inline status and explicit dismissal";
+        specimen_description: "Closing requests a host state change. Nonclosable examples show the other semantic kinds; none automatically disappear.";
+        FluentButton { text: "Show notice"; clicked => { root.notice_shown = true; } }
+        FluentInfoBar { shown: root.notice_shown; title: "Information"; message: "The host decides when to remove this inline message."; dismissed => { root.notice_shown = false; } }
+        FluentInfoBar { kind: InfoBarKind.success; title: "Complete"; message: "Changes are available."; closable: false; }
+        FluentInfoBar { kind: InfoBarKind.warning; title: "Review needed"; message: "Check the current values before proceeding."; closable: false; }
+        FluentInfoBar { kind: InfoBarKind.error; title: "Could not apply"; message: "The host can explain a recovery action here."; closable: false; }
+    }
+}
+

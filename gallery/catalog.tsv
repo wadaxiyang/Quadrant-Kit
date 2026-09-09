@@ -36,3 +36,4 @@ native-numeric	Native numeric & progress		4		NativeNumericPage	native_numeric_pa
 native-containers	Native containers & lists		5		NativeContainersPage	native_containers_page.slint	FluentScrollView,FluentListView,FluentStandardListView,FluentGroupBox,FluentTabWidget	scroll list virtualization group tabs containers
 native-pickers	Native table & pickers		5		NativePickersPage	native_pickers_page.slint	FluentStandardTableView,FluentDatePicker,FluentTimePicker	table date time calendar sorting
 native-popups	Native flyout & menus		5		NativePopupsPage	native_popups_page.slint	FluentFlyout,FluentDropDownButton,FluentSplitButton	flyout popup menu context dropdown split
+native-inline	Expander & InfoBar		5		NativeInlinePage	native_inline_page.slint	FluentExpander,FluentInfoBar	expander inline infobar status lifecycle

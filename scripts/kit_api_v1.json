@@ -498,6 +498,66 @@
         }
       }
     },
+    "FluentExpander": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "expanded": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "header-enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "header-has-focus": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "expanded-requested": {
+            "kind": "callback",
+            "arguments": [
+              "bool"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "focus-header": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": ":",
+          "expression": "\"Details\""
+        },
+        "expanded": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "header-enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "header-has-focus": {
+          "binding": ":",
+          "expression": "header . has-focus"
+        }
+      }
+    },
     "FluentFlyout": {
       "signature": {
         "kind": "component",
@@ -875,6 +935,67 @@
         "status-error": {
           "binding": ":",
           "expression": "@ image-url ( \"../../assets/icons/error-24-regular.svg\" )"
+        }
+      }
+    },
+    "FluentInfoBar": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "shown": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "message": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "kind": {
+            "kind": "property",
+            "direction": "in",
+            "type": "InfoBarKind"
+          },
+          "closable": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "dismissed": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "shown": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "title": {
+          "binding": null,
+          "expression": ""
+        },
+        "message": {
+          "binding": null,
+          "expression": ""
+        },
+        "kind": {
+          "binding": ":",
+          "expression": "InfoBarKind . info"
+        },
+        "closable": {
+          "binding": ":",
+          "expression": "true"
         }
       }
     },
@@ -1536,6 +1657,19 @@
           "expression": "command . pressed"
         }
       }
+    },
+    "InfoBarKind": {
+      "signature": {
+        "kind": "enum",
+        "inherits": null,
+        "values": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ]
+      },
+      "defaults": {}
     },
     "MetricCard": {
       "signature": {
