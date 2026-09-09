@@ -77,7 +77,7 @@ The root `quadrant-kit` package is only a build-time source locator. It owns no 
 - [Candidate changes](CHANGELOG.md)
 - [Checks, baseline review and platform evidence](docs/VALIDATION.md)
 
-The current local facade exports 35 names, including NavigationView and the navigation
+The current local facade exports the contracts listed in PUBLIC_API, including NavigationView and the navigation
 types, Back button, pane toggle and content surface. Gallery uses NavigationView
 with a hierarchical catalog, title/keyword search and Gallery-owned Back history;
 its 25 destinations share page scrolling and collapsible, selectable source/details.
@@ -85,7 +85,7 @@ Gallery shares one application toolbar and keeps platform-native window controls
 DWM caption buttons on Windows and AppKit traffic lights on macOS. The native
 adapters compose these with the toolbar; Mac runtime verification is still pending.
 See the [Gallery window notes](docs/GALLERY.md#native-window-chrome-and-shared-toolbar).
-Home and All components use the same catalog as navigation/search, linking all 21
+Home and All components use the same catalog as navigation/search, linking all current
 public visual components. Snapshot destinations are stable strings; 0–7 remain
 explicit Gallery-only aliases.
 The shell supports expanded/compact navigation, independent primary/footer

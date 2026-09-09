@@ -19,6 +19,11 @@ New features in existing components update that component's current API without
 a second registration step. Keep private helpers private. Do not add a duplicate
 public-name manifest, universal component factory or unnecessary interface shells.
 
+Compiler-special native controls may use a verified public static re-export when
+an extra subclass breaks native child lowering. This is the actual current native
+implementation, not a placeholder or old-name alias. Guard the exact supported
+native identity and compile the generated runtime, not just a build script.
+
 Tooltip content may be a passive primitive presenter; public Slint Tooltip owns
 service behavior. Its API may be simplified as needed, with current callers
 updated. Do not create a primitives-to-overlays dependency for ordinary tooltips.

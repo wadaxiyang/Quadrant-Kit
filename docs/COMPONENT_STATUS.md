@@ -36,11 +36,18 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | TooltipHost | IMPLEMENTED / presenter; builtin presentation / composition | Retained passive content presenter; service callers use builtin Tooltip; full P5A work pending | tooltip-host | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
 | WindowControlButton | IMPLEMENTED / composed; Button, Tooltip | Composes IconButton; removed symbol; enabled and explicit 46x40 default; host owns OS action | window-control-button | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
 
+| FluentCheckBox | IMPLEMENTED / native-wrapper; CheckBox | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
+| FluentSwitch | IMPLEMENTED / native-wrapper; Switch | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
+| FluentRadioGroup | IMPLEMENTED / native-wrapper; RadioGroup | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
+| FluentComboBox | IMPLEMENTED / native-wrapper; ComboBox | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
+
 Private NavigationItemRow is separately recorded by the native guard (ordinary
 input pending P5C); NavigationModel is a pure private global, not a visual export.
 Existing historical navigation input observations do not become P1 runtime tests.
 
 ## Planned names and independently gated batches
+
+P4A selection names above are now implemented; later batches below remain planned.
 
 The following names are the P1 plan, not exports or implemented APIs. Use Fluent
 for new wrappers; no cosmetic renaming of current components. Property/direction/

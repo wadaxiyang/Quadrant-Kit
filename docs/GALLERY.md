@@ -426,3 +426,6 @@ with its native Switch. Existing typed catalog routes remain unchanged.
 to test FluentButton/Modal/PageHeader. These hosts never enter ordinary Gallery startup.
 Source, generated consumer, logs, binary and software images are retained under target/.
 See the P3 report for actual counts, catalog captures and native input limits.
+
+P4A: `native-selection` is a conditional reachable page for all four selection
+wrappers, sharing checked state and demonstrating disabled, empty and long models.

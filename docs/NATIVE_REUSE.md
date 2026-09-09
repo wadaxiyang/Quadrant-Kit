@@ -152,3 +152,10 @@ native controls keep their Fluent palette and animation. Typography, spacing and
 Elevation recipes remain centralized and unchanged. Theme.text_disabled is the
 new shared disabled foreground for custom labels; it is not an upstream palette
 setter. Detailed differences and evidence are in P3.md and DESIGN_SYSTEM.md.
+
+P4A adds FluentCheckBox, FluentSwitch, FluentRadioGroup and FluentComboBox as direct
+public std controls. RadioGroup retains native compiler identity through a static
+re-export because subclassed children fail Rust code generation. The scanner allows
+only the verified RadioGroup native component re-export and checks its true owner;
+unknown native exports still fail. Native state/input/child grammar stay native-owned;
+there is no extra wrapper tree, activation forwarding or private Slint import.

@@ -1,0 +1,36 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette } from "std-widgets.slint";
+import { FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox, Theme, ThemeMode } from "@quadrant-kit";
+export component SelectionCheck inherits Window {
+    width: 640px; height: 420px; default-font-family: "Segoe UI Variable Text";
+    in-out property <bool> dark;
+    in-out property <bool> controls_enabled: true;
+    in-out property <bool> checked <=> check.checked;
+    in-out property <bool> switched <=> toggle.checked;
+    in-out property <int> index <=> combo.current-index;
+    in-out property <[string]> choices: ["First", "Second", "Third"];
+    out property <string> value: combo.current-value;
+    out property <bool> second: second.checked;
+    out property <bool> radio_focus: radio.has-focus;
+    out property <int> checks: 0;
+    out property <int> switches: 0;
+    out property <int> radios: 0;
+    out property <int> combos: 0;
+    public function focus_check() { check.focus(); }
+    public function focus_switch() { toggle.focus(); }
+    public function focus_combo() { combo.focus(); }
+    public function select_first() { first.checked = true; }
+    changed dark => { Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light; Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light; }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    background: Theme.background;
+    check := FluentCheckBox { x: 20px; y: 20px; width: 230px; height: 40px; text: "Check / 选择"; enabled: root.controls_enabled; toggled => { root.checks += 1; } }
+    toggle := FluentSwitch { x: 20px; y: 80px; width: 230px; height: 40px; text: "Switch / 开关"; enabled: root.controls_enabled; toggled => { root.switches += 1; } }
+    radio := FluentRadioGroup { x: 20px; y: 140px; width: 260px; height: 140px; title: "Options"; enabled: root.controls_enabled;
+        first := RadioButton { text: "First"; }
+        second := RadioButton { text: "Second"; }
+        RadioButton { text: "Disabled"; enabled: false; }
+        selected(value) => { root.radios += 1; }
+    }
+    combo := FluentComboBox { x: 20px; y: 320px; width: 320px; height: 32px; model: root.choices; enabled: root.controls_enabled; selected(value) => { root.combos += 1; } }
+}

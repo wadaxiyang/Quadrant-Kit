@@ -9,7 +9,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from slint_contract import ContractError, images, lex, parse, public_api
+from slint_contract import ContractError, images, lex, native_type, parse, public_api
 from check_ui_boundaries import baseline_findings, boundaries, check, check_product, provenance
 from check_cargo_boundaries import KIT_URL, check_manifest, check_metadata, reachable
 from verify_distribution import verify, verify_archive
@@ -315,7 +315,12 @@ class CurrentRepositoryTests(unittest.TestCase):
         documented = {}
         text = (root / 'docs/PUBLIC_API.md').read_text(encoding='utf-8')
         for source in re.findall(r'```slint\s*\n(.*?)```', text, re.S):
-            definitions = parse(source)['definitions']
+            parsed = parse(source)
+            definitions = dict(parsed['definitions'])
+            for name, (module, original) in parsed['exports'].items():
+                if module == 'std-widgets.slint':
+                    self.assertNotIn(name, definitions)
+                    definitions[name] = native_type(original)
             self.assertFalse(documented.keys() & definitions.keys(), 'Duplicate documented declaration')
             documented.update(definitions)
         self.assertEqual(documented, api, 'Documented signatures/defaults must match the facade')

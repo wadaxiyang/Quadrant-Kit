@@ -1,5 +1,14 @@
 # Validation and boundary contracts
 
+## Current P4 selection checks
+
+`python scripts/run_button_checks.py --suite selection` builds and runs the isolated
+P4A native event host, including programmatic state, disabled input and model changes.
+RadioGroup static re-export is deliberately verified by the scanner and generated
+Rust compilation; build-script-only generation cannot prove compiler-special child
+lowering works. `run_perf.py --scenes selection-100 --samples 30` compares paired
+native/Kit CheckBoxes under the existing release measurement protocol.
+
 ## Fluent evolution P2 — current checks
 
 P2 migrates FluentButton to a visible native Button. The explicitly reviewed current

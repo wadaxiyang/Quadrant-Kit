@@ -1,5 +1,10 @@
 # Architecture
 
+Compiler-special native controls may be statically re-exported through a primitive
+module when subclassing loses their native child grammar (currently RadioGroup).
+The facade still only re-exports current contracts; this does not create a runtime
+registry. The pinned runtime probe and exact native-owner guard cover this path.
+
 The root Rust package returns its own `ui/kit.slint` location using `env!("CARGO_MANIFEST_DIR")`. The returned path exists during consumer compilation; it is not a runtime resource URL and must not be persisted into application settings. Gallery is the only member application in this workspace.
 
 Dependency arrows mean consumer → dependency:

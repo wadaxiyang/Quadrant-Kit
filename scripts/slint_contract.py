@@ -346,7 +346,14 @@ def images(source):
 NATIVE_STRUCT_FIELDS = {'Date': ('day', 'month', 'year'), 'Time': ('hour', 'minute', 'second')}
 
 
+NATIVE_COMPONENT_EXPORTS = frozenset({'RadioGroup'})
+
+
 def native_type(name):
+    if name in NATIVE_COMPONENT_EXPORTS:
+        # Public compiler-special controls must retain their exact native identity.
+        # The pinned compiler/probe verifies their inherited contract and grammar.
+        return {'signature': {'kind': 'component', 'inherits': name, 'members': {}}, 'defaults': {}}
     if name not in NATIVE_STRUCT_FIELDS:
         raise ContractError(f'Unverified Slint 1.17.1 public re-export: {name}')
     return {'signature': {'kind': 'struct', 'inherits': None,
@@ -399,6 +406,8 @@ def public_exports(root):
                 raise ContractError(f'Unresolved/ambiguous re-export: {original}')
             source, original = matches[0]
         if source == 'std-widgets.slint':
+            if original in NATIVE_COMPONENT_EXPORTS:
+                return {'definition': native_type(original), 'path': path, 'name': name, 'native_source': original}
             return {'definition': native_type(original), 'path': source, 'name': original}
         return resolve(local_path(path, source, root), original, trail | {key})
 

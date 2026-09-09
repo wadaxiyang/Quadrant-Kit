@@ -313,6 +313,22 @@
         }
       }
     },
+    "FluentCheckBox": {
+      "signature": {
+        "kind": "component",
+        "inherits": "CheckBox",
+        "members": {}
+      },
+      "defaults": {}
+    },
+    "FluentComboBox": {
+      "signature": {
+        "kind": "component",
+        "inherits": "ComboBox",
+        "members": {}
+      },
+      "defaults": {}
+    },
     "FluentIcon": {
       "signature": {
         "kind": "component",
@@ -666,6 +682,22 @@
         }
       }
     },
+    "FluentRadioGroup": {
+      "signature": {
+        "kind": "component",
+        "inherits": "RadioGroup",
+        "members": {}
+      },
+      "defaults": {}
+    },
+    "FluentSwitch": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Switch",
+        "members": {}
+      },
+      "defaults": {}
+    },
     "FluentTextArea": {
       "signature": {
         "kind": "component",
@@ -881,7 +913,7 @@
         },
         "value": {
           "binding": ":",
-          "expression": "\"—\""
+          "expression": "\"\u2014\""
         },
         "hint": {
           "binding": null,

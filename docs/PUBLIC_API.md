@@ -720,3 +720,31 @@ are suppressed, and re-enabling emits no action. Forced undersized native text
 buttons still need sufficient width or abbreviated visible text and a full name.
 See [P3 evidence and limits](implementation/kit-fluent-v1/P3.md), including the
 unrun full IME, reader, modal lifecycle and WinUI reference comparison.
+
+## P4A native selection contracts
+
+These wrappers use the pinned public native API without extra input objects or
+shadow state. `checked` on CheckBox/Switch is native in-out bool; `toggled()` is a
+user action, not a programmatic assignment event. Share state with `<=>`. No three-state
+checkbox is offered. ComboBox inherits model, enabled, current-index/current-value,
+has-focus and selected(string); model replacement is normalized by native code.
+FluentRadioGroup is a static public native re-export: an extra subclass loses the
+compiler's RadioButton lowering. Its snapshot records the inherited native contract,
+not a second implementation. It accepts native RadioButton children with text/checked/enabled and exposes
+title/enabled/orientation/current-value/has-focus/selected(string). It has no public
+current-index property. Native RadioGroup selected(string) reports selection
+transitions, including programmatic checked=true and initial selection; it is not
+a user-only command. Setting the selected child false reverts; deselect-all is not
+supported. Static children are verified. Dynamic RadioButton repeaters currently
+produce invalid generated Rust in 1.17.1 and are NOT_SUPPORTED in this contract.
+Tab visits enabled radio children; Space/Enter selects. Arrow-key selection is not
+implemented by this pinned native control and is not added by Kit.
+Native keyboard, focus, accessibility and sizing pass through the public base.
+These are current static exports; no registration or compatibility path is added.
+
+```slint
+export component FluentCheckBox inherits CheckBox { }
+export component FluentSwitch inherits Switch { }
+export { RadioGroup as FluentRadioGroup } from "std-widgets.slint";
+export component FluentComboBox inherits ComboBox { }
+```

@@ -20,7 +20,7 @@ import time
 from capture_gallery_baseline import source_identity
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'text-input', 'hidden-toast', 'icons-100', 'segments-100')
+SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'text-input', 'hidden-toast', 'icons-100', 'segments-100', 'selection-100')
 NEGATIVE = {
     'palette-write': ('import { Palette } from "std-widgets.slint"; export component Probe inherits Window { init => { Palette.accent-background = #ff0000; } }', 'Assignment on a output property'),
     'radio-index': ('import { RadioGroup } from "std-widgets.slint"; export component Probe inherits Window { RadioGroup { current-index: 0; RadioButton { text: "One"; } } }', 'Unknown property current-index'),
@@ -50,6 +50,12 @@ def scene_source(scene, variant):
         control = 'SegmentButton' if kit else 'Button'
         state = 'selected: mod(index, 2) == 0;' if kit else 'checked: mod(index, 2) == 0; checkable: false; accessible-checkable: true;'
         body = f'for index in 100: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 76px; height: 32px; text: "Test"; enabled: true; {state} }}'
+    elif scene == 'selection-100':
+        imports += 'import { CheckBox } from "std-widgets.slint";\n'
+        if kit:
+            imports += 'import { FluentCheckBox } from "@quadrant-kit";\n'
+        control = 'FluentCheckBox' if kit else 'CheckBox'
+        body = f'for index in 100: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 76px; height: 32px; text: "Test"; checked: mod(index, 2) == 0; enabled: true; }}'
     elif scene == 'text-input':
         control = 'FluentTextField' if kit else 'LineEdit'
         body = f'{control} {{ x: 16px; y: 16px; width: 320px; height: 32px; text: "Text 输入"; }}'

@@ -553,6 +553,86 @@
         "component-specific runtime: NOT_RUN in P1"
       ],
       "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentCheckBox",
+      "implementation": "ui/primitives/check_box.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "CheckBox",
+      "native_dependencies": [
+        "CheckBox"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate native input or shadow selection state"
+      ],
+      "validation": [
+        "P4A current probe, selection runtime suite and Gallery"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentSwitch",
+      "implementation": "ui/primitives/switch.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "Switch",
+      "native_dependencies": [
+        "Switch"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate native input or shadow selection state"
+      ],
+      "validation": [
+        "P4A current probe, selection runtime suite and Gallery"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentRadioGroup",
+      "implementation": "ui/primitives/radio_group.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "RadioGroup",
+      "native_dependencies": [
+        "RadioGroup"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate native input or shadow selection state"
+      ],
+      "validation": [
+        "P4A current probe, selection runtime suite and Gallery"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentComboBox",
+      "implementation": "ui/primitives/combo_box.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "ComboBox",
+      "native_dependencies": [
+        "ComboBox"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate native input or shadow selection state"
+      ],
+      "validation": [
+        "P4A current probe, selection runtime suite and Gallery"
+      ],
+      "review_on_slint_upgrade": true
     }
   ]
 }

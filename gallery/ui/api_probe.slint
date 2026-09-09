@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 import {
+    FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox,
     Elevation, Motion, Theme, ThemeMode, Typography, UiConstants, FluentIcons,
     FluentIcon, TooltipHost, SurfaceCard, Badge, BadgeKind, FluentButton, IconButton,
     SegmentButton, FluentTextField, FluentTextArea, SettingRow,
@@ -41,6 +42,10 @@ export component KitApiProbe inherits Window {
     default-font-size: Typography.body;
     default-font-family: Theme.ui_font_family;
     VerticalLayout {
+        FluentCheckBox { text: "Check"; checked <=> root.activated; enabled: root.controls_enabled; }
+        FluentSwitch { text: "Switch"; checked <=> root.activated; enabled: root.controls_enabled; }
+        FluentRadioGroup { title: "Options"; RadioButton { text: "One"; checked: true; } RadioButton { text: "Two"; } }
+        FluentComboBox { model: ["One", "Two"]; current-index: 1; }
         spacing: UiConstants.space_8;
         FluentIcon { source: FluentIcons.menu; icon_color: Theme.accent; }
         TooltipHost { shown: false; text: "Help"; }

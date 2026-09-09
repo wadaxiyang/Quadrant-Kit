@@ -50,6 +50,11 @@ def verify(root=ROOT, manifest=None):
     if manifest.get('schema_version') != 1 or manifest.get('slint_version') != '1.17.1':
         raise ContractError('Unknown native manifest schema or Slint version')
     modules, components = inventory(root)
+    native_exports = { (entry['path'], entry['name']): entry for entry in public_exports(root).values() if 'native_source' in entry }
+    for key, entry in native_exports.items():
+        if key in components:
+            raise ContractError('Native re-export collides with a local implementation')
+        components[key] = (entry['definition'], [])
     records = {}
     for record in manifest.get('records', []):
         required = {'component', 'classification', 'implementation', 'status', 'native_dependencies', 'missing_capability', 'permitted_custom_behavior', 'forbidden_custom_behavior', 'validation', 'review_on_slint_upgrade', 'public'}
@@ -82,6 +87,8 @@ def verify(root=ROOT, manifest=None):
         key = path, name
         if key in trail:
             raise ContractError('Native symbol cycle')
+        if key in native_exports:
+            return native_exports[key]['native_source']
         module = modules[path]
         if key in components:
             return key
@@ -105,6 +112,8 @@ def verify(root=ROOT, manifest=None):
         return name  # builtin element; Slint compiler validates unknown elements
 
     def closure(key, trail=frozenset()):
+        if key in native_exports:
+            return {native_exports[key]['native_source']}, set()
         if key in trail:
             raise ContractError('Component composition cycle')
         definition, body = components[key]
@@ -137,6 +146,10 @@ def verify(root=ROOT, manifest=None):
         status = record['status']
         if status == 'native-wrapper':
             owner = record.get('native_owner')
+            if key in native_exports:
+                if owner != native_exports[key]['native_source']:
+                    raise ContractError('Native re-export owner mismatch')
+                continue
             facts = implementation_facts(body)
             direct = list(facts['instances']) + [definition['signature']['inherits']]
             owners = [resolve(key[0], name) for name in direct if name]

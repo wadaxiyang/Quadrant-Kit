@@ -1,0 +1,29 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox, Theme } from "@quadrant-kit";
+export component NativeSelectionPage inherits GalleryPage {
+    private property <bool> controls_enabled: true;
+    private property <bool> checked: false;
+    private property <int> toggles: 0;
+    private property <string> last_choice: "None";
+    page_description: "Native selection controls. State lives in the native controls; two-way bindings share it with the host.";
+    Specimen {
+        specimen_title: "Selection / 选择";
+        specimen_description: "RadioButton children belong to the public RadioGroup syntax. No independent Kit radio button or three-state checkbox is claimed.";
+        source_code: "import { FluentCheckBox } from \"@quadrant-kit\";\nFluentCheckBox { text: \"Enabled\"; checked: true; }";
+        FluentSwitch { text: "Enable controls"; checked <=> root.controls_enabled; }
+        FluentCheckBox { text: "CheckBox / 选择选项"; checked <=> root.checked; enabled: root.controls_enabled; toggled => { root.toggles += 1; } }
+        FluentSwitch { text: "Shared checked state"; checked <=> root.checked; enabled: root.controls_enabled; toggled => { root.toggles += 1; } }
+        FluentRadioGroup { title: "RadioGroup"; enabled: root.controls_enabled;
+            RadioButton { text: "First / 第一项"; checked: true; }
+            RadioButton { text: "Second / 第二项"; }
+            RadioButton { text: "Disabled"; enabled: false; }
+            selected(value) => { root.last_choice = value; }
+        }
+        FluentComboBox { enabled: root.controls_enabled; model: ["First / 第一项", "Second / 第二项", "A much longer choice used to inspect native sizing"]; selected(value) => { root.last_choice = value; } }
+        FluentComboBox { model: []; enabled: false; }
+        Text { text: "User toggles: " + root.toggles + " | Last choice: " + root.last_choice; wrap: word-wrap; color: Theme.text_primary; }
+    }
+}

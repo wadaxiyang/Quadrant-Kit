@@ -31,3 +31,4 @@ section-header	SectionHeader	layout-group	5		SectionHeaderPage	section_header_pa
 empty-state	EmptyState	layout-group	5		EmptyStatePage	empty_state_page.slint	EmptyState	page layout header title content state
 window-group	Window		7					
 window-control-button	WindowControlButton	window-group	7		WindowControlButtonPage	window_control_button_page.slint	WindowControlButton	window minimize maximize close chrome
+native-selection	Native selection		4		NativeSelectionPage	native_selection_page.slint	FluentCheckBox,FluentSwitch,FluentRadioGroup,FluentComboBox	checkbox switch radio combo selection
