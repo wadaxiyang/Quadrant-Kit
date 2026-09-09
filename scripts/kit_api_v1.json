@@ -1474,6 +1474,12 @@
             "arguments": [],
             "return": "void",
             "pure": false
+          },
+          "restore-focus-requested": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
           }
         }
       },

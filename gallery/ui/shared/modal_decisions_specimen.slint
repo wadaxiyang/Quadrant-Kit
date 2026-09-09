@@ -9,18 +9,26 @@ export component ModalDecisionsSpecimen inherits Specimen {
 
     in property <int> preview_mode: 1;
     callback modal_requested(int);
+    in property <int> restore_epoch;
+    private property <int> opener_kind: -1;
+    changed restore_epoch => {
+        if root.opener_kind == 0 { info.focus(); }
+        if root.opener_kind == 1 { warning.focus(); }
+        if root.opener_kind == 2 { danger.focus(); }
+        root.opener_kind = -1;
+    }
 
     specimen_title: "Modal decisions";
     source_code: "import { ModalManager } from \"@quadrant-kit\";\n\nModalManager { shown: true; title: \"Apply changes?\"; message: \"Review the change before continuing.\"; primary_text: \"Continue\"; accepted => { /* The host closes the overlay. */ } }";
     specimen_description: "Info, warning, and destructive confirmation share one overlay, focus scope, and content-driven surface.";
-    keyboard_info: "Enter accepts the primary action; Escape dismisses; focus containment and restoration require further verification.";
+    keyboard_info: "Return/Space activates the focused native action. Tab/ShiftTab stays within the fixed actions; Escape requests dismissal; this host restores the opener.";
     accessibility_info: "Semantic icon, title, message, labeled actions, and danger hierarchy describe the decision.";
 
     HorizontalLayout {
         spacing: UiConstants.space_8;
-        FluentButton { text: "Show info"; clicked => { root.modal_requested(0); } }
-        FluentButton { text: "Show warning"; clicked => { root.modal_requested(1); } }
-        FluentButton { text: "Show danger"; danger: true; clicked => { root.modal_requested(2); } }
+        info := FluentButton { text: "Show info"; clicked => { root.opener_kind = 0; root.modal_requested(0); } }
+        warning := FluentButton { text: "Show warning"; clicked => { root.opener_kind = 1; root.modal_requested(1); } }
+        danger := FluentButton { text: "Show danger"; danger: true; clicked => { root.opener_kind = 2; root.modal_requested(2); } }
         Rectangle { horizontal-stretch: 1; }
     }
 

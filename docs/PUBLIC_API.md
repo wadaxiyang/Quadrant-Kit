@@ -595,6 +595,7 @@ export component ModalManager inherits Rectangle {
     in property <bool> danger_primary: false;
     callback accepted;
     callback dismissed;
+    callback restore_focus_requested();
 }
 ```
 
@@ -982,3 +983,24 @@ Pinned native Tooltip placement can extend beyond the containing window; an
 embedded software-window snapshot may crop edge content. Kit keeps this native
 placement boundary; TooltipHost does not promise work-area clamping or keyboard
 activation. Prefer short supplementary text and keep essential information inline.
+
+## P5B finite confirmation contract — behavior change
+
+ModalManager is a fixed confirmation with one or two native actions. Initial focus
+is Cancel when show_secondary=true, otherwise the primary action. Return/Space is
+owned by the focused native button; Return no longer unconditionally accepts.
+Plain Tab and ShiftTab cycle within those actions; Escape requests dismissal.
+Only one accepted/dismissed request is admitted per observed shown cycle. The host
+must set shown=false in its handler. Ignored requests leave focus in the fixed
+actions but do not repeat commands. Hosts keep show_secondary stable while shown
+and do not programmatically move focus behind the active overlay.
+
+The whole focus/input subtree is conditional on shown. Logical close (including a
+programmatic close after an observed open) calls restore_focus_requested once;
+the host restores its known opener or a valid fallback. Kit cannot capture an
+arbitrary external element reference. Gallery wires this protocol to its three
+actual opener buttons. No restoration callback is inferred from opacity or scrim.
+
+The host owns routing and lifecycle. This is not arbitrary-content ContentDialog,
+screen-reader containment or a universal focus manager. Native accessibility and
+actual OS reader behavior remain separate from the finite WindowEvent tests.

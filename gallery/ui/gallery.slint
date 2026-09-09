@@ -81,6 +81,7 @@ export component DesignGalleryWindow inherits Window {
     default-font-weight: Typography.regular;
 
     in-out property <string> ui_font_family <=> Theme.ui_font_family;
+    private property <int> sample_modal_restore_epoch: 0;
     in-out property <string> sample_text: "Prepare a sample document";
     in-out property <bool> sample_switch: true;
     in-out property <ThemeMode> gallery_theme: ThemeMode.light;
@@ -165,10 +166,10 @@ export component DesignGalleryWindow inherits Window {
                     if root.gallery_destination == "badge": BadgePage { width: 100%; height: 100%; }
                     if root.gallery_destination == "metric-card": MetricCardPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "setting-row": SettingRowPage { width: 100%; height: 100%; sample_switch <=> root.sample_switch; }
-                    if root.gallery_destination == "feedback": FeedbackPage { width: 100%; height: 100%; preview_mode: root.preview_mode; modal_requested(kind) => { root.sample_modal_kind = kind; root.sample_modal_visible = true; } }
+                    if root.gallery_destination == "feedback": FeedbackPage { restore_epoch: root.sample_modal_restore_epoch; width: 100%; height: 100%; preview_mode: root.preview_mode; modal_requested(kind) => { root.sample_modal_kind = kind; root.sample_modal_visible = true; } }
                     if root.gallery_destination == "tooltip-host": TooltipHostPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "toast-host": ToastHostPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
-                    if root.gallery_destination == "modal-manager": ModalManagerPage { width: 100%; height: 100%; modal_requested(kind) => { root.sample_modal_kind = kind; root.sample_modal_visible = true; } }
+                    if root.gallery_destination == "modal-manager": ModalManagerPage { restore_epoch: root.sample_modal_restore_epoch; width: 100%; height: 100%; modal_requested(kind) => { root.sample_modal_kind = kind; root.sample_modal_visible = true; } }
                     if root.gallery_destination == "navigation-view": NavigationViewPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "navigation-foundations": NavigationFoundationsPage { width: 100%; height: 100%; preview_mode: root.preview_mode; }
                     if root.gallery_destination == "page-header": PageHeaderPage { width: 100%; height: 100%; }
@@ -196,6 +197,7 @@ export component DesignGalleryWindow inherits Window {
         kind: root.sample_modal_kind == 2 ? ModalKind.danger :
               root.sample_modal_kind == 1 ? ModalKind.warning : ModalKind.info;
         danger_primary: root.sample_modal_kind == 2;
+        restore_focus_requested => { root.sample_modal_restore_epoch += 1; }
         accepted => { root.sample_modal_visible = false; }
         dismissed => { root.sample_modal_visible = false; }
     }

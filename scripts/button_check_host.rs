@@ -212,9 +212,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     ui.set_modal_shown(true);
                 }
                 17 => {
+                    key(window, Key::Tab.into()); // P5B initially focuses Cancel.
                     key(window, Key::Return.into());
                     check(
-                        "modal Return accepts once",
+                        "modal focused primary Return accepts once",
                         ui.get_accepted_count() == 1
                             && ui.get_dismissed_count() == 1
                             && !ui.get_modal_shown(),

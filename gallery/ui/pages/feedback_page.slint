@@ -13,6 +13,7 @@ import { ModalDecisionsSpecimen } from "../shared/modal_decisions_specimen.slint
 export component FeedbackPage inherits GalleryPage {
 
     in property <int> preview_mode: 1;
+    in property <int> restore_epoch;
     callback modal_requested(int);
 
     page_description: "Toast communicates transient outcomes; Modal owns focused decisions that require explicit acceptance or dismissal.";
@@ -22,6 +23,6 @@ export component FeedbackPage inherits GalleryPage {
 
     ToastBoundariesSpecimen { preview_mode: root.preview_mode; modal_requested(kind) => { root.modal_requested(kind); } }
 
-    ModalDecisionsSpecimen { preview_mode: root.preview_mode; modal_requested(kind) => { root.modal_requested(kind); } }
+    ModalDecisionsSpecimen { restore_epoch: root.restore_epoch; preview_mode: root.preview_mode; modal_requested(kind) => { root.modal_requested(kind); } }
 
 }

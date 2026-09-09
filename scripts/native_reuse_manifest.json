@@ -14,8 +14,10 @@
       ],
       "missing_capability": "No complete public std confirmation-overlay container.",
       "permitted_custom_behavior": [
-        "single shown confirmation overlay",
-        "scrim and bounded focus coordination; Return conflict pending P5B"
+        "Conditional fixed confirmation and passive scrim",
+        "Finite two-action Tab/ShiftTab containment and Escape request",
+        "Initial native action focus; host restore request on logical close",
+        "At most one accepted/dismissed request per visible cycle"
       ],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
@@ -24,12 +26,11 @@
         "hidden native proxies"
       ],
       "validation": [
-        "current-api-probe",
-        "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "P5B runtime reproducer and current focus/input suite",
+        "Current API/probe and native reuse guard"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "ec553dbedf048e57a48add373bc9c936bdb844ca8fc52da1d172528414cde058"
+      "reviewed_implementation_sha256": "3d59fed99801fc41dd9fb72bcfb5550599563d13d8dd729db7e4cfbc32bd4ecb"
     },
     {
       "component": "ToastHost",

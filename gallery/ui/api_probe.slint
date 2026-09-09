@@ -100,6 +100,6 @@ export component KitApiProbe inherits Window {
         EmptyState { title: "Empty"; message: "No items"; }
         MetricCard { label: "Items"; value: "0"; hint: "Sample"; }
         ToastHost { shown: false; kind: ToastKind.info; message: "Saved"; dismissed => { root.activated = false; } }
-        ModalManager { shown: false; kind: ModalKind.warning; title: "Apply?"; accepted => { root.activated = true; } dismissed => { root.activated = false; } }
+        ModalManager { restore_focus_requested => { } shown: false; kind: ModalKind.warning; title: "Apply?"; accepted => { root.activated = true; } dismissed => { root.activated = false; } }
     }
 }

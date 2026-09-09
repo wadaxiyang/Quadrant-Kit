@@ -229,3 +229,12 @@ through real four-second timeouts and dispatches native pointer/key input. It ch
 one request per cycle, host ownership, hover pause, hidden input, rapid reversals
 and native tooltip focus behavior. The runner accepts a bounded 1..300 second
 allowance for longer lifecycle/idle suites; default remains 30 seconds.
+
+### P5B finite confirmation
+
+`python scripts/run_button_checks.py --suite modal` checks actual native button
+Return/Space, initial Cancel/primary focus, Tab/ShiftTab cycling, Escape, scrim,
+programmatic/rapid close, one request per cycle and host restore callback counts.
+`python scripts/run_button_checks.py --suite button` retains the current upstream
+button/composition regression, now navigating from initial Cancel to Confirm.
+These are finite WindowEvent contracts, separate from actual OS reader containment.

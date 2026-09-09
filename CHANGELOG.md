@@ -1,5 +1,14 @@
 # Changelog
 
+## Fluent evolution P5B — local, unpublished
+
+- ModalManager Return/Space now activates the focused native button. Initial focus
+  is Cancel when present, otherwise primary; Tab/ShiftTab cycles the fixed actions.
+- Emit at most one accepted/dismissed request per shown cycle; host owns closing.
+- Add restore_focus_requested on logical close and wire actual Gallery openers.
+- This remains a finite confirmation, with reader/full-dialog capability unverified.
+
+
 ## Fluent evolution P5A — local, unpublished
 
 - ToastHost now requests dismissal at most once per shown cycle. Host owns closing

@@ -17,7 +17,7 @@ from run_perf import ROOT, execute, generate, resolved_fingerprint, source_ident
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-only', action='store_true', help='Build an interactive host without claiming input PASS')
-    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric', 'containers', 'pickers', 'toast'], default='button')
+    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric', 'containers', 'pickers', 'toast', 'modal'], default='button')
     parser.add_argument('--timeout-seconds', type=int, default=30, help='Bounded runtime allowance for lifecycle/idle suites (1..300)')
     args = parser.parse_args(argv)
     if not 1 <= args.timeout_seconds <= 300:
@@ -34,6 +34,8 @@ def main(argv=None):
         stem, executable_name = 'pickers_check', 'kit-p4d-pickers-check'
     if args.suite == 'toast':
         stem, executable_name = 'toast_check', 'kit-p5a-toast-check'
+    if args.suite == 'modal':
+        stem, executable_name = 'modal_check', 'kit-p5b-modal-check'
     output = ROOT / 'target/button-checks' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     source = source_identity(ROOT)
     report = {'suite': args.suite, 'source': source, 'status': 'IN_PROGRESS', 'commands': [], 'backend': 'winit-software', 'input': 'public WindowEvent dispatch; OS input/accessibility is separate'}

@@ -176,3 +176,7 @@ P5A reviews ToastHost's single-cycle dismissal guard, conditional native child/T
 lifetime and passive hover pause. Ordinary close activation remains the visible
 native IconButton. Native Tooltip remains the only tooltip service; Gallery now
 shows it explicitly alongside the separately labeled passive presenter.
+
+P5B removes Modal Return interception and ordinary activation duplication. Its
+reviewed exception is only the fixed action focus cycle, Escape, passive scrim,
+conditional lifetime and host restore callback. Each action remains a native Button.

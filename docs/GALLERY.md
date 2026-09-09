@@ -438,3 +438,7 @@ P4D: `native-pickers` conditionally shows table sort requests and native date/ti
 
 P5A: Toast interactive specimens now offer Show/auto-dismiss and actually close from
 the host callback. Tooltip page separates native service from passive presentation.
+
+P5B: modal-manager and feedback pages remember their actual opener button and
+restore it on ModalManager.restore_focus_requested. A page-local epoch transports
+that host event through the specimen; it is not a Kit runtime focus service.
