@@ -1,0 +1,22 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button } from "std-widgets.slint";
+import { FluentIcons } from "../foundation/fluent_icons.slint";
+import { FluentFlyout } from "flyout.slint";
+export component FluentDropDownButton inherits Rectangle {
+    in property <string> text: "More";
+    in property <bool> enabled: true;
+    in property <length> popup_width: 280px;
+    out property <bool> is_open: popup.is-open;
+    out property <bool> has-focus: command.has-focus;
+    public function open() { if root.enabled && root.visible { command.focus(); popup.show(); } }
+    public function close() { popup.close(); }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: command.min-width; preferred-height: command.min-height;
+    width: command.min-width; height: command.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: command;
+    command := Button { width:100%;height:100%;text:root.text;icon:FluentIcons.chevron_down;icon-size:16px;colorize-icon:true;enabled:root.enabled;clicked=>{root.open();} }
+    popup := FluentFlyout { x:0px;y:root.height;width:root.popup_width;@children }
+}

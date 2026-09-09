@@ -1,0 +1,33 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { FluentFlyout, FluentDropDownButton, FluentSplitButton, FluentButton, FluentScrollView, Theme } from "@quadrant-kit";
+export component NativePopupsPage inherits GalleryPage {
+    private property <string> result: "No command";
+    page_description: "Native popup dismissal/focus and menu input. Split primary and secondary regions are independent.";
+    Specimen {specimen_title:"Anchored flyout and command regions";specimen_description:"Escape or outside click closes. Tab enters native children. Native popup close restores the opener; host slots own their content actions.";
+        HorizontalLayout {
+            opener := FluentButton {text:"Open flyout";clicked=>{self.focus();fly.show();}
+                fly := FluentFlyout {y:parent.height;width:300px;
+                    Text {text:"Native ScrollView content";color:Theme.text_primary;}
+                    FluentScrollView {height:160px;VerticalLayout {for index in 20: FluentButton {text:"Item "+index;clicked=>{root.result="Flyout item "+index;}}}}
+                    FluentButton {text:"Close";clicked=>{fly.close();}}
+                }
+            }
+            drop := FluentDropDownButton {text:"Choose";FluentButton {text:"First choice";clicked=>{root.result="Drop-down choice";drop.close();}}}
+            split := FluentSplitButton {text:"Apply";clicked=>{root.result="Primary action";}FluentButton {text:"Apply alternative";clicked=>{root.result="Secondary choice";split.close();}}}
+        }
+        Text {text:root.result;color:Theme.text_primary;}
+    }
+    Specimen {specimen_title:"Native Menu / ContextMenuArea";specimen_description:"Right-click this area, or focus the button and press the keyboard Menu key. Menus, disabled entries and submenus are public native elements.";
+        menu := ContextMenuArea {height:80px;
+            FluentButton {text:"Open native menu";clicked=>{menu.show({x:0px,y:32px});}}
+            Menu {MenuItem {title:"Run command";activated=>{root.result="Native menu command";}}
+                MenuItem {title:"Unavailable";enabled:false;}
+                MenuSeparator {}
+                Menu {title:"Submenu";MenuItem {title:"Nested command";activated=>{root.result="Nested native menu command";}}}
+            }
+        }
+    }
+}

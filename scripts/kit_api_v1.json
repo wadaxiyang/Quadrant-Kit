@@ -431,6 +431,92 @@
         }
       }
     },
+    "FluentDropDownButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "popup-width": {
+            "kind": "property",
+            "direction": "in",
+            "type": "length"
+          },
+          "is-open": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "has-focus": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "open": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "close": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": ":",
+          "expression": "\"More\""
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "popup-width": {
+          "binding": ":",
+          "expression": "280px"
+        },
+        "is-open": {
+          "binding": ":",
+          "expression": "popup . is-open"
+        },
+        "has-focus": {
+          "binding": ":",
+          "expression": "command . has-focus"
+        }
+      }
+    },
+    "FluentFlyout": {
+      "signature": {
+        "kind": "component",
+        "inherits": "PopupWindow",
+        "members": {
+          "content-padding": {
+            "kind": "property",
+            "direction": "in",
+            "type": "length"
+          }
+        }
+      },
+      "defaults": {
+        "content-padding": {
+          "binding": ":",
+          "expression": "12px"
+        }
+      }
+    },
     "FluentGroupBox": {
       "signature": {
         "kind": "component",
@@ -924,6 +1010,88 @@
       },
       "defaults": {}
     },
+    "FluentSplitButton": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "secondary-label": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "popup-width": {
+            "kind": "property",
+            "direction": "in",
+            "type": "length"
+          },
+          "is-open": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "has-focus": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "clicked": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "open": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "close": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "text": {
+          "binding": ":",
+          "expression": "\"Action\""
+        },
+        "secondary-label": {
+          "binding": ":",
+          "expression": "\"More options\""
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "popup-width": {
+          "binding": ":",
+          "expression": "280px"
+        },
+        "is-open": {
+          "binding": ":",
+          "expression": "popup . is-open"
+        },
+        "has-focus": {
+          "binding": ":",
+          "expression": "primary . has-focus || secondary . has-focus"
+        }
+      }
+    },
     "FluentStandardListView": {
       "signature": {
         "kind": "component",
@@ -1398,7 +1566,7 @@
         },
         "value": {
           "binding": ":",
-          "expression": "\"\u2014\""
+          "expression": "\"—\""
         },
         "hint": {
           "binding": null,

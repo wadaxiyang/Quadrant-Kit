@@ -246,3 +246,12 @@ These are finite WindowEvent contracts, separate from actual OS reader containme
 WindowEvent keyboard/pointer sequences, and 30 cold validation timings per size.
 Raw BENCH lines retain every sample. `--profile` defaults to debug for other suites.
 This is bounded ScrollView composition, not a virtualized infinite tree.
+
+### P5D popups and native menus
+
+`python scripts/run_button_checks.py --suite popup --profile release` exercises
+actual native popup state/dismissal, focus restore, separate command regions and
+scroll content. On Windows, native Menu uses an OS modal loop; the test sends
+Down/Return only after verifying that its own process owns the foreground window.
+This is a real Windows input subset, not reader verification. Raw logs retain the
+foreground check and all native/current failures.

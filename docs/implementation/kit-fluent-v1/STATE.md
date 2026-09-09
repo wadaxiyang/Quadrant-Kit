@@ -19,7 +19,8 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P5A | PASS — scoped tooltip/Toast lifecycle | [P5A.md](P5A.md): old duplicate-request reproducer; 11 runtime assertions, 75 Python tests, Gallery build/41 captures; current API unchanged. |
 | P5B | PARTIAL — finite confirmation contract PASS | [P5B.md](P5B.md): Return conflict removed; 20 modal and current button runtime assertions, 75 Python tests, Gallery/40 captures. Reader/full dialog NOT_RUN. Scoped unit complete. |
 | P5C | PASS — scoped bounded navigation | [P5C.md](P5C.md): reactive invalidation, native actions, 152 runtime assertions, full core, 40 captures; 256 validation p95 8.13 ms. |
-| P5D–P5E, P6 | NOT_STARTED | Authorized continuation in order. |
+| P5D | PASS — scoped native popups | [P5D.md](P5D.md): three exports, 115 scaled runtime assertions, Windows menu input subset, 76 Python tests, Gallery/40 captures. |
+| P5E, P6 | NOT_STARTED | Authorized continuation in order. |
 | P7–P8 | NOT_STARTED | Not part of this request. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
@@ -46,3 +47,6 @@ commands passed. P5B scoped delivery is complete; next is P5C.
 
 P5B was committed as `c73c1e4ce98e44ef350d1675bc3cddcc8dbf263f`; both package
 commands passed. P5C scoped delivery is complete; next is P5D.
+
+P5C was committed as `701fc1f309bab7bad0a5ccc56f88482037e402da`; both package
+commands passed. P5D scoped delivery is complete; next is P5E.

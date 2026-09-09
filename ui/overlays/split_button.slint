@@ -1,0 +1,25 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button } from "std-widgets.slint";
+import { FluentIcons } from "../foundation/fluent_icons.slint";
+import { FluentFlyout } from "flyout.slint";
+export component FluentSplitButton inherits Rectangle {
+    in property <string> text: "Action";
+    in property <string> secondary_label: "More options";
+    in property <bool> enabled: true;
+    in property <length> popup_width: 280px;
+    out property <bool> is_open: popup.is-open;
+    out property <bool> has-focus: primary.has-focus || secondary.has-focus;
+    callback clicked();
+    public function open() { if root.enabled && root.visible { secondary.focus(); popup.show(); } }
+    public function close() { popup.close(); }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: primary.min-width + 36px; preferred-height: primary.min-height;
+    width: primary.min-width + 36px; height: primary.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: primary;
+    primary := Button { x:0px;y:0px;width:max(0px,parent.width - 36px);height:100%;text:root.text;enabled:root.enabled;clicked=>{root.clicked();} }
+    secondary := Button { x:parent.width - 36px;y:0px;width:36px;height:100%;icon:FluentIcons.chevron_down;icon-size:16px;colorize-icon:true;accessible-label:root.secondary_label;enabled:root.enabled;clicked=>{root.open();} }
+    popup := FluentFlyout { x:0px;y:root.height;width:root.popup_width;@children }
+}

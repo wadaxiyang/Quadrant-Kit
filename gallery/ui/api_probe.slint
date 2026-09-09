@@ -1,3 +1,4 @@
+import { FluentFlyout, FluentDropDownButton, FluentSplitButton } from "@quadrant-kit";
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 import {
@@ -46,6 +47,7 @@ export component KitApiProbe inherits Window {
     default-font-family: Theme.ui_font_family;
     private property <Date> selected_date: { year: 2026, month: 9, day: 10 };
     private property <Time> selected_time: { hour: 12, minute: 30, second: 0 };
+    probe_flyout := FluentFlyout { FluentButton {text:"Close";clicked=>{probe_flyout.close();}} }
     VerticalLayout {
         FluentStandardTableView { height: 200px; columns: [{ title: "Name", width: 160px }]; rows: [[{ text: "One" }]]; }
         FluentDatePicker { date: root.selected_date; accepted(value) => { root.selected_date = value; } }
@@ -58,6 +60,8 @@ export component KitApiProbe inherits Window {
         FluentTabWidget { height: 100px; current-index: 0; Tab { title: "One"; Text { text: "One"; } } Tab { title: "Two"; Text { text: "Two"; } } }
 
         FluentSlider { value: 20; minimum: 0; maximum: 100; step: 5; enabled: root.controls_enabled; }
+        FluentDropDownButton { text:"More"; FluentButton {text:"Option";} }
+        FluentSplitButton { text:"Apply"; clicked=>{root.activated=true;} FluentButton {text:"Alternative";} }
         FluentSpinBox { value: 12; read-only: true; step-size: 2; }
         FluentProgressBar { progress: 0.5; running: false; indeterminate: true; }
         FluentProgressRing { progress: 0.5; running: false; }

@@ -1,0 +1,51 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { FluentFlyout, FluentDropDownButton, FluentSplitButton, Theme, ThemeMode } from "@quadrant-kit";
+import { Button, Palette, ScrollView } from "std-widgets.slint";
+export component PopupCheck inherits Window {
+    width: 700px; height: 500px; background: Theme.background;
+    in property <bool> dark: false;
+    init=>{Theme.mode=ThemeMode.light;Palette.color-scheme=ColorScheme.light;}
+    changed dark=>{Theme.mode=root.dark?ThemeMode.dark:ThemeMode.light;Palette.color-scheme=root.dark?ColorScheme.dark:ColorScheme.light;}
+    in property <bool> long_content: false;
+    out property <length> scroll_y;
+    in property <bool> controls_enabled: true;
+    in property <length> anchor_x: 20px;
+    in property <length> anchor_y: 20px;
+    out property <bool> fly_open: fly.is-open;
+    out property <bool> drop_open: drop.is-open;
+    out property <bool> split_open: split.is-open;
+    out property <bool> opener_focused: opener.has-focus;
+    out property <int> fly_commands: 0;
+    out property <int> drop_commands: 0;
+    out property <int> split_commands: 0;
+    out property <int> primary_commands: 0;
+    out property <int> menu_commands: 0;
+    public function open_fly() { if root.controls_enabled { opener.focus(); fly.show(); } }
+    public function close_fly() { fly.close(); }
+    public function open_menu() { menu.show({x: 0px,y: 32px}); }
+    changed controls_enabled => { if !root.controls_enabled { fly.close();drop.close();split.close(); } }
+    opener := Button { x:root.anchor_x;y:root.anchor_y;width:160px;height:32px;text:"Open flyout";enabled:root.controls_enabled;clicked=>{root.open_fly();} }
+    fly := FluentFlyout {x:root.anchor_x;y:root.anchor_y+32px;width:260px;
+        Button {text:"Fly action";clicked=>{root.fly_commands+=1;}}
+        Button {text:"Disabled";enabled:false;clicked=>{root.fly_commands+=100;}}
+        Button {text:"Close";clicked=>{fly.close();}}
+        if root.long_content: ScrollView {height:96px;changed viewport-y=>{root.scroll_y=self.viewport-y;}
+            VerticalLayout {for index in 30: Button {text:"Scroll row "+index;height:32px;}}
+        }
+    }
+    drop := FluentDropDownButton {x:20px;y:200px;width:160px;height:32px;popup_width:260px;text:"Drop down";enabled:root.controls_enabled;
+        Button {text:"Drop action";clicked=>{root.drop_commands+=1;drop.close();}}
+    }
+    split := FluentSplitButton {x:20px;y:260px;width:176px;height:32px;popup_width:260px;text:"Primary";enabled:root.controls_enabled;clicked=>{root.primary_commands+=1;}
+        Button {text:"Split option";clicked=>{root.split_commands+=1;split.close();}}
+    }
+    menu := ContextMenuArea {x:340px;y:200px;width:200px;height:80px;enabled:root.controls_enabled;
+        Rectangle {background:#dddddd;Text{text:"Native context menu";horizontal-alignment:center;vertical-alignment:center;}}
+        Menu { MenuItem {title:"First command";activated=>{root.menu_commands+=1;}}
+            MenuItem {title:"Disabled command";enabled:false;activated=>{root.menu_commands+=100;}}
+            MenuSeparator {}
+            Menu {title:"Submenu";MenuItem {title:"Nested command";activated=>{root.menu_commands+=10;}}}
+        }
+    }
+}

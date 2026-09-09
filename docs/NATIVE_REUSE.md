@@ -93,7 +93,7 @@ are present in the locked facade. Their exhaustive property/default/behavior
 matrix is NOT_RUN in P0, to be verified per P4 batch; SpinBox's integer scope and
 TabWidget's contextual children must not be replaced by guessed WinUI contracts.
 Tooltip/PopupWindow are public builtins; existing navigation compiles Tooltip.
-Menu/ContextMenuArea wrapping and popup focus contracts remain P5 work.
+P5D exercises native PopupWindow and Menu/ContextMenuArea; its finite input/focus contracts are documented below.
 
 ## Current exceptions and migration state
 
@@ -185,3 +185,8 @@ P5C replaces row TouchArea and Return/Space activation with visible native Butto
 surfaces. Only missing compound direction-key focus/expansion, scroll-into-view
 and passive left-aligned/eliding content remain custom. Model validation observes
 row notifications; no Rust adapter, router or selection owner was added.
+
+P5D FluentFlyout inherits public PopupWindow, including actual is-open, Escape,
+outside-click close and focus restoration. DropDown/Split compose visible native
+Button owners with that popup. Slots own native children and scrolling; native
+Menu/ContextMenuArea remains direct Gallery composition, with no Kit dispatcher.

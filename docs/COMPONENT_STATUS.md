@@ -56,6 +56,12 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | FluentDatePicker | IMPLEMENTED / native composition; DatePickerPopup | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
 | FluentTimePicker | IMPLEMENTED / native composition; TimePickerPopup | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
 
+| FluentFlyout | IMPLEMENTED / composed; native PopupWindow | Native popup ownership; host content actions | native-popups | VERIFIED: P5D runtime + Windows menu subset | VERIFIED: P5D Matrix/scales | NOT_RUN | Reader NOT_RUN |
+
+| FluentDropDownButton | IMPLEMENTED / composed; native PopupWindow and Button | Native popup ownership; host content actions | native-popups | VERIFIED: P5D runtime + Windows menu subset | VERIFIED: P5D Matrix/scales | NOT_RUN | Reader NOT_RUN |
+
+| FluentSplitButton | IMPLEMENTED / composed; native PopupWindow and Button | Native popup ownership; host content actions | native-popups | VERIFIED: P5D runtime + Windows menu subset | VERIFIED: P5D Matrix/scales | NOT_RUN | Reader NOT_RUN |
+
 Private NavigationItemRow is separately recorded by the native guard (ordinary
 input migrated P5C); NavigationModel is a pure private global, not a visual export.
 Existing historical navigation input observations do not become P1 runtime tests.
@@ -80,7 +86,7 @@ No placeholder exports or historical compatibility paths are introduced; compile
 | P5A | Tooltip service and existing ToastHost | Builtin Tooltip plus content; finite toast lifecycle | PASS — P5A scoped contract |
 | P5B | Existing ModalManager | Fixed confirmation, explicit focus protocol; not complete ContentDialog | PARTIAL — finite P5B input PASS; reader NOT_RUN |
 | P5C | Existing NavigationView/rows | Measure 16/64/256/257 before optimization; no host router | PASS — P5C scoped contract |
-| P5D | FluentFlyout, FluentDropDownButton, FluentSplitButton; menu composition examples | PopupWindow/Menu/ContextMenuArea and native Button; no new Menu runtime service | BACKLOG |
+| P5D | FluentFlyout, FluentDropDownButton, FluentSplitButton; menu composition examples | PopupWindow/Menu/ContextMenuArea and native Button; no new Menu runtime service | PASS — P5D scoped contract |
 | P5E | FluentExpander, FluentInfoBar | Native command plus bounded composition; not a custom input framework | BACKLOG |
 
 ## Explicitly outside this evolution's completion claim

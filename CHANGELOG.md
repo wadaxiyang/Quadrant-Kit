@@ -1,5 +1,12 @@
 # Changelog
 
+## Fluent evolution P5D — local, unpublished
+
+- Add native PopupWindow-based FluentFlyout and anchored FluentDropDownButton / FluentSplitButton.
+- Expose actual popup state and retain native close, focus and menu behavior.
+- Add reachable native Menu / ContextMenuArea and scrollable flyout specimens.
+
+
 ## Fluent evolution P5C — local, unpublished
 
 - NavigationView now rejects invalid row notifications reactively and exposes model_valid.

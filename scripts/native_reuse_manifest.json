@@ -877,6 +877,68 @@
         "P4D native runtime and current Gallery/probe"
       ],
       "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentFlyout",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/overlays/flyout.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "PopupWindow"
+      ],
+      "missing_capability": "Passive flyout surface / command-and-popup composition only",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Custom popup dismissal, menu activation or hidden input proxy"
+      ],
+      "validation": [
+        "P5D native capability and current popup runtime",
+        "Gallery/current API probe and boundary checks"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentDropDownButton",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/overlays/drop_down_button.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "Button",
+        "PopupWindow"
+      ],
+      "missing_capability": "Passive flyout surface / command-and-popup composition only",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Custom popup dismissal, menu activation or hidden input proxy"
+      ],
+      "validation": [
+        "P5D native capability and current popup runtime",
+        "Gallery/current API probe and boundary checks"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentSplitButton",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/overlays/split_button.slint",
+      "public": true,
+      "status": "composed",
+      "native_dependencies": [
+        "Button",
+        "PopupWindow"
+      ],
+      "missing_capability": "Passive flyout surface / command-and-popup composition only",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Custom popup dismissal, menu activation or hidden input proxy"
+      ],
+      "validation": [
+        "P5D native capability and current popup runtime",
+        "Gallery/current API probe and boundary checks"
+      ],
+      "review_on_slint_upgrade": true
     }
   ]
 }

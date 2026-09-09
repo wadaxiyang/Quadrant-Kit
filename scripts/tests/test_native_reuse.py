@@ -141,6 +141,18 @@ class NativeReuseTests(unittest.TestCase):
                 with self.assertRaisesRegex(ContractError, 'records differ'):
                     verify(self.root, {'schema_version': 1, 'slint_version': '1.17.1', 'records': []})
 
+    def test_builtin_popup_children_are_scanned_without_custom_input(self):
+        self.write('export component Command inherits PopupWindow { close-policy: close-on-click-outside; Rectangle { VerticalLayout { @children } } }')
+        record = self.record('composed')
+        record['native_dependencies'] = ['PopupWindow']
+        verify(self.root, self.manifest(record))
+        self.write('export component Command inherits PopupWindow { TouchArea { clicked => {} } }')
+        with self.assertRaisesRegex(ContractError, 'Unreviewed custom input'):
+            verify(self.root, self.manifest(record))
+        self.write('export component Command { ContextMenuArea { Menu { MenuItem { title: "Action"; } } } }')
+        record['native_dependencies'] = ['ContextMenuArea', 'Menu']
+        verify(self.root, self.manifest(record))
+
     def test_current_repository_and_pending_debt_are_explicit(self):
         root = Path(__file__).resolve().parents[2]
         result = verify(root)

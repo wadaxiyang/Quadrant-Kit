@@ -1016,3 +1016,95 @@ NavigationView.model_valid is a read-only diagnostic for the current combined
 primary/footer validation. Both whole-model replacement and row-change notifications
 re-evaluate it; invalid models suppress rows and their commands. The host still
 owns repair. Changing selected_id does not invalidate structural validation.
+
+## P5D native flyout and command composition
+
+FluentFlyout inherits actual PopupWindow: show(), close() and read-only is-open
+are native. The default close-policy is close-on-click-outside; native Escape
+and outside click dismiss, and native close restores the previous focus item.
+The host focuses its opener before show; Tab enters popup content. There is no
+synthetic shown property or forced first-child focus. The slot uses a vertical
+layout; children own actions, enabled state and any scrolling. Honor native work
+area placement; oversized content requires a bounded native ScrollView.
+
+DropDownButton activates only the anchored popup. SplitButton primary emits clicked;
+the independent arrow opens its popup. Both use native Buttons and expose actual
+is_open plus open()/close(). Disabling or hiding their own root closes the popup;
+hosts close/unload before hiding a retained ancestor or changing pages. No callbacks
+are emitted for an ordinary close. Native popups own focus, Escape, outside clicks
+and lifetime, including rapid reversals. The Menu/ContextMenuArea example is native
+Slint composition, not another Kit menu dispatcher.
+
+```slint
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Theme, Elevation } from "../foundation/theme.slint";
+export component FluentFlyout inherits PopupWindow {
+    in property <length> content_padding: 12px;
+    width: 280px;
+    close-policy: close-on-click-outside;
+    Rectangle {
+        background: Theme.card_bg;
+        border-width: 1px; border-color: Theme.border_color; border-radius: 6px;
+        drop-shadow-blur: Elevation.popup_blur; drop-shadow-color: Elevation.popup_shadow;
+        VerticalLayout { padding: root.content_padding; spacing: 8px; @children }
+    }
+}
+```
+
+```slint
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button } from "std-widgets.slint";
+import { FluentIcons } from "../foundation/fluent_icons.slint";
+import { FluentFlyout } from "flyout.slint";
+export component FluentDropDownButton inherits Rectangle {
+    in property <string> text: "More";
+    in property <bool> enabled: true;
+    in property <length> popup_width: 280px;
+    out property <bool> is_open: popup.is-open;
+    out property <bool> has-focus: command.has-focus;
+    public function open() { if root.enabled && root.visible { command.focus(); popup.show(); } }
+    public function close() { popup.close(); }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: command.min-width; preferred-height: command.min-height;
+    width: command.min-width; height: command.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: command;
+    command := Button { width:100%;height:100%;text:root.text;icon:FluentIcons.chevron_down;icon-size:16px;colorize-icon:true;enabled:root.enabled;clicked=>{root.open();} }
+    popup := FluentFlyout { x:0px;y:root.height;width:root.popup_width;@children }
+}
+```
+
+```slint
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button } from "std-widgets.slint";
+import { FluentIcons } from "../foundation/fluent_icons.slint";
+import { FluentFlyout } from "flyout.slint";
+export component FluentSplitButton inherits Rectangle {
+    in property <string> text: "Action";
+    in property <string> secondary_label: "More options";
+    in property <bool> enabled: true;
+    in property <length> popup_width: 280px;
+    out property <bool> is_open: popup.is-open;
+    out property <bool> has-focus: primary.has-focus || secondary.has-focus;
+    callback clicked();
+    public function open() { if root.enabled && root.visible { secondary.focus(); popup.show(); } }
+    public function close() { popup.close(); }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: primary.min-width + 36px; preferred-height: primary.min-height;
+    width: primary.min-width + 36px; height: primary.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: primary;
+    primary := Button { x:0px;y:0px;width:max(0px,parent.width - 36px);height:100%;text:root.text;enabled:root.enabled;clicked=>{root.clicked();} }
+    secondary := Button { x:parent.width - 36px;y:0px;width:36px;height:100%;icon:FluentIcons.chevron_down;icon-size:16px;colorize-icon:true;accessible-label:root.secondary_label;enabled:root.enabled;clicked=>{root.open();} }
+    popup := FluentFlyout { x:0px;y:root.height;width:root.popup_width;@children }
+}
+```
+
+Drop-down uses the native Button icon slot for the local chevron (before text);
+SplitButton uses an icon-only native secondary button. Native colorize-icon keeps
+these SVGs visible across themes without depending on text-symbol font coverage.

@@ -1,0 +1,14 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Theme, Elevation } from "../foundation/theme.slint";
+export component FluentFlyout inherits PopupWindow {
+    in property <length> content_padding: 12px;
+    width: 280px;
+    close-policy: close-on-click-outside;
+    Rectangle {
+        background: Theme.card_bg;
+        border-width: 1px; border-color: Theme.border_color; border-radius: 6px;
+        drop-shadow-blur: Elevation.popup_blur; drop-shadow-color: Elevation.popup_shadow;
+        VerticalLayout { padding: root.content_padding; spacing: 8px; @children }
+    }
+}
