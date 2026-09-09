@@ -1,5 +1,13 @@
 # Changelog
 
+## Fluent evolution P4D — local, unpublished
+
+- Add native table composition and host-controlled date/time pickers with public
+  Date/Time types, native text validation and explicit accepted/canceled requests.
+- Preserve native row selection and column sort requests; hosts own actual sorting.
+- Close pickers on disable/hide and restore opener focus after native confirmation.
+
+
 ## Fluent evolution P4A–P4C — local, unpublished
 
 - Add native selection, numeric/progress and container controls through the facade.

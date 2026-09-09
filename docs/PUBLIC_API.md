@@ -853,3 +853,106 @@ export component FluentStandardListView inherits Rectangle {
 export component FluentGroupBox inherits GroupBox { }
 export { TabWidget as FluentTabWidget } from "std-widgets.slint";
 ```
+
+## P4D table and date/time contracts
+
+StandardTableView keeps builtin TableColumn/StandardListViewItem data. columns and
+current-row share native storage; sorting callbacks request host work and do not
+sort rows. scrollbars-enabled only controls native scrollbars, not rows or headers.
+No editing, frozen columns or generalized DataGrid behavior is promised. Hosts
+reconcile selection when replacing models and keep cell/column shapes consistent.
+
+Date and Time are direct public native structs. Pickers compose visible native
+Button and public native popup. Host input date/time is the sole committed value;
+accepted(value) requests a host update, canceled() leaves it unchanged. open() is
+gated by enabled/visible; close() is imperative and emits neither callback. Native
+OK/Cancel closes before forwarding once and returning focus to the opener. Setting the picker's own visible=false
+or enabled=false closes the popup. Before hiding a retained ancestor, hosts close
+the popup explicitly or unload the picker. Hosts supply valid calendar dates/times; no Kit
+calendar, locale parser, range, clock, timezone or business sorting is added.
+The default text is a simple numeric label and can be overridden for localization.
+Native popup editing/validation and positioning limits remain the pinned contract.
+There is no synthetic shown mirror or promise of a full WinUI picker.
+
+```slint
+export struct Date { day: int, month: int, year: int }
+export struct Time { hour: int, minute: int, second: int }
+export component FluentStandardTableView inherits Rectangle {
+    in property <[[StandardListViewItem]]> rows <=> view.rows;
+    in-out property <[TableColumn]> columns <=> view.columns;
+    in-out property <int> current-row <=> view.current-row;
+    out property <int> current-sort-column: view.current-sort-column;
+    in property <bool> scrollbars-enabled <=> view.enabled;
+    out property <bool> has-focus: view.has-focus;
+    callback sort-ascending(int);
+    callback sort-descending(int);
+    callback current-row-changed(int);
+    callback row-pointer-event(int, PointerEvent, Point);
+    min-width: 400px; min-height: 200px;
+    horizontal-stretch: 1; vertical-stretch: 1;
+    forward-focus: view;
+    view := StandardTableView {
+        width: 100%; height: 100%;
+        sort-ascending(index) => { root.sort-ascending(index); }
+        sort-descending(index) => { root.sort-descending(index); }
+        current-row-changed(index) => { root.current-row-changed(index); }
+        row-pointer-event(index, event, position) => { root.row-pointer-event(index, event, position); }
+    }
+}
+export component FluentDatePicker inherits Rectangle {
+    in property <Date> date: { year: 2026, month: 1, day: 1 };
+    in property <string> text: root.date.year + "-" + root.date.month + "-" + root.date.day;
+    in property <string> title: "Select date";
+    in property <bool> enabled: true;
+    out property <bool> has-focus: command.has-focus;
+    callback accepted(Date);
+    callback canceled();
+    public function open() { if root.enabled && root.visible { popup.show(); } }
+    public function close() { popup.close(); if root.enabled && root.visible { command.focus(); } }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: command.min-width; preferred-height: command.min-height;
+    width: command.min-width; height: command.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: command;
+    command := Button {
+        width: 100%; height: 100%; text: root.text; enabled: root.enabled;
+        clicked => { root.open(); }
+    }
+    popup := DatePickerPopup {
+        x: 0px; y: root.height;
+        title: root.title; date: root.date;
+        accepted(value) => { command.focus(); root.accepted(value); }
+        canceled => { command.focus(); root.canceled(); }
+    }
+}
+export component FluentTimePicker inherits Rectangle {
+    in property <Time> time: { hour: 0, minute: 0, second: 0 };
+    in property <string> text: root.time.hour + ":" + (root.time.minute < 10 ? "0" : "") + root.time.minute;
+    in property <string> title: "Select time";
+    in property <bool> enabled: true;
+    out property <bool> has-focus: command.has-focus;
+    in property <bool> use-24-hour-format: true;
+    callback accepted(Time);
+    callback canceled();
+    public function open() { if root.enabled && root.visible { popup.show(); } }
+    public function close() { popup.close(); if root.enabled && root.visible { command.focus(); } }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: command.min-width; preferred-height: command.min-height;
+    width: command.min-width; height: command.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: command;
+    command := Button {
+        width: 100%; height: 100%; text: root.text; enabled: root.enabled;
+        clicked => { root.open(); }
+    }
+    popup := TimePickerPopup {
+        x: 0px; y: root.height;
+        title: root.title; time: root.time;
+        use-24-hour-format: root.use-24-hour-format;
+        accepted(value) => { command.focus(); root.accepted(value); }
+        canceled => { command.focus(); root.canceled(); }
+    }
+}
+```

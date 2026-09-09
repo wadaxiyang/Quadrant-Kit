@@ -1,0 +1,30 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button, DatePickerPopup, Date } from "std-widgets.slint";
+export component FluentDatePicker inherits Rectangle {
+    in property <Date> date: { year: 2026, month: 1, day: 1 };
+    in property <string> text: root.date.year + "-" + root.date.month + "-" + root.date.day;
+    in property <string> title: "Select date";
+    in property <bool> enabled: true;
+    out property <bool> has-focus: command.has-focus;
+    callback accepted(Date);
+    callback canceled();
+    public function open() { if root.enabled && root.visible { popup.show(); } }
+    public function close() { popup.close(); if root.enabled && root.visible { command.focus(); } }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: command.min-width; preferred-height: command.min-height;
+    width: command.min-width; height: command.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: command;
+    command := Button {
+        width: 100%; height: 100%; text: root.text; enabled: root.enabled;
+        clicked => { root.open(); }
+    }
+    popup := DatePickerPopup {
+        x: 0px; y: root.height;
+        title: root.title; date: root.date;
+        accepted(value) => { command.focus(); root.accepted(value); }
+        canceled => { command.focus(); root.canceled(); }
+    }
+}

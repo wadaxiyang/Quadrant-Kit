@@ -43,6 +43,27 @@
       },
       "defaults": {}
     },
+    "Date": {
+      "signature": {
+        "kind": "struct",
+        "inherits": null,
+        "fields": [
+          {
+            "name": "day",
+            "type": "int"
+          },
+          {
+            "name": "month",
+            "type": "int"
+          },
+          {
+            "name": "year",
+            "type": "int"
+          }
+        ]
+      },
+      "defaults": {}
+    },
     "Elevation": {
       "signature": {
         "kind": "global",
@@ -328,6 +349,87 @@
         "members": {}
       },
       "defaults": {}
+    },
+    "FluentDatePicker": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "date": {
+            "kind": "property",
+            "direction": "in",
+            "type": "Date"
+          },
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "has-focus": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "accepted": {
+            "kind": "callback",
+            "arguments": [
+              "Date"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "canceled": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "open": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "close": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "date": {
+          "binding": ":",
+          "expression": "{ year : 2026 , month : 1 , day : 1 }"
+        },
+        "text": {
+          "binding": ":",
+          "expression": "root . date . year + \"-\" + root . date . month + \"-\" + root . date . day"
+        },
+        "title": {
+          "binding": ":",
+          "expression": "\"Select date\""
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "has-focus": {
+          "binding": ":",
+          "expression": "command . has-focus"
+        }
+      }
     },
     "FluentGroupBox": {
       "signature": {
@@ -877,6 +979,104 @@
         }
       }
     },
+    "FluentStandardTableView": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "rows": {
+            "kind": "property",
+            "direction": "in",
+            "type": "[ [ StandardListViewItem ] ]"
+          },
+          "columns": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "[ TableColumn ]"
+          },
+          "current-row": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "int"
+          },
+          "current-sort-column": {
+            "kind": "property",
+            "direction": "out",
+            "type": "int"
+          },
+          "scrollbars-enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "has-focus": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "sort-ascending": {
+            "kind": "callback",
+            "arguments": [
+              "int"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "sort-descending": {
+            "kind": "callback",
+            "arguments": [
+              "int"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "current-row-changed": {
+            "kind": "callback",
+            "arguments": [
+              "int"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "row-pointer-event": {
+            "kind": "callback",
+            "arguments": [
+              "int",
+              "PointerEvent",
+              "Point"
+            ],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "rows": {
+          "binding": "<=>",
+          "expression": "view . rows"
+        },
+        "columns": {
+          "binding": "<=>",
+          "expression": "view . columns"
+        },
+        "current-row": {
+          "binding": "<=>",
+          "expression": "view . current-row"
+        },
+        "current-sort-column": {
+          "binding": ":",
+          "expression": "view . current-sort-column"
+        },
+        "scrollbars-enabled": {
+          "binding": "<=>",
+          "expression": "view . enabled"
+        },
+        "has-focus": {
+          "binding": ":",
+          "expression": "view . has-focus"
+        }
+      }
+    },
     "FluentSwitch": {
       "signature": {
         "kind": "component",
@@ -997,6 +1197,96 @@
         "error-text": {
           "binding": null,
           "expression": ""
+        }
+      }
+    },
+    "FluentTimePicker": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "time": {
+            "kind": "property",
+            "direction": "in",
+            "type": "Time"
+          },
+          "text": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "title": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
+          "enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "has-focus": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "use-24-hour-format": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "accepted": {
+            "kind": "callback",
+            "arguments": [
+              "Time"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "canceled": {
+            "kind": "callback",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "open": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          },
+          "close": {
+            "kind": "function",
+            "arguments": [],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "time": {
+          "binding": ":",
+          "expression": "{ hour : 0 , minute : 0 , second : 0 }"
+        },
+        "text": {
+          "binding": ":",
+          "expression": "root . time . hour + \":\" + ( root . time . minute < 10 ? \"0\" : \"\" ) + root . time . minute"
+        },
+        "title": {
+          "binding": ":",
+          "expression": "\"Select time\""
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "has-focus": {
+          "binding": ":",
+          "expression": "command . has-focus"
+        },
+        "use-24-hour-format": {
+          "binding": ":",
+          "expression": "true"
         }
       }
     },
@@ -2356,6 +2646,27 @@
           "system",
           "light",
           "dark"
+        ]
+      },
+      "defaults": {}
+    },
+    "Time": {
+      "signature": {
+        "kind": "struct",
+        "inherits": null,
+        "fields": [
+          {
+            "name": "hour",
+            "type": "int"
+          },
+          {
+            "name": "minute",
+            "type": "int"
+          },
+          {
+            "name": "second",
+            "type": "int"
+          }
         ]
       },
       "defaults": {}

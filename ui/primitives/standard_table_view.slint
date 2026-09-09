@@ -1,0 +1,25 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { StandardTableView } from "std-widgets.slint";
+export component FluentStandardTableView inherits Rectangle {
+    in property <[[StandardListViewItem]]> rows <=> view.rows;
+    in-out property <[TableColumn]> columns <=> view.columns;
+    in-out property <int> current-row <=> view.current-row;
+    out property <int> current-sort-column: view.current-sort-column;
+    in property <bool> scrollbars-enabled <=> view.enabled;
+    out property <bool> has-focus: view.has-focus;
+    callback sort-ascending(int);
+    callback sort-descending(int);
+    callback current-row-changed(int);
+    callback row-pointer-event(int, PointerEvent, Point);
+    min-width: 400px; min-height: 200px;
+    horizontal-stretch: 1; vertical-stretch: 1;
+    forward-focus: view;
+    view := StandardTableView {
+        width: 100%; height: 100%;
+        sort-ascending(index) => { root.sort-ascending(index); }
+        sort-descending(index) => { root.sort-descending(index); }
+        current-row-changed(index) => { root.current-row-changed(index); }
+        row-pointer-event(index, event, position) => { root.row-pointer-event(index, event, position); }
+    }
+}

@@ -813,6 +813,72 @@
         "P4C native runtime, 10k list and current Gallery/probe"
       ],
       "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentStandardTableView",
+      "implementation": "ui/primitives/standard_table_view.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "StandardTableView",
+      "native_dependencies": [
+        "StandardTableView"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate row/keyboard/editing/date/time algorithms"
+      ],
+      "validation": [
+        "P4D native runtime and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentDatePicker",
+      "implementation": "ui/overlays/date_picker.slint",
+      "public": true,
+      "classification": "composed-missing-standard-control",
+      "status": "composed",
+      "native_owner": "DatePickerPopup",
+      "native_dependencies": [
+        "Button",
+        "DatePickerPopup"
+      ],
+      "missing_capability": "Native popup needs an opener and host value commit protocol",
+      "permitted_custom_behavior": [
+        "Open/close and restore opener focus; forward accepted/canceled"
+      ],
+      "forbidden_custom_behavior": [
+        "Duplicate row/keyboard/editing/date/time algorithms"
+      ],
+      "validation": [
+        "P4D native runtime and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentTimePicker",
+      "implementation": "ui/overlays/time_picker.slint",
+      "public": true,
+      "classification": "composed-missing-standard-control",
+      "status": "composed",
+      "native_owner": "TimePickerPopup",
+      "native_dependencies": [
+        "Button",
+        "TimePickerPopup"
+      ],
+      "missing_capability": "Native popup needs an opener and host value commit protocol",
+      "permitted_custom_behavior": [
+        "Open/close and restore opener focus; forward accepted/canceled"
+      ],
+      "forbidden_custom_behavior": [
+        "Duplicate row/keyboard/editing/date/time algorithms"
+      ],
+      "validation": [
+        "P4D native runtime and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
     }
   ]
 }

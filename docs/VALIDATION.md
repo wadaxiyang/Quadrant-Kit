@@ -212,3 +212,12 @@ ListView delegate counts and scroll extents, then exercises model replacement,
 StandardListView selection, wheel input, explicit group-child enable coordination
 and static native tabs. `python scripts/run_perf.py --scenes lists-10000 --samples 30`
 uses matching native/Kit virtual-list geometry and records all paired samples.
+
+### P4D native table and picker checks
+
+`python scripts/run_button_checks.py --suite pickers` verifies public WindowEvent
+table input, native date/time acceptance/cancel, invalid calendar text, host value
+ownership, disabled/rapid popup lifetime and opener focus. Native popup screenshots
+include a bottom-right placement. This is separate from OS-level reader validation.
+`python scripts/run_perf.py --scenes table-100 --samples 30` pairs 100-row native/Kit
+tables with identical columns, dimensions, font, backend and renderer.

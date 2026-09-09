@@ -1,0 +1,50 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette } from "std-widgets.slint";
+import { FluentStandardTableView, FluentDatePicker, FluentTimePicker, Date, Time, Theme, ThemeMode } from "@quadrant-kit";
+export component PickersCheck inherits Window {
+    width: 1000px; height: 760px; default-font-family: "Segoe UI Variable Text";
+    background: Theme.background;
+    in-out property <bool> dark;
+    in-out property <bool> enabled: true;
+    in-out property <Date> date: { year: 2024, month: 2, day: 29 };
+    in-out property <Time> time: { hour: 23, minute: 45, second: 0 };
+    in-out property <[TableColumn]> columns: [{ title: "Name", width: 240px }, { title: "Value", width: 200px }];
+    in-out property <[[StandardListViewItem]]> rows: [[{ text: "Zebra" }, { text: "10" }], [{ text: "Apple" }, { text: "20" }], [{ text: "Pear" }, { text: "30" }]];
+    in-out property <int> selected_row <=> table.current-row;
+    out property <int> ascending: 0;
+    out property <int> descending: 0;
+    out property <int> selections: 0;
+    out property <int> accepted_dates: 0;
+    out property <int> canceled_dates: 0;
+    out property <int> accepted_times: 0;
+    out property <int> canceled_times: 0;
+    out property <bool> date_focused: date_picker.has-focus;
+    out property <bool> time_focused: time_picker.has-focus;
+    out property <Date> requested_date;
+    out property <Time> requested_time;
+    public function focus_table() { table.focus(); }
+    public function open_date() { date_picker.open(); }
+    public function close_date() { date_picker.close(); }
+    public function open_time() { time_picker.open(); }
+    public function close_time() { time_picker.close(); }
+    public function focus_date() { date_picker.focus(); }
+    in-out property <length> picker_x: 20px;
+    in-out property <length> picker_y: 300px;
+    changed dark => { Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light; Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light; }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    table := FluentStandardTableView { x: 20px; y: 20px; width: 600px; height: 240px;
+        columns <=> root.columns; rows: root.rows;
+        sort-ascending(index) => { root.ascending += 1; }
+        sort-descending(index) => { root.descending += 1; }
+        current-row-changed(index) => { root.selections += 1; }
+    }
+    date_picker := FluentDatePicker { x: root.picker_x; y: root.picker_y; width: 180px; height: 32px; date: root.date; enabled: root.enabled;
+        accepted(value) => { root.accepted_dates += 1; root.requested_date = value; }
+        canceled => { root.canceled_dates += 1; }
+    }
+    time_picker := FluentTimePicker { x: 230px; y: 300px; width: 180px; height: 32px; time: root.time; enabled: root.enabled;
+        accepted(value) => { root.accepted_times += 1; root.requested_time = value; }
+        canceled => { root.canceled_times += 1; }
+    }
+}

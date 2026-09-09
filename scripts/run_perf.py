@@ -20,7 +20,7 @@ import time
 from capture_gallery_baseline import source_identity
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'text-input', 'hidden-toast', 'icons-100', 'segments-100', 'selection-100', 'progress-100', 'lists-10000')
+SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'text-input', 'hidden-toast', 'icons-100', 'segments-100', 'selection-100', 'progress-100', 'lists-10000', 'table-100')
 NEGATIVE = {
     'palette-write': ('import { Palette } from "std-widgets.slint"; export component Probe inherits Window { init => { Palette.accent-background = #ff0000; } }', 'Assignment on a output property'),
     'radio-index': ('import { RadioGroup } from "std-widgets.slint"; export component Probe inherits Window { RadioGroup { current-index: 0; RadioButton { text: "One"; } } }', 'Unknown property current-index'),
@@ -69,6 +69,13 @@ def scene_source(scene, variant):
             imports += 'import { FluentListView } from "@quadrant-kit";\n'
         control = 'FluentListView' if kit else 'ListView'
         body = f'{control} {{ x: 20px; y: 20px; width: 780px; height: 400px; for index in 10000: Text {{ height: 24px; text: "Row " + index; color: #202020; }} }}'
+    elif scene == 'table-100':
+        imports += 'import { StandardTableView } from "std-widgets.slint";\n'
+        if kit:
+            imports += 'import { FluentStandardTableView } from "@quadrant-kit";\n'
+        control = 'FluentStandardTableView' if kit else 'StandardTableView'
+        rows = ','.join('[' + '{text: "Row ' + str(i) + '"}, {text: "Value"}' + ']' for i in range(100))
+        body = f'{control} {{ x: 20px; y: 20px; width: 780px; height: 400px; columns: [{{title: "Name", width: 300px}}, {{title: "Value", width: 300px}}]; rows: [{rows}]; }}'
     elif scene == 'text-input':
         control = 'FluentTextField' if kit else 'LineEdit'
         body = f'{control} {{ x: 16px; y: 16px; width: 320px; height: 32px; text: "Text 输入"; }}'

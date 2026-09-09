@@ -63,6 +63,13 @@ class PerfTests(unittest.TestCase):
             self.assertIn('width: 780px; height: 400px;', source)
             self.assertNotIn('@children', source)
 
+    def test_table_pairs_have_matching_rows_and_columns(self):
+        for variant in ('native', 'kit'):
+            source = run_perf.scene_source('table-100', variant)
+            self.assertEqual(source.count('{text: "Row '), 100)
+            self.assertEqual(source.count('width: 300px'), 2)
+            self.assertIn('width: 780px; height: 400px;', source)
+
     def test_unknown_scene_fails(self):
         with self.assertRaises(ValueError):
             run_perf.scene_source('unknown', 'kit')

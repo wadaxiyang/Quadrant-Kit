@@ -168,3 +168,6 @@ P4C preserves ListView/TabWidget native identity through verified static exports
 ScrollView/GroupBox inherit native slots. StandardListView composes one native view
 and names its limited enabled behavior scrollbars-enabled. No copied row/scroll/tab
 input and no claim that native container enabled recursively disables content.
+
+P4D composes native table and date/time popups. No business sorting/calendar logic.
+Table scrollbars-enabled accurately names the native limited disable scope.

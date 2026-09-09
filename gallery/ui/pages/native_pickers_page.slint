@@ -1,0 +1,31 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { FluentStandardTableView, FluentDatePicker, FluentTimePicker, Date, Time, Theme } from "@quadrant-kit";
+export component NativePickersPage inherits GalleryPage {
+    private property <Date> selected_date: { year: 2026, month: 9, day: 10 };
+    private property <Time> selected_time: { hour: 12, minute: 30, second: 0 };
+    private property <string> result: "No request";
+    private property <[TableColumn]> columns: [{ title: "Name", width: 240px }, { title: "Value", width: 200px }];
+    page_description: "Native table requests and date/time dialogs. The host owns committed values and business sorting.";
+    Specimen {
+        specimen_title: "Table selection and sort requests";
+        specimen_description: "Click a column heading: requests are reported; this example deliberately keeps its rows in source order.";
+        FluentStandardTableView { height: 220px; columns <=> root.columns;
+            rows: [[{ text: "First / 第一项" }, { text: "10" }], [{ text: "Second" }, { text: "20" }]];
+            sort-ascending(index) => { root.result = "Ascending request " + index; }
+            sort-descending(index) => { root.result = "Descending request " + index; }
+            current-row-changed(index) => { root.result = "Selected row " + index; }
+        }
+        Text { text: root.result; color: Theme.text_primary; }
+    }
+    Specimen {
+        specimen_title: "Native date and time";
+        specimen_description: "Confirm commits through the host callback; Cancel retains the host value. Native popups own editing and validation.";
+        HorizontalLayout {
+            FluentDatePicker { date: root.selected_date; accepted(value) => { root.selected_date = value; } }
+            FluentTimePicker { time: root.selected_time; accepted(value) => { root.selected_time = value; } }
+        }
+    }
+}

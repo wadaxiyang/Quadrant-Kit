@@ -4,6 +4,7 @@ import {
     FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox,
     FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing,
     FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget,
+    FluentStandardTableView, FluentDatePicker, FluentTimePicker, Date, Time,
     Elevation, Motion, Theme, ThemeMode, Typography, UiConstants, FluentIcons,
     FluentIcon, TooltipHost, SurfaceCard, Badge, BadgeKind, FluentButton, IconButton,
     SegmentButton, FluentTextField, FluentTextArea, SettingRow,
@@ -43,7 +44,13 @@ export component KitApiProbe inherits Window {
     background: Elevation.card_surface;
     default-font-size: Typography.body;
     default-font-family: Theme.ui_font_family;
+    private property <Date> selected_date: { year: 2026, month: 9, day: 10 };
+    private property <Time> selected_time: { hour: 12, minute: 30, second: 0 };
     VerticalLayout {
+        FluentStandardTableView { height: 200px; columns: [{ title: "Name", width: 160px }]; rows: [[{ text: "One" }]]; }
+        FluentDatePicker { date: root.selected_date; accepted(value) => { root.selected_date = value; } }
+        FluentTimePicker { time: root.selected_time; accepted(value) => { root.selected_time = value; } }
+
         FluentScrollView { height: 80px; viewport-height: 200px; Text { text: "Scroll content"; } }
         FluentListView { height: 80px; for index in 10000: Text { text: index; height: 24px; } }
         FluentStandardListView { height: 80px; model: [{ text: "One" }]; current-item: 0; scrollbars-enabled: true; }

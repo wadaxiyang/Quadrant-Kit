@@ -34,3 +34,4 @@ window-control-button	WindowControlButton	window-group	7		WindowControlButtonPag
 native-selection	Native selection		4		NativeSelectionPage	native_selection_page.slint	FluentCheckBox,FluentSwitch,FluentRadioGroup,FluentComboBox	checkbox switch radio combo selection
 native-numeric	Native numeric & progress		4		NativeNumericPage	native_numeric_page.slint	FluentSlider,FluentSpinBox,FluentProgressBar,FluentProgressRing	slider spin integer progress ring numeric
 native-containers	Native containers & lists		5		NativeContainersPage	native_containers_page.slint	FluentScrollView,FluentListView,FluentStandardListView,FluentGroupBox,FluentTabWidget	scroll list virtualization group tabs containers
+native-pickers	Native table & pickers		5		NativePickersPage	native_pickers_page.slint	FluentStandardTableView,FluentDatePicker,FluentTimePicker	table date time calendar sorting

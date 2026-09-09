@@ -52,6 +52,10 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | FluentGroupBox | IMPLEMENTED / native-wrapper; GroupBox | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
 | FluentTabWidget | IMPLEMENTED / native-wrapper; TabWidget | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
 
+| FluentStandardTableView | IMPLEMENTED / native composition; StandardTableView | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
+| FluentDatePicker | IMPLEMENTED / native composition; DatePickerPopup | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
+| FluentTimePicker | IMPLEMENTED / native composition; TimePickerPopup | P4D typed values and request contract | native-pickers | P4D report | P4D report | P4D report | NOT_RUN: reader |
+
 Private NavigationItemRow is separately recorded by the native guard (ordinary
 input pending P5C); NavigationModel is a pure private global, not a visual export.
 Existing historical navigation input observations do not become P1 runtime tests.
@@ -72,7 +76,7 @@ No placeholder exports or historical compatibility paths are introduced; compile
 | P4A | FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox | CheckBox/Switch/RadioGroup/ComboBox; no assumed three-state or RadioGroup index | PASS — P4A scoped contract |
 | P4B | FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing | Slider/int SpinBox/ProgressIndicator/Spinner; no floating NumberBox claim | PASS — P4B scoped contract |
 | P4C | FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget | ScrollView/ListView/StandardListView/GroupBox/TabWidget; verified direct repeater / fixed Tab grammar | PASS — P4C scoped contract |
-| P4D | FluentStandardTableView, FluentDatePicker, FluentTimePicker | StandardTableView, DatePickerPopup/TimePickerPopup; actual structs/ranges and finite popup contract | BACKLOG |
+| P4D | FluentStandardTableView, FluentDatePicker, FluentTimePicker | StandardTableView, DatePickerPopup/TimePickerPopup; actual structs and finite popup contract | PASS — P4D scoped contract |
 | P5A | Tooltip service and existing ToastHost | Builtin Tooltip plus content; finite toast lifecycle | NOT_STARTED |
 | P5B | Existing ModalManager | Fixed confirmation, explicit focus protocol; not complete ContentDialog | NOT_STARTED |
 | P5C | Existing NavigationView/rows | Measure 16/64/256/257 before optimization; no host router | NOT_STARTED |

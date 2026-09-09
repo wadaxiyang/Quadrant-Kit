@@ -1,0 +1,32 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Button, TimePickerPopup, Time } from "std-widgets.slint";
+export component FluentTimePicker inherits Rectangle {
+    in property <Time> time: { hour: 0, minute: 0, second: 0 };
+    in property <string> text: root.time.hour + ":" + (root.time.minute < 10 ? "0" : "") + root.time.minute;
+    in property <string> title: "Select time";
+    in property <bool> enabled: true;
+    out property <bool> has-focus: command.has-focus;
+    in property <bool> use-24-hour-format: true;
+    callback accepted(Time);
+    callback canceled();
+    public function open() { if root.enabled && root.visible { popup.show(); } }
+    public function close() { popup.close(); if root.enabled && root.visible { command.focus(); } }
+    changed enabled => { if !root.enabled { popup.close(); } }
+    changed visible => { if !root.visible { popup.close(); } }
+    preferred-width: command.min-width; preferred-height: command.min-height;
+    width: command.min-width; height: command.min-height;
+    horizontal-stretch: 0; vertical-stretch: 0;
+    forward-focus: command;
+    command := Button {
+        width: 100%; height: 100%; text: root.text; enabled: root.enabled;
+        clicked => { root.open(); }
+    }
+    popup := TimePickerPopup {
+        x: 0px; y: root.height;
+        title: root.title; time: root.time;
+        use-24-hour-format: root.use-24-hour-format;
+        accepted(value) => { command.focus(); root.accepted(value); }
+        canceled => { command.focus(); root.canceled(); }
+    }
+}
