@@ -48,6 +48,14 @@ class PerfTests(unittest.TestCase):
         self.assertNotIn('FluentButton {', source)
         self.assertNotIn('ToastHost {', source)
 
+    def test_progress_pairs_match_content_geometry_and_idle_state(self):
+        for variant in ('native', 'kit'):
+            source = run_perf.scene_source('progress-100', variant)
+            self.assertEqual(source.count('for index in 50:'), 2)
+            self.assertEqual(source.count('progress: 0.6; indeterminate: false;'), 2)
+            self.assertIn('width: 76px; height: 3px;', source)
+            self.assertIn('width: 32px; height: 32px;', source)
+
     def test_unknown_scene_fails(self):
         with self.assertRaises(ValueError):
             run_perf.scene_source('unknown', 'kit')

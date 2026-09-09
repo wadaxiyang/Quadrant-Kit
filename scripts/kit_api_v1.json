@@ -682,10 +682,118 @@
         }
       }
     },
+    "FluentProgressBar": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "progress": {
+            "kind": "property",
+            "direction": "in",
+            "type": "float"
+          },
+          "indeterminate": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "running": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "animating": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          }
+        }
+      },
+      "defaults": {
+        "progress": {
+          "binding": ":",
+          "expression": "0"
+        },
+        "indeterminate": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "running": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "animating": {
+          "binding": ":",
+          "expression": "root . visible && root . running && root . indeterminate"
+        }
+      }
+    },
+    "FluentProgressRing": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "progress": {
+            "kind": "property",
+            "direction": "in",
+            "type": "float"
+          },
+          "indeterminate": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "running": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "animating": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          }
+        }
+      },
+      "defaults": {
+        "progress": {
+          "binding": ":",
+          "expression": "0"
+        },
+        "indeterminate": {
+          "binding": ":",
+          "expression": "false"
+        },
+        "running": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "animating": {
+          "binding": ":",
+          "expression": "root . visible && root . running && root . indeterminate"
+        }
+      }
+    },
     "FluentRadioGroup": {
       "signature": {
         "kind": "component",
         "inherits": "RadioGroup",
+        "members": {}
+      },
+      "defaults": {}
+    },
+    "FluentSlider": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Slider",
+        "members": {}
+      },
+      "defaults": {}
+    },
+    "FluentSpinBox": {
+      "signature": {
+        "kind": "component",
+        "inherits": "SpinBox",
         "members": {}
       },
       "defaults": {}

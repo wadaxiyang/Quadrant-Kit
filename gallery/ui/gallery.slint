@@ -33,6 +33,8 @@ import { WindowControlButtonPage } from "pages/window_control_button_page.slint"
 
 import { NativeSelectionPage } from "pages/native_selection_page.slint";
 
+import { NativeNumericPage } from "pages/native_numeric_page.slint";
+
 export { GalleryNavigation, GalleryComponentLink } from "shared/gallery_catalog.slint";
 export { NavigationValidationWindow } from "navigation_validation.slint";
 export { KitApiProbe } from "api_probe.slint";
@@ -141,6 +143,7 @@ export component DesignGalleryWindow inherits Window {
                 Rectangle {
                     vertical-stretch: 1; min-width: 0px; min-height: 0px;
                     if root.gallery_destination == "native-selection": NativeSelectionPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "native-numeric": NativeNumericPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "home": HomePage { width: 100%; height: 100%; }
                     if root.gallery_destination == "all-components": AllComponentsPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "tokens": TokensPage { width: 100%; height: 100%; }

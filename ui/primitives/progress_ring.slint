@@ -1,0 +1,20 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Spinner } from "std-widgets.slint";
+export component FluentProgressRing inherits Rectangle {
+    in property <float> progress: 0;
+    in property <bool> indeterminate: false;
+    in property <bool> running: true;
+    out property <bool> animating: root.visible && root.running && root.indeterminate;
+    width: 32px;
+    height: 32px;
+    preferred-width: 32px;
+    preferred-height: 32px;
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+    if root.visible: Spinner {
+        width: 100%; height: 100%;
+        progress: min(1, max(0, root.progress));
+        indeterminate: root.animating;
+    }
+}

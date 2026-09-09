@@ -41,6 +41,11 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | FluentRadioGroup | IMPLEMENTED / native-wrapper; RadioGroup | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
 | FluentComboBox | IMPLEMENTED / native-wrapper; ComboBox | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
 
+| FluentSlider | IMPLEMENTED / native-wrapper; Slider | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
+| FluentSpinBox | IMPLEMENTED / native-wrapper; SpinBox | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
+| FluentProgressBar | IMPLEMENTED / native-wrapper; ProgressIndicator | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
+| FluentProgressRing | IMPLEMENTED / native-wrapper; Spinner | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
+
 Private NavigationItemRow is separately recorded by the native guard (ordinary
 input pending P5C); NavigationModel is a pure private global, not a visual export.
 Existing historical navigation input observations do not become P1 runtime tests.
@@ -52,14 +57,14 @@ P4A selection names above are now implemented; later batches below remain planne
 The following names are the P1 plan, not exports or implemented APIs. Use Fluent
 for new wrappers; no cosmetic renaming of current components. Property/direction/
 base and supported behavior are defined per batch from the pinned public controls.
-No empty facade aliases or historical compatibility paths will be introduced.
+No placeholder exports or historical compatibility paths are introduced; compiler-special controls use verified public native re-exports.
 
 | Stage | Planned public components | Native basis / limits | Status |
 |---|---|---|---|
 | P2 | Existing FluentButton migration | Actual Button; passive danger outline, removed preview/accent/show_icon | PASS — scoped migration; see P2 report and native sizing limits |
-| P3 | Remaining current components | Native buttons; tokens/slots/wrapping; all original 21 accounted for | PARTIAL — core gate PASS; WinUI reference NOT_RUN; P3 package BLOCKED |
-| P4A | FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox | CheckBox/Switch/RadioGroup/ComboBox; no assumed three-state or RadioGroup index | BACKLOG |
-| P4B | FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing | Slider/int SpinBox/ProgressIndicator/Spinner; no floating NumberBox claim | BACKLOG |
+| P3 | Remaining current components | Native buttons; tokens/slots/wrapping; all original 21 accounted for | PARTIAL — core gate PASS; WinUI reference NOT_RUN; P3 package PASS after commit |
+| P4A | FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox | CheckBox/Switch/RadioGroup/ComboBox; no assumed three-state or RadioGroup index | PASS — P4A scoped contract |
+| P4B | FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing | Slider/int SpinBox/ProgressIndicator/Spinner; no floating NumberBox claim | PASS — P4B scoped contract |
 | P4C | FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget | ScrollView/ListView/StandardListView/GroupBox/TabWidget; resolve @children/compiler virtualization first | BACKLOG |
 | P4D | FluentStandardTableView, FluentDatePicker, FluentTimePicker | StandardTableView, DatePickerPopup/TimePickerPopup; actual structs/ranges and finite popup contract | BACKLOG |
 | P5A | Tooltip service and existing ToastHost | Builtin Tooltip plus content; finite toast lifecycle | NOT_STARTED |

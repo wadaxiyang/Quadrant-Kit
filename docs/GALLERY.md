@@ -429,3 +429,5 @@ See the P3 report for actual counts, catalog captures and native input limits.
 
 P4A: `native-selection` is a conditional reachable page for all four selection
 wrappers, sharing checked state and demonstrating disabled, empty and long models.
+
+P4B: conditional `native-numeric` page demonstrates all four numeric/progress exports.

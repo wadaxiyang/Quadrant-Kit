@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 import {
     FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox,
+    FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing,
     Elevation, Motion, Theme, ThemeMode, Typography, UiConstants, FluentIcons,
     FluentIcon, TooltipHost, SurfaceCard, Badge, BadgeKind, FluentButton, IconButton,
     SegmentButton, FluentTextField, FluentTextArea, SettingRow,
@@ -42,6 +43,10 @@ export component KitApiProbe inherits Window {
     default-font-size: Typography.body;
     default-font-family: Theme.ui_font_family;
     VerticalLayout {
+        FluentSlider { value: 20; minimum: 0; maximum: 100; step: 5; enabled: root.controls_enabled; }
+        FluentSpinBox { value: 12; read-only: true; step-size: 2; }
+        FluentProgressBar { progress: 0.5; running: false; indeterminate: true; }
+        FluentProgressRing { progress: 0.5; running: false; }
         FluentCheckBox { text: "Check"; checked <=> root.activated; enabled: root.controls_enabled; }
         FluentSwitch { text: "Switch"; checked <=> root.activated; enabled: root.controls_enabled; }
         FluentRadioGroup { title: "Options"; RadioButton { text: "One"; checked: true; } RadioButton { text: "Two"; } }

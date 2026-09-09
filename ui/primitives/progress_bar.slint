@@ -1,0 +1,18 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { ProgressIndicator } from "std-widgets.slint";
+export component FluentProgressBar inherits Rectangle {
+    in property <float> progress: 0;
+    in property <bool> indeterminate: false;
+    in property <bool> running: true;
+    out property <bool> animating: root.visible && root.running && root.indeterminate;
+    height: 3px;
+    preferred-height: 3px;
+    horizontal-stretch: 1;
+    vertical-stretch: 0;
+    if root.visible: ProgressIndicator {
+        width: 100%; height: 100%;
+        progress: min(1, max(0, root.progress));
+        indeterminate: root.animating;
+    }
+}

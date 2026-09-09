@@ -4,6 +4,9 @@
 
 `python scripts/run_button_checks.py --suite selection` builds and runs the isolated
 P4A native event host, including programmatic state, disabled input and model changes.
+The `numeric` suite covers native Slider/SpinBox bounds, editing/read-only/disabled,
+and ProgressBar/ProgressRing running/hidden/stable-render state. The paired
+`progress-100` scene creates 50 native/Kit bars and 50 rings with identical geometry.
 RadioGroup static re-export is deliberately verified by the scanner and generated
 Rust compilation; build-script-only generation cannot prove compiler-special child
 lowering works. `run_perf.py --scenes selection-100 --samples 30` compares paired

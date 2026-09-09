@@ -1,0 +1,32 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing, FluentSwitch, FluentCheckBox, Theme } from "@quadrant-kit";
+export component NativeNumericPage inherits GalleryPage {
+    private property <bool> enabled: true;
+    private property <bool> read_only: false;
+    private property <bool> running: true;
+    private property <bool> indeterminate: false;
+    private property <float> amount: 40;
+    private property <int> number: 10;
+    page_description: "Native numeric editing and progress. Set running=false when a resident host becomes inactive.";
+    Specimen {
+        specimen_title: "Values and progress / 数值与进度";
+        specimen_description: "Slider uses floating values; SpinBox edits integers. Progress is clamped to 0..1 for presentation.";
+        source_code: "import { FluentSpinBox } from \"@quadrant-kit\";\nFluentSpinBox { minimum: 0; maximum: 100; step-size: 2; }";
+        HorizontalLayout {
+            FluentSwitch { text: "Enabled"; checked <=> root.enabled; }
+            FluentCheckBox { text: "Read-only SpinBox"; checked <=> root.read_only; }
+        }
+        FluentSlider { minimum: 0; maximum: 100; step: 5; value <=> root.amount; enabled: root.enabled; }
+        FluentSpinBox { minimum: -20; maximum: 100; step-size: 2; value <=> root.number; enabled: root.enabled; read-only: root.read_only; }
+        Text { text: "Slider: " + root.amount + " | Integer: " + root.number; color: Theme.text_primary; }
+        HorizontalLayout {
+            FluentSwitch { text: "Running"; checked <=> root.running; }
+            FluentCheckBox { text: "Indeterminate"; checked <=> root.indeterminate; }
+        }
+        FluentProgressBar { progress: root.amount / 100; running: root.running; indeterminate: root.indeterminate; }
+        FluentProgressRing { progress: root.amount / 100; running: root.running; indeterminate: root.indeterminate; }
+    }
+}

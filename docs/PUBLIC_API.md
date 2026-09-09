@@ -748,3 +748,60 @@ export component FluentSwitch inherits Switch { }
 export { RadioGroup as FluentRadioGroup } from "std-widgets.slint";
 export component FluentComboBox inherits ComboBox { }
 ```
+
+## P4B numeric and progress contracts
+
+FluentSlider inherits native float value/minimum/maximum/step, orientation, enabled,
+has-focus and changed(float)/released(float). FluentSpinBox inherits native int
+value/minimum/maximum/step-size, read-only, enabled, horizontal-alignment, has-focus
+and edited(int). Host assignments do not emit edit/change callbacks; hosts must
+supply ordered ranges and in-range programmatic values. Native input applies its
+own boundary rules. Slider has no read-only property. This is not a floating or
+expression NumberBox. No native drag/edit implementation is copied.
+
+Progress wrappers clamp presentation to 0..1. running=false makes indeterminate
+progress static; visible=false removes the native child. animating describes the
+requested native indeterminate state, not measured CPU. Hosts keeping an entire
+ancestor hidden/resident must bind running to their active state or unload it.
+There is no Kit Timer or duplicate animation; Spinner keeps native motion.
+
+```slint
+export component FluentSlider inherits Slider { }
+
+export component FluentSpinBox inherits SpinBox { }
+
+export component FluentProgressBar inherits Rectangle {
+    in property <float> progress: 0;
+    in property <bool> indeterminate: false;
+    in property <bool> running: true;
+    out property <bool> animating: root.visible && root.running && root.indeterminate;
+    height: 3px;
+    preferred-height: 3px;
+    horizontal-stretch: 1;
+    vertical-stretch: 0;
+    if root.visible: ProgressIndicator {
+        width: 100%; height: 100%;
+        progress: min(1, max(0, root.progress));
+        indeterminate: root.animating;
+    }
+}
+
+export component FluentProgressRing inherits Rectangle {
+    in property <float> progress: 0;
+    in property <bool> indeterminate: false;
+    in property <bool> running: true;
+    out property <bool> animating: root.visible && root.running && root.indeterminate;
+    width: 32px;
+    height: 32px;
+    preferred-width: 32px;
+    preferred-height: 32px;
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+    if root.visible: Spinner {
+        width: 100%; height: 100%;
+        progress: min(1, max(0, root.progress));
+        indeterminate: root.animating;
+    }
+}
+
+```

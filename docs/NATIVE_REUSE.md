@@ -159,3 +159,7 @@ re-export because subclassed children fail Rust code generation. The scanner all
 only the verified RadioGroup native component re-export and checks its true owner;
 unknown native exports still fail. Native state/input/child grammar stay native-owned;
 there is no extra wrapper tree, activation forwarding or private Slint import.
+
+P4B adds direct Slider/SpinBox subclasses and conditional public ProgressIndicator/Spinner
+children. running/visible control native indeterminate work; Kit adds no Timer or
+drag/edit handler. Native numeric bounds and int/read-only semantics remain native.

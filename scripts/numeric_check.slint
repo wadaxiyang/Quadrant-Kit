@@ -1,0 +1,32 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette } from "std-widgets.slint";
+import { FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing, Theme, ThemeMode } from "@quadrant-kit";
+export component NumericCheck inherits Window {
+    width: 640px; height: 400px; default-font-family: "Segoe UI Variable Text";
+    background: Theme.background;
+    in-out property <bool> dark;
+    in-out property <bool> controls_enabled: true;
+    in-out property <bool> read_only;
+    in-out property <float> slider_value <=> slider.value;
+    in-out property <int> integer_value <=> spin.value;
+    in-out property <bool> running: true;
+    in-out property <bool> progress_visible: true;
+    out property <bool> animating: bar.animating && ring.animating;
+    out property <int> slider_events: 0;
+    out property <int> releases: 0;
+    out property <int> edits: 0;
+    public function focus_slider() { slider.focus(); }
+    public function focus_spin() { spin.focus(); }
+    changed dark => { Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light; Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light; }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    slider := FluentSlider { x: 20px; y: 30px; width: 220px; height: 32px; minimum: 0; maximum: 10; step: 2; enabled: root.controls_enabled;
+        changed(value) => { root.slider_events += 1; }
+        released(value) => { root.releases += 1; }
+    }
+    spin := FluentSpinBox { x: 20px; y: 100px; width: 220px; height: 32px; minimum: 0; maximum: 10; step-size: 2; enabled: root.controls_enabled; read-only: root.read_only;
+        edited(value) => { root.edits += 1; }
+    }
+    bar := FluentProgressBar { x: 20px; y: 180px; width: 320px; progress: 0.6; indeterminate: true; running: root.running; visible: root.progress_visible; }
+    ring := FluentProgressRing { x: 20px; y: 220px; width: 40px; height: 40px; progress: 0.6; indeterminate: true; running: root.running; visible: root.progress_visible; }
+}

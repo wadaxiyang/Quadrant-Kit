@@ -17,12 +17,14 @@ from run_perf import ROOT, execute, generate, resolved_fingerprint, source_ident
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-only', action='store_true', help='Build an interactive host without claiming input PASS')
-    parser.add_argument('--suite', choices=['button', 'foundation', 'selection'], default='button')
+    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric'], default='button')
     args = parser.parse_args(argv)
     stem = 'foundation_check' if args.suite == 'foundation' else 'button_check'
     executable_name = 'kit-p3-foundation-check' if args.suite == 'foundation' else 'kit-p2-button-check'
     if args.suite == 'selection':
         stem, executable_name = 'selection_check', 'kit-p4a-selection-check'
+    if args.suite == 'numeric':
+        stem, executable_name = 'numeric_check', 'kit-p4b-numeric-check'
     output = ROOT / 'target/button-checks' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     source = source_identity(ROOT)
     report = {'suite': args.suite, 'source': source, 'status': 'IN_PROGRESS', 'commands': [], 'backend': 'winit-software', 'input': 'public WindowEvent dispatch; OS input/accessibility is separate'}

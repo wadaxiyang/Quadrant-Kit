@@ -633,6 +633,86 @@
         "P4A current probe, selection runtime suite and Gallery"
       ],
       "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentSlider",
+      "implementation": "ui/primitives/slider.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "Slider",
+      "native_dependencies": [
+        "Slider"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate input, drag logic or progress timer"
+      ],
+      "validation": [
+        "P4B numeric runtime and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentSpinBox",
+      "implementation": "ui/primitives/spin_box.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "SpinBox",
+      "native_dependencies": [
+        "SpinBox"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate input, drag logic or progress timer"
+      ],
+      "validation": [
+        "P4B numeric runtime and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentProgressBar",
+      "implementation": "ui/primitives/progress_bar.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "ProgressIndicator",
+      "native_dependencies": [
+        "ProgressIndicator"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate input, drag logic or progress timer"
+      ],
+      "validation": [
+        "P4B numeric runtime and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentProgressRing",
+      "implementation": "ui/primitives/progress_ring.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "Spinner",
+      "native_dependencies": [
+        "Spinner"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate input, drag logic or progress timer"
+      ],
+      "validation": [
+        "P4B numeric runtime and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
     }
   ]
 }
