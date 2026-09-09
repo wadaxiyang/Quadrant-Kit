@@ -85,3 +85,15 @@ The command fetches and peels the retained tag anonymously before generating a n
 The consumer uses Theme/ThemeMode, FluentButton, FluentIcons/FluentIcon, ModalManager and ToastHost through the file-mapped facade with EmbedFiles. GUI smoke runs a copied binary from an empty runtime directory; this does not claim the build cache was removed or prove the full Tasks runtime package. Build-only runs report runtime NOT_RUN. Reports, lockfile, logs and generated source are retained in the temporary directory for audit, including failures; no automatic deletion hides evidence.
 
 Candidate tags are retention references, not stable releases. Preserve published `candidate/extraction-*` tags with update/deletion protection, never move an adopted tag, and create a new candidate commit/tag after a fix. The migration ledger records the actual retained SHA and CI/consumer results; a commit cannot embed its own final SHA.
+
+
+## P3 upgrade notes
+
+P0–P2 source `f479338` was pushed to main at the user's request; this does not
+retarget the historical retained consumer above or certify a new external consumer.
+P3 removes icon/segment/card/field preview inputs, WindowControlButton.symbol and
+EmptyState.milestone. IconButton/SegmentButton names bind via accessible_name.
+Native icon sizing and window-button default height changed; honor preferred sizes.
+See PUBLIC_API for controlled selection, error layout and SettingRow child-enabled
+bindings. Initialize Theme and Palette per window from one host decision; no new
+runtime registry, source override, font bundle or root runtime dependency is needed.

@@ -20,12 +20,14 @@ export component MetricCard inherits SurfaceCard {
 
         Text {
             text: root.label;
+            wrap: word-wrap;
             color: Theme.text_secondary;
-            font-size: 12px;
+            font-size: Typography.caption;
         }
 
         Text {
             text: root.value;
+            wrap: word-wrap;
             color: Theme.text_primary;
             font-size: Typography.title;
             font-weight: Typography.semibold;
@@ -33,6 +35,7 @@ export component MetricCard inherits SurfaceCard {
 
         Text {
             text: root.hint;
+            wrap: word-wrap;
             color: Theme.text_secondary;
             font-size: Typography.caption;
         }

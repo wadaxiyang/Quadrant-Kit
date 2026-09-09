@@ -49,9 +49,9 @@ export component GalleryToolbar inherits Rectangle {
             SegmentButton { width: 58px; text: "System"; selected: root.gallery_theme == ThemeMode.system; clicked => { root.gallery_theme = ThemeMode.system; } }
             SegmentButton { width: 58px; text: "Light"; selected: root.gallery_theme == ThemeMode.light; clicked => { root.gallery_theme = ThemeMode.light; } }
             SegmentButton { width: 58px; text: "Dark"; selected: root.gallery_theme == ThemeMode.dark; clicked => { root.gallery_theme = ThemeMode.dark; } }
-            SegmentButton { width: 32px; text: "C"; accessible-label: "Compact preview (C)"; selected: root.preview_mode == 0; clicked => { root.preview_mode = 0; } }
-            SegmentButton { width: 32px; text: "M"; accessible-label: "Medium preview (M)"; selected: root.preview_mode == 1; clicked => { root.preview_mode = 1; } }
-            SegmentButton { width: 32px; text: "W"; accessible-label: "Wide preview (W)"; selected: root.preview_mode == 2; clicked => { root.preview_mode = 2; } }
+            SegmentButton { width: 32px; text: "C"; accessible_name: "Compact preview (C)"; selected: root.preview_mode == 0; clicked => { root.preview_mode = 0; } }
+            SegmentButton { width: 32px; text: "M"; accessible_name: "Medium preview (M)"; selected: root.preview_mode == 1; clicked => { root.preview_mode = 1; } }
+            SegmentButton { width: 32px; text: "W"; accessible_name: "Wide preview (W)"; selected: root.preview_mode == 2; clicked => { root.preview_mode = 2; } }
         }
     }
 }

@@ -96,7 +96,7 @@ checks are recorded in [the Phase 8 report](docs/NAVIGATION_REBUILD_PHASE8.md).
 SidebarItem and its legacy tokens have been removed. These changes are unpublished; the retained
 extraction source still has 28 names. Branding, task models, Inbox, task row
 composition, quadrant colors, product-specific timer/layout tokens, and product
-navigation aliases belong to Tasks. P2 migrates FluentButton to the public native Button, with reviewed API and visual changes documented in PUBLIC_API.md; other current components retain their scoped migration status.
+navigation aliases belong to Tasks. P2/P3 migrate command buttons to public native Button, with controlled selection, native tooltip service and current API/visual changes in PUBLIC_API.md. Navigation row and overlay lifecycle work retain their scoped P5 status.
 
 Code is GPL-3.0-only; the Microsoft SVG assets retain their MIT license. See [LICENSE](LICENSE), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), and [assets/icons/LICENSE-MIT](assets/icons/LICENSE-MIT).
 

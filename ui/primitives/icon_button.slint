@@ -1,72 +1,43 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { Button } from "std-widgets.slint";
 import { Theme } from "../foundation/theme.slint";
 import { UiConstants } from "../foundation/constants.slint";
-import { FluentIcon } from "fluent_icon.slint";
 import { TooltipHost } from "tooltip_host.slint";
 
 export component IconButton inherits Rectangle {
     in property <image> icon;
     in property <string> tooltip;
+    in property <string> accessible_name;
     in property <bool> danger: false;
     in property <bool> enabled: true;
-    // Development-gallery overrides; false in product surfaces.
-    in property <bool> preview_hover: false;
-    in property <bool> preview_pressed: false;
-    in property <bool> preview_focus: false;
+    out property <bool> has-focus: command.has-focus;
+    out property <bool> pressed: command.pressed;
     callback clicked;
-    // Slint 1.17 ignores FocusOut after enabled becomes false. Track the visible
-    // focus independently so disabling/re-enabling cannot revive a stale ring.
-    private property <bool> focus_visible: false;
 
-    width: UiConstants.icon_button_size;
-    height: UiConstants.icon_button_size;
-    border-radius: UiConstants.control_radius;
-    border-width: root.enabled && (root.focus_visible || root.preview_focus) ? 2px : 0px;
-    border-color: Theme.focus_ring;
-    background: !root.enabled ? transparent :
-                (button_touch.pressed || root.preview_pressed) ? (root.danger ? Theme.danger_bg : Theme.selected_bg) :
-                (button_touch.has-hover || root.preview_hover) ? (root.danger ? Theme.danger_bg : Theme.control_bg_hover) : transparent;
-    opacity: root.enabled ? 1 : 0.45;
-    forward-focus: keyboard_focus;
-    changed enabled => { if (!root.enabled) { root.focus_visible = false; keyboard_focus.clear-focus(); } }
-    accessible-role: button;
-    accessible-label: root.tooltip;
-    accessible-enabled: root.enabled;
-    accessible-action-default => { if (root.enabled) { root.clicked(); } }
+    width: max(UiConstants.icon_button_size, command.min-width);
+    height: max(UiConstants.icon_button_size, command.min-height);
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+    forward-focus: command;
 
-    FluentIcon {
-        x: (parent.width - self.width) / 2;
-        y: (parent.height - self.height) / 2;
-        source: root.icon;
-        icon_color: root.danger ? Theme.danger :
-                    (button_touch.has-hover || root.preview_hover) ? Theme.text_primary : Theme.icon_neutral;
-    }
-
-    keyboard_focus := FocusScope {
+    command := Button {
+        width: 100%; height: 100%;
+        icon: root.icon;
+        icon-size: 20px;
+        colorize-icon: true;
         enabled: root.enabled;
-        focus-gained => { root.focus_visible = true; }
-        focus-lost => { root.focus_visible = false; }
-        key-pressed(event) => {
-            if (root.enabled && (event.text == Key.Return || event.text == Key.Space)) {
-                root.clicked();
-                return accept;
-            }
-            return reject;
-        }
+        accessible-label: root.accessible_name == "" ? root.tooltip : root.accessible_name;
+        clicked => { if (root.enabled) { root.clicked(); } }
     }
-
-    button_touch := TouchArea {
-        enabled: root.enabled;
-        mouse-cursor: pointer;
-        clicked => { root.clicked(); }
+    if root.danger: Rectangle {
+        x: -2px; y: -2px;
+        width: parent.width + 4px; height: parent.height + 4px;
+        background: transparent;
+        border-radius: 6px; border-width: 1px;
+        border-color: root.enabled ? Theme.danger : Theme.text_tertiary;
+        accessible-role: none;
     }
-
-    TooltipHost {
-        x: (parent.width - self.width) / 2;
-        y: parent.height + UiConstants.space_4;
-        text: root.tooltip;
-        shown: button_touch.has-hover;
-    }
+    Tooltip { TooltipHost { text: root.tooltip; shown: true; } }
 }

@@ -21,12 +21,12 @@ export component IconButtonSpecimen inherits Specimen {
         spacing: UiConstants.space_12;
         Row {
             StateSpecimen { label: "Normal"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.action_count += 1; root.last_action = "Add"; } } }
-            StateSpecimen { label: "Hover"; IconButton { icon: FluentIcons.add; tooltip: "Add"; preview_hover: true; clicked => { root.action_count += 1; root.last_action = "Hover sample"; } } }
-            StateSpecimen { label: "Pressed"; IconButton { icon: FluentIcons.add; tooltip: "Add"; preview_pressed: true; clicked => { root.action_count += 1; root.last_action = "Pressed sample"; } } }
+            StateSpecimen { label: "Hover to inspect"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.action_count += 1; root.last_action = "Hover sample"; } } }
+            StateSpecimen { label: "Press to inspect"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.action_count += 1; root.last_action = "Pressed sample"; } } }
         }
         Row {
-            StateSpecimen { label: "Keyboard focus"; IconButton { icon: FluentIcons.add; tooltip: "Add"; preview_focus: true; clicked => { root.action_count += 1; root.last_action = "Focus sample"; } } }
-            StateSpecimen { label: "Danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; preview_hover: true; clicked => { root.action_count += 1; root.last_action = "Delete"; } } }
+            StateSpecimen { label: "Tab to focus"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.action_count += 1; root.last_action = "Focus sample"; } } }
+            StateSpecimen { label: "Danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; clicked => { root.action_count += 1; root.last_action = "Delete"; } } }
             StateSpecimen { label: "Disabled"; IconButton { icon: FluentIcons.dismiss; tooltip: "Dismiss"; enabled: false; clicked => { root.action_count += 1; root.last_action = "Disabled sample"; } } }
         }
     }

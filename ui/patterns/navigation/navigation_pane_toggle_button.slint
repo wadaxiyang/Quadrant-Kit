@@ -2,11 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { UiConstants } from "../../foundation/constants.slint";
-import { Theme } from "../../foundation/theme.slint";
 import { FluentIcons } from "../../foundation/fluent_icons.slint";
-import { IconButton } from "../../primitives/icon_button.slint";
+import { Button } from "std-widgets.slint";
 import { TooltipHost } from "../../primitives/tooltip_host.slint";
-import { FluentIcon } from "../../primitives/fluent_icon.slint";
 import { NavigationPaneMode } from "navigation_types.slint";
 
 export component NavigationPaneToggleButton inherits Rectangle {
@@ -20,7 +18,9 @@ export component NavigationPaneToggleButton inherits Rectangle {
     forward-focus: button;
     accessible-role: none;
 
-    button := IconButton {
+    button := Button {
+        icon: FluentIcons.menu;
+        colorize-icon: true;
         width: 100%;
         height: 100%;
         enabled: root.enabled;
@@ -33,12 +33,4 @@ export component NavigationPaneToggleButton inherits Rectangle {
     // Popup tooltip stays readable at the left window edge and in compact panes.
     Tooltip { TooltipHost { text: root.accessible_name; shown: true; } }
 
-    FluentIcon {
-        x: (parent.width - self.width) / 2;
-        y: (parent.height - self.height) / 2;
-        size: UiConstants.navigation_icon_size;
-        source: FluentIcons.menu;
-        icon_color: Theme.navigation_item_foreground;
-        opacity: root.enabled ? 1 : 0.45;
-    }
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "slint_version": "1.17.1",
-  "review_scope": "P2 current-source migration; runtime evidence in P2 report is scoped separately",
+  "review_scope": "P3 current-source review; scoped runtime evidence in P3 report",
   "records": [
     {
       "component": "ModalManager",
@@ -37,7 +37,10 @@
       "implementation": "ui/overlays/toast.slint",
       "public": true,
       "status": "reviewed-exception",
-      "native_dependencies": [],
+      "native_dependencies": [
+        "Button",
+        "Tooltip"
+      ],
       "missing_capability": "No public std transient toast presenter.",
       "permitted_custom_behavior": [
         "visibility and timeout dismissal request",
@@ -64,6 +67,7 @@
       "public": true,
       "status": "composed",
       "native_dependencies": [
+        "Button",
         "Tooltip"
       ],
       "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
@@ -110,6 +114,7 @@
       "public": true,
       "status": "composed",
       "native_dependencies": [
+        "Button",
         "Tooltip"
       ],
       "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
@@ -134,6 +139,7 @@
       "public": true,
       "status": "reviewed-exception",
       "native_dependencies": [
+        "Button",
         "LineEdit",
         "ScrollView",
         "Tooltip"
@@ -156,7 +162,7 @@
         "component-specific runtime: NOT_RUN in P1"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "4b8dd247375667719dc72d07c4677f8b67c2e59c06aa284a85ac1221051b5047"
+      "reviewed_implementation_sha256": "d44da7c60dc0e7403fe9d4d81d9d213da74b9a1f9f36bb0752d300472f10a74f"
     },
     {
       "component": "NavigationItemRow",
@@ -300,15 +306,16 @@
     },
     {
       "component": "WindowControlButton",
-      "classification": "standard-control-pending",
+      "classification": "composed-missing-standard-control",
       "implementation": "ui/patterns/window/window_control_button.slint",
       "public": true,
-      "status": "custom/pending-migration",
-      "native_dependencies": [],
-      "missing_capability": "Standard Button exists; current custom activation is audited transition debt, not an exception to native-first.",
-      "permitted_custom_behavior": [
-        "existing command activation until its scoped migration"
+      "status": "composed",
+      "native_dependencies": [
+        "Button",
+        "Tooltip"
       ],
+      "missing_capability": "OS window actions remain host-owned; generic native command presentation.",
+      "permitted_custom_behavior": [],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
         "text editing",
@@ -320,8 +327,7 @@
         "native-reuse-guard",
         "component-specific runtime: NOT_RUN in P1"
       ],
-      "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "bb3835e5eaa41017c59af03a44271b64148399d9794f0b711c18b64c6b17ba56"
+      "review_on_slint_upgrade": true
     },
     {
       "component": "Badge",
@@ -397,14 +403,17 @@
     },
     {
       "component": "IconButton",
-      "classification": "standard-control-pending",
+      "classification": "standard-control-wrapper",
       "implementation": "ui/primitives/icon_button.slint",
       "public": true,
-      "status": "custom/pending-migration",
-      "native_dependencies": [],
-      "missing_capability": "Standard Button exists; current custom activation is audited transition debt, not an exception to native-first.",
+      "status": "native-wrapper",
+      "native_dependencies": [
+        "Button",
+        "Tooltip"
+      ],
+      "missing_capability": "No per-control danger palette override; passive outline only.",
       "permitted_custom_behavior": [
-        "existing command activation until its scoped migration"
+        "enabled-guarded native clicked forwarding"
       ],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
@@ -415,21 +424,23 @@
       "validation": [
         "current-api-probe",
         "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "P3 foundation runtime host"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "618ba1d330d0eabc786537e559a016f67fb4b8f6af2ca95da05526f1ca18a3f5"
+      "native_owner": "Button"
     },
     {
       "component": "SegmentButton",
-      "classification": "standard-control-pending",
+      "classification": "standard-control-wrapper",
       "implementation": "ui/primitives/segment_button.slint",
       "public": true,
-      "status": "custom/pending-migration",
-      "native_dependencies": [],
-      "missing_capability": "Standard Button exists; current custom activation is audited transition debt, not an exception to native-first.",
+      "status": "native-wrapper",
+      "native_dependencies": [
+        "Button"
+      ],
+      "missing_capability": "Native checkable activation toggles local checked, so checkable=false with host-bound checked and accessible-checkable=true.",
       "permitted_custom_behavior": [
-        "existing command activation until its scoped migration"
+        "enabled-guarded native clicked forwarding"
       ],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
@@ -440,10 +451,10 @@
       "validation": [
         "current-api-probe",
         "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "P3 foundation runtime host"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "cdbab1cc9044043b006d1dcc4fcf0062f47df073c2fff319e4e859548e8e1fb9"
+      "native_owner": "Button"
     },
     {
       "component": "SurfaceCard",
@@ -454,7 +465,8 @@
       "native_dependencies": [],
       "missing_capability": "No std card with arbitrary host child content and optional interaction.",
       "permitted_custom_behavior": [
-        "card-specific interactive/selected presentation and activation; pending native command design"
+        "Optional arbitrary-child card activation; no public std Button child-content template.",
+        "Conditional pointer/a11y helpers; one disabled focus anchor retained for inherited focus() forwarding."
       ],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
@@ -465,10 +477,10 @@
       "validation": [
         "current-api-probe",
         "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "P3 foundation runtime host"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "705e4603a3aa963c0895c9c9400cf776c6b90c4b6a5fdc6057b6d5a326d3b1af"
+      "reviewed_implementation_sha256": "6e7731b7f2cefeb9ae9e615088e2a69e995d7d800f13e416742a8e2f1f46bb26"
     },
     {
       "component": "FluentTextArea",

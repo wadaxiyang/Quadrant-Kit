@@ -2,7 +2,7 @@
 
 `ui/kit.slint` is the only supported Slint entry. All 35 public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The navigation rebuild additions and SidebarItem removal are local, unpublished work; the retained extraction source in CONSUMER_GUIDE.md still exposes its original API.
 
-Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` records the reviewed current contract (P2: 35 names, 238 properties, 20 callbacks, seven enums and one struct). These counts and historical signatures are not permanent invariants. APIs can be added, removed, renamed or adjusted with a concrete reason, synchronized current callers/docs/probes and an explicitly reviewed snapshot. Each version keeps one implementation, without old aliases or compatibility branches. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
+Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` records the reviewed current contract (P3: 35 names, 234 properties, 20 callbacks, seven enums and one struct). These counts and historical signatures are not permanent invariants. APIs can be added, removed, renamed or adjusted with a concrete reason, synchronized current callers/docs/probes and an explicitly reviewed snapshot. Each version keeps one implementation, without old aliases or compatibility branches. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
 
 Phase 3 removes SidebarItem, Theme.sidebar_bg and the two UiConstants.sidebar_* widths.
 The new pane tokens retain their resolved transparent/54 px values; content_radius
@@ -74,6 +74,7 @@ export global Theme {
     out property <color> card_bg_muted: dark_mode ? #27272a : #fafafa;
     out property <color> text_primary: dark_mode ? #eeeeee : #1a1a1a;
     out property <color> text_secondary: dark_mode ? #bbbbbb : #666666;
+    out property <color> text_disabled: dark_mode ? #777777 : #8a8a8a;
     out property <color> text_tertiary: dark_mode ? #9d9d9d : #707070;
     out property <color> border_color: dark_mode ? #3e3e42 : #e6e8eb;
     out property <color> divider: dark_mode ? #38383c : #e8e8e8;
@@ -256,9 +257,6 @@ export component SurfaceCard inherits Rectangle {
     in property <bool> elevated: false;
     in property <bool> selected: false;
     in property <bool> enabled: true;
-    in property <bool> preview_hover: false;
-    in property <bool> preview_pressed: false;
-    in property <bool> preview_focus: false;
     in property <string> accessible_name;
     callback clicked;
 }
@@ -338,11 +336,11 @@ focus and hover/press visuals follow native Fluent and the host Palette/font.
 export component IconButton inherits Rectangle {
     in property <image> icon;
     in property <string> tooltip;
+    in property <string> accessible_name;
     in property <bool> danger: false;
     in property <bool> enabled: true;
-    in property <bool> preview_hover: false;
-    in property <bool> preview_pressed: false;
-    in property <bool> preview_focus: false;
+    out property <bool> has-focus: command.has-focus;
+    out property <bool> pressed: command.pressed;
     callback clicked;
 }
 ```
@@ -354,11 +352,11 @@ export component IconButton inherits Rectangle {
 ```slint
 export component SegmentButton inherits Rectangle {
     in property <string> text;
+    in property <string> accessible_name;
     in property <bool> selected: false;
     in property <bool> enabled: true;
-    in property <bool> preview_hover: false;
-    in property <bool> preview_pressed: false;
-    in property <bool> preview_focus: false;
+    out property <bool> has-focus: command.has-focus;
+    out property <bool> pressed: command.pressed;
     callback clicked;
 }
 ```
@@ -373,7 +371,6 @@ export component FluentTextField inherits Rectangle {
     in property <string> placeholder_text;
     in property <bool> enabled: true;
     in property <string> error_text;
-    in property <bool> preview_focus: false;
     callback accepted(string);
     callback edited(string);
 }
@@ -494,9 +491,9 @@ Pages should remain transparent so they do not cover the frame.
 ```slint
 export component WindowControlButton inherits Rectangle {
     in property <image> icon;
-    in property <string> symbol;
     in property <string> label;
     in property <bool> close_button: false;
+    in property <bool> enabled: true;
     callback clicked;
 }
 ```
@@ -537,7 +534,6 @@ export component EmptyState inherits SurfaceCard {
     in property <string> title;
     in property <string> message;
     in property <image> icon: Icons.status_info;
-    in property <string> milestone;
 }
 ```
 
@@ -652,7 +648,7 @@ Tab/Shift+Tab traverse labels and independent chevrons; Enter/Space activate the
 Right requests expansion. Left requests collapse or focuses an enabled visible
 ancestor. These direction keys never invoke a destination. Disabling or hiding
 a focused row recovers to a visible enabled ancestor or the pane focus scope.
-Back and pane-toggle buttons clear focus when disabled. Compact tooltips expose
+Back and pane-toggle buttons suppress commands and visible native focus when disabled; native logical focus may remain. Compact tooltips expose
 ancestor-qualified labels outside the pane clip.
 
 Native coverage and limits: [Phase 7 report](NAVIGATION_REBUILD_PHASE7.md).
@@ -673,3 +669,54 @@ implementing each new contract. SettingRow's slot controls explicitly bind enabl
 NavigationView/SegmentButton retain host-controlled state. API probe focus methods,
 slot children, narrow editor and host setters compile without claiming runtime
 behavior. Native wrapper decisions and public type limits are in NATIVE_REUSE.md.
+
+
+## P3 current contracts and Breaking changes
+
+- IconButton and SegmentButton remove all three preview inputs and add
+  `accessible_name`, read-only `has-focus` and `pressed`. Bind the name on the
+  wrapper, rather than inherited `accessible-label` on its non-interactive root.
+  IconButton falls back to tooltip; SegmentButton falls back to text. Empty icon
+  commands require an explicit name. Each has one visible native Button owner;
+  Return/Space or a completed pointer activation forwards one enabled command.
+- SegmentButton keeps `selected` as a host-controlled input. The native child uses
+  `checked: root.selected`, `checkable: false`, and accessible checkable/checked
+  bindings. Native activation cannot toggle the checked value. Programmatic
+  selection emits no clicked; the host can accept, reject or defer a request.
+  Selection now uses native checked fill. This is a button, not a RadioGroup.
+- IconButton uses native 20px icon tint and content sizing: the default is 44×32px
+  for a populated icon in pinned Fluent, and 32×32px for no icon. Explicitly forcing
+  less than native min-width can displace/clip icon content. Native Tooltips own
+  popup timing/position; TooltipHost remains passive content. Danger is the P2
+  neutral native surface plus passive outline, not a red-filled template.
+- WindowControlButton removes unused `symbol`, adds `enabled: true`, and defaults
+  to 46×40px instead of inheriting arbitrary parent height. Supply an image and
+  descriptive label. It composes IconButton; `close_button` selects the passive
+  danger outline. It never performs an OS action. Actual Gallery chrome stays native.
+- FluentTextField removes preview_focus. The native editor is top-aligned; the
+  wrapping error caption increases preferred/minimum height. Parent layouts should
+  honor that height. Text remains two-way, edited means user editing and accepted
+  means native single-line Return. FluentTextArea retains native multiline editing,
+  wrapping and its 76px minimum. Disabled is not read-only; no read-only API is added.
+- SurfaceCard removes preview inputs and whole-subtree opacity. Non-interactive
+  cards omit the pointer and accessibility helper subtrees; a disabled focus anchor
+  remains for inherited focus forwarding. Interactive arbitrary-child cards retain
+  a scoped custom action exception because public Button has no content slot.
+  Use passive children in an interactive card; embedded independent controls use a
+  non-interactive card. `enabled` gates the card action, not arbitrary child input;
+  the host controls child enabled and text colors. Default elevation remains off.
+- SettingRow.enabled styles its own title/description through Theme.text_disabled;
+  the slot control must bind enabled to the same host value. The row does not
+  recursively disable children or dim an already-disabled native control. Long
+  labels wrap and preferred height follows layout; callers must honor content size.
+- PageHeader places its optional native action below text below 420px width.
+  Titles/subtitles wrap. SectionHeader, MetricCard and EmptyState wrap their long
+  labels; EmptyState removes unused `milestone`. Badge and FluentIcon keep their
+  already-small presentation structures; icon optical offsets still need the wrapper.
+
+All command state is native-owned except documented host-controlled selection.
+Native logical focus may survive disable/re-enable; commands and disabled visuals
+are suppressed, and re-enabling emits no action. Forced undersized native text
+buttons still need sufficient width or abbreviated visible text and a full name.
+See [P3 evidence and limits](implementation/kit-fluent-v1/P3.md), including the
+unrun full IME, reader, modal lifecycle and WinUI reference comparison.

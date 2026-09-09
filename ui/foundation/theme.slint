@@ -35,6 +35,8 @@ export global Theme {
     out property <color> card_bg_muted: dark_mode ? #27272a : #fafafa;
     out property <color> text_primary: dark_mode ? #eeeeee : #1a1a1a;
     out property <color> text_secondary: dark_mode ? #bbbbbb : #666666;
+    // Disabled foreground for Kit-owned presentation; native controls keep Palette ownership.
+    out property <color> text_disabled: dark_mode ? #777777 : #8a8a8a;
     out property <color> text_tertiary: dark_mode ? #9d9d9d : #707070;
     out property <color> border_color: dark_mode ? #3e3e42 : #e6e8eb;
     out property <color> divider: dark_mode ? #38383c : #e8e8e8;

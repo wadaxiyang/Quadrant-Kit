@@ -11,8 +11,6 @@ export component EmptyState inherits SurfaceCard {
     in property <string> title;
     in property <string> message;
     in property <image> icon: Icons.status_info;
-    // Retained for source compatibility. Development milestone text is no longer rendered.
-    in property <string> milestone;
 
     min-height: 144px;
     preferred-height: max(root.min-height, empty_layout.preferred-height);
@@ -31,6 +29,7 @@ export component EmptyState inherits SurfaceCard {
 
         Text {
             text: root.title;
+            wrap: word-wrap;
             color: Theme.text_primary;
             font-size: Typography.body_large;
             font-weight: Typography.semibold;

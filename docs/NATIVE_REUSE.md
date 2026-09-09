@@ -1,11 +1,11 @@
-# Native reuse — current P2 policy and pinned capability evidence
+# Native reuse — current P3 policy and pinned capability evidence
 
 Applies to Slint/slint-build **1.17.1**, Fluent style, current Kit HEAD
-`737d0aae0975232f520cc1e82640d99e8eb49467` plus the uncommitted P0/P1/P2 changes
+the pushed P0–P2 source `f479338` plus the current P3 changes
 identified in the phase reports.
 This is a static audit, not a runtime compliance declaration. The P0 inventory is
 [AUDIT.md](implementation/kit-fluent-v1/AUDIT.md). P1 adds the current manifest and
-guard described below. P2 migrates FluentButton; other production components retain their scoped state.
+guard described below. P2 migrates FluentButton; P3 migrates IconButton, SegmentButton and window commands.
 
 ## Current manifest and guard
 
@@ -31,8 +31,7 @@ debt, never compliant). Component composition may contain pending children; this
 does not make the compound component native-compliant. Four exceptions record
 SurfaceCard, NavigationView, ToastHost and ModalManager with explicit scope.
 
-The remaining pending-command allowances are IconButton, SegmentButton,
-WindowControlButton and private NavigationItemRow. New pending commands fail.
+The only remaining pending-command allowance is private NavigationItemRow (P5C). New pending commands fail.
 Reviewed exceptions and pending implementations have canonical declaration/body
 digests; comments/formatting do not change them, new behavior does. There is no
 automatic refresh command. Review changes with concrete scope/behavior evidence,
@@ -98,8 +97,8 @@ Menu/ContextMenuArea wrapping and popup focus contracts remain P5 work.
 
 ## Current exceptions and migration state
 
-IconButton, SegmentButton, WindowControlButton and NavigationItemRow are
-`custom/pending-migration`; compositions using those children retain that gap.
+Only NavigationItemRow remains `custom/pending-migration` for P5C. IconButton and
+SegmentButton are native Button wrappers; WindowControlButton composes IconButton.
 PageHeader and ModalManager now use native Button through FluentButton. Text wrappers already use actual native editors. Badge, FluentIcon,
 TooltipHost content, surfaces, headings, metrics and empty state are presentation
 or structure candidates: no complete std equivalent exists. Navigation lacks a
@@ -128,3 +127,28 @@ implementation and existing finite overlay limitations remain. See PUBLIC_API fo
 Breaking changes and implementation/kit-fluent-v1/P2.md for actual input/visual/perf
 results. No completed screen-reader, full modal containment or OS-wide validation
 is inferred from those scoped checks.
+
+
+## P3 decisions
+
+IconButton has one visible Button and builtin Tooltip, with no duplicated keyboard,
+pointer or accessibility action. SegmentButton uses a non-toggling native Button
+with one-way checked binding and accessibility checked semantics. Window commands
+compose IconButton. Back retains a passive geometric arrow over the visible native
+surface; pane toggle uses native icon/expanded accessibility on its Button.
+Navigation search names now target the IconButton native owner. Gallery disclosure
+commands use std Button directly, keeping expandable semantics on the input node.
+
+SurfaceCard retains its explicitly reviewed optional content-slot action exception.
+Only interactive cards instantiate pointer/a11y helpers; one disabled focus anchor
+remains. P3 does not claim zero nodes for a passive card. TooltipHost remains a
+presenter; comprehensive Tooltip/Toast lifecycle work is still P5A. Navigation row
+input and model work is P5C; P3 does not disguise it as completed native reuse.
+
+Theme's public state is host-controlled. Host sets Theme mode/system state and
+Palette.color-scheme from the same decision, once per top-level component. Palette
+color outputs are never assigned. Kit-owned surfaces keep semantic Theme colors;
+native controls keep their Fluent palette and animation. Typography, spacing and
+Elevation recipes remain centralized and unchanged. Theme.text_disabled is the
+new shared disabled foreground for custom labels; it is not an upstream palette
+setter. Detailed differences and evidence are in P3.md and DESIGN_SYSTEM.md.

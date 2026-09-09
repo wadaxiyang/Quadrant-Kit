@@ -25,11 +25,11 @@ export component SelectionSpecimen inherits Specimen {
             spacing: UiConstants.space_8;
             Row {
                 StateSpecimen { label: "Segment selected"; SegmentButton { text: "Selected"; selected: true; } }
-                StateSpecimen { label: "Segment hover"; SegmentButton { text: "Hover"; preview_hover: true; } }
-                StateSpecimen { label: "Segment pressed"; SegmentButton { text: "Pressed"; preview_pressed: true; } }
+                StateSpecimen { label: "Hover to inspect"; SegmentButton { text: "Hover"; } }
+                StateSpecimen { label: "Press to inspect"; SegmentButton { text: "Pressed"; } }
             }
             Row {
-                StateSpecimen { label: "Segment focus"; SegmentButton { text: "Focus"; preview_focus: true; } }
+                StateSpecimen { label: "Tab to focus"; SegmentButton { text: "Focus"; } }
                 StateSpecimen { label: "Segment disabled"; SegmentButton { text: "Disabled"; enabled: false; } }
                 StateSpecimen { label: "Not selected"; SegmentButton { text: "Available"; } }
             }

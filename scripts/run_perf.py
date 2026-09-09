@@ -20,7 +20,7 @@ import time
 from capture_gallery_baseline import source_identity
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'text-input', 'hidden-toast')
+SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'text-input', 'hidden-toast', 'icons-100', 'segments-100')
 NEGATIVE = {
     'palette-write': ('import { Palette } from "std-widgets.slint"; export component Probe inherits Window { init => { Palette.accent-background = #ff0000; } }', 'Assignment on a output property'),
     'radio-index': ('import { RadioGroup } from "std-widgets.slint"; export component Probe inherits Window { RadioGroup { current-index: 0; RadioButton { text: "One"; } } }', 'Unknown property current-index'),
@@ -35,12 +35,21 @@ def scene_source(scene, variant):
     imports = 'import { Button, LineEdit, Palette } from "std-widgets.slint";\n'
     kit = variant == 'kit' and scene != 'empty'
     if kit:
-        imports += 'import { FluentButton, FluentTextField, ToastHost, Theme, ThemeMode } from "@quadrant-kit";\n'
+        imports += 'import { FluentButton, IconButton, SegmentButton, FluentTextField, ToastHost, Theme, ThemeMode } from "@quadrant-kit";\n'
     body = ''
     if scene.startswith('buttons-'):
         count = int(scene.split('-')[1])
         control = 'FluentButton' if kit else 'Button'
         body = f'for index in {count}: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 76px; height: 32px; text: "Test"; enabled: true; }}'
+    elif scene == 'icons-100':
+        control = 'IconButton' if kit else 'Button'
+        asset = (ROOT / 'assets/icons/add-16-regular.svg').as_posix()
+        extra = 'tooltip: "Add";' if kit else 'icon-size: 20px; colorize-icon: true; accessible-label: "Add"; Tooltip { Text { text: "Add"; } }'
+        body = f'for index in 100: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 44px; height: 32px; icon: @image-url("{asset}"); enabled: true; {extra} }}'
+    elif scene == 'segments-100':
+        control = 'SegmentButton' if kit else 'Button'
+        state = 'selected: mod(index, 2) == 0;' if kit else 'checked: mod(index, 2) == 0; checkable: false; accessible-checkable: true;'
+        body = f'for index in 100: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 76px; height: 32px; text: "Test"; enabled: true; {state} }}'
     elif scene == 'text-input':
         control = 'FluentTextField' if kit else 'LineEdit'
         body = f'{control} {{ x: 16px; y: 16px; width: 320px; height: 32px; text: "Text 输入"; }}'

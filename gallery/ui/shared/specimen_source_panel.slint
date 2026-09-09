@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { SegmentButton, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { Button } from "std-widgets.slint";
+import { Theme, Typography, UiConstants } from "@quadrant-kit";
 import { CodeSample } from "code_sample.slint";
 
 export component SpecimenSourcePanel inherits Rectangle {
@@ -23,11 +24,11 @@ export component SpecimenSourcePanel inherits Rectangle {
             Rectangle { height: 1px; background: Theme.border_color; }
             HorizontalLayout {
                 height: 48px; padding: 8px;
-                SegmentButton {
+                Button {
                     text: root.expanded ? "Hide source & details" : "Show source & details";
                     accessible-label: self.text + " · " + root.title;
                     accessible-expandable: true; accessible-expanded: root.expanded;
-                    selected: root.expanded;
+                    primary: root.expanded;
                     clicked => { self.focus(); root.expanded = !root.expanded; }
                 }
             }

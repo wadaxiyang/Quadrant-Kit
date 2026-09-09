@@ -1,8 +1,8 @@
-# Component status — P2 current contract
+# Component status — P3 current contract
 
 IMPLEMENTED means current code exists; VERIFIED is reserved for a named check at
 an identified source/environment. PARTIAL names a limited contract or verification
-scope. NOT_RUN means that dimension was not executed in P2. BACKLOG is planned or
+scope. NOT_RUN means that dimension was not executed in P3. BACKLOG is planned or
 explicitly excluded work. Static guard PASS never implies input, visual, performance
 or screen-reader acceptance. P0 historical evidence stays at its original source.
 
@@ -12,29 +12,29 @@ Contracts/defaults are in PUBLIC_API.md; per-component source/custom behavior an
 slots are in implementation/kit-fluent-v1/AUDIT.md. The table is reconciled with the
 facade, native manifest and real Gallery catalog, not used as a runtime registry.
 
-| Component | Implementation / native basis | Current contract and gap | Gallery scene | Input P2 | Visual P2 | Performance evidence | Accessibility P2 |
+| Component | Implementation / native basis | Current contract and gap | Gallery scene | Input P3 | Visual P3 | Performance evidence | Accessibility P3 |
 |---|---|---|---|---|---|---|---|
-| Badge | IMPLEMENTED / presenter; builtin presentation / composition | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | badge | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| EmptyState | IMPLEMENTED / composed; builtin presentation / composition | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | empty-state | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| FluentButton | IMPLEMENTED / native-wrapper; Button | Native command; current API and scoped evidence in P2 report | fluent-button | VERIFIED: P2 event + Windows input | VERIFIED: scoped light/dark states | P2 paired release comparison; see report | PARTIAL: one named native button; Windows indexed actions; no reader certification |
-| FluentIcon | IMPLEMENTED / presenter; builtin presentation / composition | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | icons | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| FluentTextArea | IMPLEMENTED / native-wrapper; TextEdit | PARTIAL: Two-way native editor; IME/scrolling runtime pending | fluent-text-area | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| FluentTextField | IMPLEMENTED / native-wrapper; LineEdit | PARTIAL: Two-way native editor; IME/focus/error layout runtime pending | fluent-text-field | NOT_RUN | NOT_RUN | P0 Release n=3 smoke; not budget acceptance | NOT_RUN |
-| IconButton | IMPLEMENTED / custom/pending-migration; builtin presentation / composition | PARTIAL: Icon command; custom input/inline tooltip pending P3/P5A | icon-button | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| MetricCard | IMPLEMENTED / composed; builtin presentation / composition | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | metric-card | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| ModalManager | IMPLEMENTED / reviewed-exception; Button | PARTIAL: Single confirmation; Return/Tab/restoration incomplete; P5B | modal-manager | PARTIAL: P2 request counts | PARTIAL: P2 confirmation buttons | NOT_RUN | PARTIAL: native button actions; no containment/reader claim |
-| NavigationBackButton | IMPLEMENTED / composed; Tooltip | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | navigation-foundations | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| NavigationContentSurface | IMPLEMENTED / presenter; builtin presentation / composition | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | navigation-foundations | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| NavigationPaneToggleButton | IMPLEMENTED / composed; Tooltip | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | navigation-foundations | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| NavigationView | IMPLEMENTED / reviewed-exception; LineEdit, ScrollView, Tooltip | PARTIAL: Host-owned navigation; bounded 256/model; behavior/perf pending P5C | navigation-view | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| PageHeader | IMPLEMENTED / composed; Button | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | page-header | PARTIAL: P2 action forwarding | PARTIAL: P2 button sizing | NOT_RUN | PARTIAL: native button action |
-| SectionHeader | IMPLEMENTED / composed; builtin presentation / composition | PARTIAL: Current presentation/composition exists; runtime dimensions not certified | section-header | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| SegmentButton | IMPLEMENTED / custom/pending-migration; builtin presentation / composition | PARTIAL: Host-controlled selected; custom input pending P3 | segment-button | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| SettingRow | IMPLEMENTED / composed; builtin presentation / composition | PARTIAL: Content slot; enabled must bind to actual child controls | setting-row | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| SurfaceCard | IMPLEMENTED / reviewed-exception; builtin presentation / composition | PARTIAL: Optional card action/slot; input helpers retained; scoped exception | surfaces | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| ToastHost | IMPLEMENTED / reviewed-exception; builtin presentation / composition | PARTIAL: One dismissal request surface; retained hidden tree; P5A lifecycle pending | toast-host | NOT_RUN | NOT_RUN | P0 Release n=3 smoke; not budget acceptance | NOT_RUN |
-| TooltipHost | IMPLEMENTED / presenter; builtin presentation / composition | PARTIAL: Inline content presenter; native tooltip service supplied by host/composition | tooltip-host | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
-| WindowControlButton | IMPLEMENTED / custom/pending-migration; builtin presentation / composition | PARTIAL: Action presenter only; custom input pending P3; OS actions host-owned | window-control-button | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN |
+| Badge | IMPLEMENTED / presenter; builtin presentation / composition | Retained minimal Rectangle/Text; semantic colors unchanged | badge | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| EmptyState | IMPLEMENTED / composed; builtin presentation / composition | Removed unused milestone; title/message wrap; passive card helpers conditional | empty-state | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| FluentButton | IMPLEMENTED / native-wrapper; Button | P2 visible Button retained; P3 regression suite | fluent-button | P2 regression suite | VERIFIED: catalog render; manual subset in P3.md | P2 report | NOT_RUN: reader
+| FluentIcon | IMPLEMENTED / presenter; builtin presentation / composition | Retained Image and optical-offset container; no resource scan | icons | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| FluentTextArea | IMPLEMENTED / native-wrapper; TextEdit | Native TextEdit retained; actual multiline Unicode/disabled edits checked | fluent-text-area | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| FluentTextField | IMPLEMENTED / native-wrapper; LineEdit | Removed preview; top-aligned native editor; error caption reserves wrapping height | fluent-text-field | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| IconButton | IMPLEMENTED / native-wrapper; Button, Tooltip | Native Button and Tooltip; native icon sizing; named action; passive danger outline | icon-button | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | P3 paired Release; steady memory NOT_RUN | PARTIAL: native Windows actions; no reader
+| MetricCard | IMPLEMENTED / composed; builtin presentation / composition | Label/value/hint wrap; passive SurfaceCard helper reduction | metric-card | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| ModalManager | IMPLEMENTED / reviewed-exception; Button | Native buttons retained; scoped regression only; full focus/lifecycle P5B | modal-manager | P2 regression suite | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| NavigationBackButton | IMPLEMENTED / composed; Button, Tooltip | IconButton forwards name/tooltip; passive arrow; native disabled behavior | navigation-foundations | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
+| NavigationContentSurface | IMPLEMENTED / presenter; builtin presentation / composition | Retained clipped host viewport; no routing, implicit padding or new effects | navigation-foundations | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| NavigationPaneToggleButton | IMPLEMENTED / composed; Button, Tooltip | Visible native Button owns icon/action/expanded semantics; pane_mode stays controlled | navigation-foundations | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
+| NavigationView | IMPLEMENTED / reviewed-exception; Button, LineEdit, ScrollView, Tooltip | Only migrated search name and button dependencies; row command/model work remains P5C | navigation-view | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| PageHeader | IMPLEMENTED / composed; Button | Native action stacks below 420px; title/subtitle wrap | page-header | P2 regression suite | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| SectionHeader | IMPLEMENTED / composed; builtin presentation / composition | Title/description wrap; retained passive badge and trailing slot | section-header | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| SegmentButton | IMPLEMENTED / native-wrapper; Button | Native non-toggling Button; selected remains host input; native checked fill | segment-button | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | P3 paired Release; steady memory NOT_RUN | PARTIAL: native Windows actions; no reader
+| SettingRow | IMPLEMENTED / composed; builtin presentation / composition | Own text uses disabled token; host binds slot enabled; long title/description wrap | setting-row | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
+| SurfaceCard | IMPLEMENTED / reviewed-exception; builtin presentation / composition | No preview or whole-subtree dimming; conditional pointer/a11y; retained optional slot-action exception | surfaces | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| ToastHost | IMPLEMENTED / reviewed-exception; Button, Tooltip | IconButton dismissal migrated transitively; full lifecycle and hidden-work debt P5A | toast-host | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | P0 hidden-toast debt retained | NOT_RUN: reader
+| TooltipHost | IMPLEMENTED / presenter; builtin presentation / composition | Retained passive content presenter; service callers use builtin Tooltip; full P5A work pending | tooltip-host | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
+| WindowControlButton | IMPLEMENTED / composed; Button, Tooltip | Composes IconButton; removed symbol; enabled and explicit 46x40 default; host owns OS action | window-control-button | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
 
 Private NavigationItemRow is separately recorded by the native guard (ordinary
 input pending P5C); NavigationModel is a pure private global, not a visual export.
@@ -50,7 +50,7 @@ No empty facade aliases or historical compatibility paths will be introduced.
 | Stage | Planned public components | Native basis / limits | Status |
 |---|---|---|---|
 | P2 | Existing FluentButton migration | Actual Button; passive danger outline, removed preview/accent/show_icon | PASS — scoped migration; see P2 report and native sizing limits |
-| P3 | Remaining current components | Propagate validated native route; tokens/slots only in scope | NOT_STARTED |
+| P3 | Remaining current components | Native buttons; tokens/slots/wrapping; all original 21 accounted for | PARTIAL — core gate PASS; WinUI reference NOT_RUN; P3 package BLOCKED |
 | P4A | FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox | CheckBox/Switch/RadioGroup/ComboBox; no assumed three-state or RadioGroup index | BACKLOG |
 | P4B | FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing | Slider/int SpinBox/ProgressIndicator/Spinner; no floating NumberBox claim | BACKLOG |
 | P4C | FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget | ScrollView/ListView/StandardListView/GroupBox/TabWidget; resolve @children/compiler virtualization first | BACKLOG |

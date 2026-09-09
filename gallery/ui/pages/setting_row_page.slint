@@ -7,16 +7,19 @@ import { SettingRow, Theme } from "@quadrant-kit";
 import { Switch } from "std-widgets.slint";
 export component SettingRowPage inherits GalleryPage {
     in-out property <bool> sample_switch: true;
+    private property <bool> row_enabled: true;
     page_description: "Compose a supporting description with a standard switch.";
     Specimen {
         specimen_title: "Labeled setting";
         specimen_description: "Compose a supporting description with a standard switch.";
-        source_code: "import { SettingRow } from \"@quadrant-kit\";\nimport { Switch } from \"std-widgets.slint\";\nSettingRow { title: \"Show hints\"; Switch { checked: true; } }";
+        source_code: "import { SettingRow } from \"@quadrant-kit\";\nimport { Switch } from \"std-widgets.slint\";\nSettingRow { title: \"Show hints\"; enabled: root.row_enabled; Switch { enabled: root.row_enabled; checked: true; } }";
         keyboard_info: "Tab enters the switch; Space changes its checked state.";
         accessibility_info: "Visible labels and state remain observable. Full screen-reader behavior is not yet verified.";
+        Switch { text: "Enable row and control"; checked <=> root.row_enabled; }
         SettingRow {
-            title: "Show hints"; description: "Supporting text stays beside the trailing control.";
-            Switch { checked <=> root.sample_switch; accessible-label: "Show hints"; }
+            enabled: root.row_enabled;
+            title: "Show hints"; description: "The host binds the row and Switch to the same enabled source. Long supporting text wraps without dimming the child a second time.";
+            Switch { enabled: root.row_enabled; checked <=> root.sample_switch; accessible-label: "Show hints"; }
         }
         Text { text: root.sample_switch ? "Hints enabled" : "Hints disabled"; color: Theme.text_secondary; }
     }

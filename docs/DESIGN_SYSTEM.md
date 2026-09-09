@@ -34,3 +34,40 @@ filled red style. The report retains before/after and event-driven state images,
 plus the native undersized-label limitation. This is a scoped std/Kit comparison;
 no new Microsoft.UI.Xaml runtime/reference, screen-reader or OS chrome comparison
 was performed. P0 reference identity and its limitations above remain historical.
+
+
+## P3 reference identity and visual changes
+
+Reference: Microsoft [WinUI Gallery v2.9.3](https://github.com/microsoft/WinUI-Gallery/releases/tag/v2.9.3),
+peeled Git commit `14a4a1a2b8ddc527dc4a7d5f7e743d7c2bc97db7` verified through GitHub
+on 2026-09-09. Its release has no downloadable assets; `Get-AppxPackage *WinUI*`
+returned no installed reference. An official Store acquisition attempt for product
+`9P3JFPWWDZRC` reached package execution but produced no further progress for over
+six minutes; the CLI was interrupted and a subsequent Appx query remained empty.
+This does not establish a completed installation. Actual WinUI capture/versioned runtime comparison
+is NOT_RUN. The pinned source is a reproducible reference identity, not a local
+WinUI rendering baseline. WinUI theme/DPI/font/screenshot-source fields are therefore
+NOT_RUN. No claim of WinUI pixel equivalence or completed reference acceptance.
+
+Kit captures use Windows build 26200, pinned Slint 1.17.1 Fluent/winit software,
+Light/Dark, system Segoe UI Variable Text requested at 14px, 100% simulated scale
+unless the image manifest says otherwise. Font fallback and real monitor transitions
+remain NOT_RUN. No font file or Microsoft runtime is redistributed.
+
+Before/after sources and retained images are in the P3 report. Icon/segment/window
+surfaces now use native backgrounds, focus, disabled tint and 150ms native animation.
+Selection is filled native checked presentation; danger stays a passive red outline.
+IconButton grows naturally to 44×32 for its 20px icon rather than squeezing native
+padding into 32px. No shared Palette output is overwritten to imitate old visuals.
+
+The new Theme.text_disabled is #777777 (Dark) / #8a8a8a (Light) for custom presentation.
+SettingRow and SurfaceCard stop dimming entire child subtrees. Default card elevation
+remains off; no new shadows/blur or animations are added. Existing Typography
+12/14/18/20/28, spacing and 4/8px radii remain. Field errors reserve wrapping height;
+headers and metric/empty labels wrap; PageHeader stacks the action below 420px.
+FluentIcon retains its offset container and Badge its two presentation elements:
+removing those would lose useful layout/semantic behavior rather than remove debt.
+
+Actual P3 Windows Gallery Light/Dark captures confirmed readable native caption
+controls after DWM composition. Software snapshots of transparent caption pixels
+do not represent that composed result. See the P3 report for source and observations.

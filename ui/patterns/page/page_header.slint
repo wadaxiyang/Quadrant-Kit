@@ -16,16 +16,19 @@ export component PageHeader inherits Rectangle {
     preferred-height: max(root.min-height, header_layout.preferred-height);
     vertical-stretch: 0;
 
-    header_layout := HorizontalLayout {
+    header_layout := GridLayout {
+        property <bool> compact: root.width < 420px;
         spacing: UiConstants.space_16;
 
         VerticalLayout {
+            row: 0; col: 0;
             horizontal-stretch: 1;
             spacing: UiConstants.space_4;
             alignment: center;
 
             Text {
                 text: root.title;
+                wrap: word-wrap;
                 color: Theme.text_primary;
                 font-size: Typography.title;
                 font-weight: Typography.semibold;
@@ -36,12 +39,12 @@ export component PageHeader inherits Rectangle {
                 color: Theme.text_secondary;
                 font-size: Typography.body;
                 wrap: word-wrap;
-                max-height: 40px;
-                overflow: elide;
             }
         }
 
         if root.show_action: FluentButton {
+            row: header_layout.compact ? 1 : 0;
+            col: header_layout.compact ? 0 : 1;
             min-width: 112px;
             text: root.action_text;
             primary: true;

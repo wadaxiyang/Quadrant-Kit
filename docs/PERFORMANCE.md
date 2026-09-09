@@ -112,3 +112,14 @@ deltas were -0.214/+0.481ms. Single-button memory was unchanged from 1s to 2s in
 all samples; 100-button observations included small changes, so full steady-state
 and idle acceptance remain unclaimed. See [P2 report](implementation/kit-fluent-v1/P2.md)
 for exact raw data, environment and all unrun metrics.
+
+
+## P3 paired foundation scenes
+
+`python scripts/run_perf.py --profile release --scenes icons-100 segments-100 --samples 30`
+compares 100 actual icon commands and 100 host-bound selected/unselected commands.
+Both icon variants use the same embedded asset, 20px icon, 44×32 geometry and tooltip
+text; the native reference uses a minimal Tooltip Text while Kit uses TooltipHost.
+Selected native Button disables automatic toggling just like SegmentButton. The
+window/features/font/DPI and sample rules above remain unchanged. No budget is
+raised. P3 report separates successful collection from budget/steady-state claims.

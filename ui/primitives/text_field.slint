@@ -14,16 +14,16 @@ export component FluentTextField inherits Rectangle {
     in property <string> placeholder_text;
     in property <bool> enabled: true;
     in property <string> error_text;
-    in property <bool> preview_focus: false;
     callback accepted(string);
     callback edited(string);
 
     forward-focus: field_input;
-    min-height: UiConstants.input_height;
+    min-height: root.preferred-height;
     preferred-height: root.error_text == "" ? UiConstants.input_height : UiConstants.input_height + UiConstants.space_4 + error_label.preferred-height;
     background: transparent;
 
     field_input := LineEdit {
+        y: 0px;
         width: 100%;
         height: UiConstants.input_height;
         text <=> root.text;
@@ -35,19 +35,11 @@ export component FluentTextField inherits Rectangle {
     }
 
     if root.error_text != "": Rectangle {
+        y: 0px;
         width: 100%;
         height: UiConstants.input_height;
         border-width: 2px;
         border-color: Theme.danger;
-        border-radius: UiConstants.control_radius;
-        background: transparent;
-    }
-
-    if root.error_text == "" && root.preview_focus: Rectangle {
-        width: 100%;
-        height: UiConstants.input_height;
-        border-width: 2px;
-        border-color: Theme.focus_ring;
         border-radius: UiConstants.control_radius;
         background: transparent;
     }
@@ -60,5 +52,7 @@ export component FluentTextField inherits Rectangle {
         color: Theme.danger;
         font-size: Typography.caption;
         wrap: word-wrap;
+        height: self.preferred-height;
+        vertical-alignment: top;
     }
 }

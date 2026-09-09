@@ -180,3 +180,14 @@ Remaining P1 work includes complete native keyboard/IME/screen-reader coverage,
 modal Tab containment/restoration and the full state/size/backend matrix. These
 are explicit coverage limits. Product's user-accepted tray/reminder/DPI scenarios
 do not certify every Kit component or operating-system theme transition.
+
+
+## Fluent evolution P3 current gate
+
+Run the common checks above and `python scripts/run_button_checks.py --suite foundation`.
+The current API snapshot intentionally changes seven declarations; the component
+set stays at 35 names/21 visuals, now 234 properties and 20 callbacks. The P3 report
+records reviewed removals/additions, true input evidence, all-page rendering and
+retained intermediate failures. Historical API counts above remain historical.
+Only NavigationItemRow retains pending native-command debt. Full reader/IME,
+WinUI runtime reference, modal lifecycle and P5 navigation acceptance remain separate.

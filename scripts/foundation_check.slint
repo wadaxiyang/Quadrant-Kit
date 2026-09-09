@@ -1,0 +1,70 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette, Switch } from "std-widgets.slint";
+import { Theme, ThemeMode, IconButton, SegmentButton, FluentIcons, WindowControlButton,
+    NavigationBackButton, NavigationPaneToggleButton, NavigationPaneMode, FluentTextField,
+    FluentTextArea, SettingRow, FluentButton, SurfaceCard, PageHeader, ToastHost } from "@quadrant-kit";
+
+export component FoundationCheck inherits Window {
+    title: "Kit P3 Foundation Verification";
+    width: 760px; height: 760px;
+    default-font-family: "Segoe UI Variable Text";
+    default-font-size: 14px;
+    background: Theme.background;
+    in-out property <bool> controls_enabled: true;
+    in-out property <bool> selected: false;
+    in-out property <bool> dark: false;
+    in-out property <bool> interactive_card: true;
+    in-out property <bool> toast_shown: false;
+    in-out property <string> field_text;
+    in-out property <string> area_text;
+    out property <int> icons;
+    out property <int> segments;
+    out property <int> windows;
+    out property <int> backs;
+    out property <int> panes;
+    out property <int> field_edits;
+    out property <int> field_accepts;
+    out property <int> area_edits;
+    out property <int> slots;
+    out property <int> cards;
+    out property <int> dismissals;
+    out property <bool> icon_pressed: icon.pressed;
+    out property <bool> icon_focused: icon.has-focus;
+    out property <bool> selected_value: segment.selected;
+    out property <length> error_height: field.height;
+    public function focus-icon() { icon.focus(); }
+    public function focus-segment() { segment.focus(); }
+    public function focus-window() { window_action.focus(); }
+    public function focus-back() { back.focus(); }
+    public function focus-pane() { pane.focus(); }
+    public function focus-field() { field.focus(); }
+    public function focus-area() { area.focus(); }
+    public function focus-slot() { slot.focus(); }
+    public function focus-card() { card.focus(); }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    changed dark => {
+        Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light;
+        Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light;
+    }
+    Text { x: 24px; y: 8px; text: "Native commands / controlled selection / host-owned window actions"; color: Theme.text_primary; }
+    icon := IconButton { x: 24px; y: 40px; icon: FluentIcons.add; tooltip: "Add item"; accessible_name: "Add named item"; enabled: root.controls_enabled; clicked => { root.icons += 1; } }
+    segment := SegmentButton { x: 100px; y: 40px; width: 132px; text: "Controlled"; accessible_name: "Controlled segment"; selected: root.selected; enabled: root.controls_enabled; clicked => { root.segments += 1; } }
+    window_action := WindowControlButton { x: 260px; y: 40px; icon: FluentIcons.dismiss; label: "Demo close request"; close_button: true; enabled: root.controls_enabled; clicked => { root.windows += 1; } }
+    back := NavigationBackButton { x: 340px; y: 40px; enabled: root.controls_enabled; clicked => { root.backs += 1; } }
+    pane := NavigationPaneToggleButton { x: 410px; y: 40px; pane_mode: NavigationPaneMode.compact; enabled: root.controls_enabled; clicked => { root.panes += 1; } }
+    Switch { x: 500px; y: 40px; text: "Enable"; checked <=> root.controls_enabled; }
+    Switch { x: 620px; y: 40px; text: "Dark"; checked <=> root.dark; }
+    PageHeader { x: 24px; y: 100px; width: 280px; height: self.preferred-height; title: "A long page title that wraps"; subtitle: "A narrow header keeps the action on the next row."; show_action: true; action_text: "Apply"; }
+    Text { x: 400px; y: 110px; width: 320px; height: 72px; text: "Icon: " + root.icons + " · segment: " + root.segments + " · close: " + root.windows + "\nBack: " + root.backs + " · pane: " + root.panes; color: Theme.text_primary; wrap: word-wrap; }
+    field := FluentTextField { x: 24px; y: 280px; width: 220px; height: self.preferred-height; enabled: root.controls_enabled; text <=> root.field_text; placeholder_text: "Single line"; error_text: "错误：请输入完整的名称。Long validation text must wrap below the native editor and remain readable."; edited(value) => { root.field_edits += 1; } accepted(value) => { root.field_accepts += 1; } }
+    area := FluentTextArea { x: 300px; y: 280px; width: 300px; height: 110px; text <=> root.area_text; enabled: root.controls_enabled; placeholder_text: "Multi-line native editing"; edited(value) => { root.area_edits += 1; } }
+    SettingRow { x: 24px; y: 420px; width: 350px; height: self.preferred-height; title: "Long setting title wraps"; description: "Both the row and its slot bind to the same host enabled value."; enabled: root.controls_enabled;
+        slot := FluentButton { text: "Slot"; enabled: root.controls_enabled; clicked => { root.slots += 1; } }
+    }
+    card := SurfaceCard { x: 24px; y: 560px; width: 220px; height: 64px; interactive: root.interactive_card; enabled: root.controls_enabled; accessible_name: "Optional card action"; clicked => { root.cards += 1; }
+        Text { text: "Optional action / " + root.cards; color: Theme.text_primary; horizontal-alignment: center; vertical-alignment: center; }
+    }
+    SurfaceCard { x: 300px; y: 560px; width: 160px; height: 64px; Text { text: "Passive card"; color: Theme.text_primary; } }
+    ToastHost { x: 400px; y: 650px; width: 336px; shown: root.toast_shown; auto_dismiss: false; message: "Dismiss request"; dismissed => { root.dismissals += 1; root.toast_shown = false; } }
+}

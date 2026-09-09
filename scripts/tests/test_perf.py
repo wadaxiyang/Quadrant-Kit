@@ -30,6 +30,17 @@ class PerfTests(unittest.TestCase):
             self.assertIn('width: 76px; height: 32px;', source)
         self.assertNotIn('FluentButton', run_perf.scene_source('buttons-100', 'native'))
 
+    def test_foundation_pairs_match_geometry_and_controlled_state(self):
+        for variant in ('native', 'kit'):
+            icon = run_perf.scene_source('icons-100', variant)
+            self.assertIn('for index in 100:', icon)
+            self.assertIn('width: 44px; height: 32px;', icon)
+            self.assertIn('add-16-regular.svg', icon)
+        native = run_perf.scene_source('segments-100', 'native')
+        self.assertIn('checkable: false;', native)
+        self.assertIn('checked: mod(index, 2) == 0;', native)
+        self.assertIn('selected: mod(index, 2) == 0;', run_perf.scene_source('segments-100', 'kit'))
+
     def test_import_only_does_not_initialize_kit(self):
         source = run_perf.scene_source('import-only', 'kit')
         self.assertIn('@quadrant-kit', source)

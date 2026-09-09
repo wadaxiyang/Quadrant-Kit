@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 # SPDX-License-Identifier: GPL-3.0-only
-"""Build/run current FluentButton input checks in an isolated native Slint host."""
+"""Build/run current Button/foundation input checks in an isolated native Slint host."""
 import argparse
 from datetime import datetime, timezone
 import json
@@ -17,15 +17,18 @@ from run_perf import ROOT, execute, generate, resolved_fingerprint, source_ident
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-only', action='store_true', help='Build an interactive host without claiming input PASS')
+    parser.add_argument('--suite', choices=['button', 'foundation'], default='button')
     args = parser.parse_args(argv)
+    stem = 'foundation_check' if args.suite == 'foundation' else 'button_check'
+    executable_name = 'kit-p3-foundation-check' if args.suite == 'foundation' else 'kit-p2-button-check'
     output = ROOT / 'target/button-checks' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     source = source_identity(ROOT)
-    report = {'source': source, 'status': 'IN_PROGRESS', 'commands': [], 'backend': 'winit-software', 'input': 'public WindowEvent dispatch; OS input/accessibility is separate'}
+    report = {'suite': args.suite, 'source': source, 'status': 'IN_PROGRESS', 'commands': [], 'backend': 'winit-software', 'input': 'public WindowEvent dispatch; OS input/accessibility is separate'}
     project = output / 'consumer'
-    generate(project, (ROOT / 'scripts/button_check.slint').read_text(encoding='utf-8'), 'kit-p2-button-check', True)
+    generate(project, (ROOT / ('scripts/' + stem + '.slint')).read_text(encoding='utf-8'), executable_name, True)
     manifest = project / 'Cargo.toml'
     manifest.write_text(manifest.read_text(encoding='utf-8').replace('[dependencies]', '[dependencies]\npng = "=0.18.1"'), encoding='utf-8')
-    shutil.copyfile(ROOT / 'scripts/button_check_host.rs', project / 'src/main.rs')
+    shutil.copyfile(ROOT / ('scripts/' + stem + '_host.rs'), project / 'src/main.rs')
     env = dict(os.environ, CARGO_TARGET_DIR=str(ROOT / 'target'), SLINT_BACKEND='winit-software', SLINT_SCALE_FACTOR='1')
     for name in ('SLINT_STYLE', 'SLINT_DEFAULT_FONT', 'SLINT_FULLSCREEN', 'SLINT_DEBUG_PERFORMANCE'):
         env.pop(name, None)
@@ -38,7 +41,7 @@ def main(argv=None):
         report['commands'].append(build)
         if build['exit_code']:
             raise RuntimeError('Button verification build failed')
-        binary = ROOT / 'target/debug' / ('kit-p2-button-check.exe' if os.name == 'nt' else 'kit-p2-button-check')
+        binary = ROOT / 'target/debug' / (executable_name + '.exe' if os.name == 'nt' else executable_name)
         saved = output / binary.name
         shutil.copyfile(binary, saved)
         report['binary'] = str(saved)

@@ -14,12 +14,14 @@ export component SettingRow inherits Rectangle {
     in property <bool> enabled: true;
 
     min-height: 64px;
-    opacity: root.enabled ? 1 : 0.55;
+    // Slot controls bind enabled to the same host source; no recursive disabling.
+    preferred-height: max(root.min-height, row_layout.preferred-height);
+    vertical-stretch: 0;
     accessible-role: groupbox;
     accessible-label: root.title;
     accessible-description: root.description;
 
-    HorizontalLayout {
+    row_layout := HorizontalLayout {
         padding-top: UiConstants.space_10;
         padding-bottom: UiConstants.space_10;
         spacing: UiConstants.space_16;
@@ -30,7 +32,8 @@ export component SettingRow inherits Rectangle {
 
             Text {
                 text: root.title;
-                color: Theme.text_primary;
+                wrap: word-wrap;
+                color: root.enabled ? Theme.text_primary : Theme.text_disabled;
                 font-size: Typography.body;
                 font-weight: Typography.semibold;
                 vertical-alignment: center;
@@ -38,7 +41,7 @@ export component SettingRow inherits Rectangle {
 
             Text {
                 text: root.description;
-                color: Theme.text_secondary;
+                color: root.enabled ? Theme.text_secondary : Theme.text_disabled;
                 font-size: Typography.caption;
                 wrap: word-wrap;
                 vertical-alignment: center;

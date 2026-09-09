@@ -13,27 +13,25 @@ export component SurfaceCard inherits Rectangle {
     in property <bool> elevated: false;
     in property <bool> selected: false;
     in property <bool> enabled: true;
-    in property <bool> preview_hover: false;
-    in property <bool> preview_pressed: false;
-    in property <bool> preview_focus: false;
     in property <string> accessible_name;
     callback clicked;
+    private property <bool> hovered: false;
+    private property <bool> pressed: false;
+    changed interactive => { if (!root.interactive) { root.hovered = false; root.pressed = false; } }
 
     background: root.selected ? Elevation.card_selected_surface :
-                root.interactive && (card_touch.pressed || root.preview_pressed) ? Elevation.card_pressed_surface :
-                root.interactive && (card_touch.has-hover || root.preview_hover) ? Elevation.card_hover_surface : Elevation.card_surface;
-    border-width: (card_focus.has-focus || root.preview_focus) ? 2px : 1px;
-    border-color: (card_focus.has-focus || root.preview_focus) ? Theme.focus_ring :
+                root.interactive && root.enabled && root.pressed ? Elevation.card_pressed_surface :
+                root.interactive && root.enabled && root.hovered ? Elevation.card_hover_surface : Elevation.card_surface;
+    border-width: (root.interactive && root.enabled && card_focus.has-focus) ? 2px : 1px;
+    border-color: (root.interactive && root.enabled && card_focus.has-focus) ? Theme.focus_ring :
                   root.selected ? Elevation.card_selected_border : Elevation.card_border;
     border-radius: UiConstants.content_radius;
     drop-shadow-blur: root.elevated ? Elevation.card_blur : 0px;
     drop-shadow-color: root.elevated ? Elevation.card_shadow : transparent;
-    opacity: root.enabled ? 1 : 0.55;
     forward-focus: card_focus;
     accessible-role: none;
 
-    interactive_accessibility := Rectangle {
-        visible: root.interactive;
+    if root.interactive: Rectangle {
         accessible-role: button;
         accessible-label: root.accessible_name;
         accessible-enabled: root.enabled;
@@ -42,17 +40,19 @@ export component SurfaceCard inherits Rectangle {
         accessible-action-default => { if (root.enabled) { root.clicked(); } }
     }
 
-    card_touch := TouchArea {
+    if root.interactive: TouchArea {
+        changed has-hover => { root.hovered = self.has-hover; }
+        changed pressed => { root.pressed = self.pressed; }
         enabled: root.interactive && root.enabled;
         mouse-cursor: pointer;
-        clicked => { root.clicked(); }
+        clicked => { if (root.enabled) { root.clicked(); } }
     }
 
     card_focus := FocusScope {
         width: 0px;
         enabled: root.interactive && root.enabled;
         key-pressed(event) => {
-            if (event.text == Key.Return || event.text == Key.Space) {
+            if (root.interactive && root.enabled && (event.text == Key.Return || event.text == Key.Space)) {
                 root.clicked();
                 return accept;
             }

@@ -207,11 +207,6 @@
             "kind": "property",
             "direction": "in",
             "type": "image"
-          },
-          "milestone": {
-            "kind": "property",
-            "direction": "in",
-            "type": "string"
           }
         }
       },
@@ -227,10 +222,6 @@
         "icon": {
           "binding": ":",
           "expression": "Icons . status-info"
-        },
-        "milestone": {
-          "binding": null,
-          "expression": ""
         }
       }
     },
@@ -745,11 +736,6 @@
             "direction": "in",
             "type": "string"
           },
-          "preview-focus": {
-            "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
           "accepted": {
             "kind": "callback",
             "arguments": [
@@ -784,10 +770,6 @@
         "error-text": {
           "binding": null,
           "expression": ""
-        },
-        "preview-focus": {
-          "binding": ":",
-          "expression": "false"
         }
       }
     },
@@ -806,6 +788,11 @@
             "direction": "in",
             "type": "string"
           },
+          "accessible-name": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
           "danger": {
             "kind": "property",
             "direction": "in",
@@ -816,19 +803,14 @@
             "direction": "in",
             "type": "bool"
           },
-          "preview-hover": {
+          "has-focus": {
             "kind": "property",
-            "direction": "in",
+            "direction": "out",
             "type": "bool"
           },
-          "preview-pressed": {
+          "pressed": {
             "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "preview-focus": {
-            "kind": "property",
-            "direction": "in",
+            "direction": "out",
             "type": "bool"
           },
           "clicked": {
@@ -848,6 +830,10 @@
           "binding": null,
           "expression": ""
         },
+        "accessible-name": {
+          "binding": null,
+          "expression": ""
+        },
         "danger": {
           "binding": ":",
           "expression": "false"
@@ -856,17 +842,13 @@
           "binding": ":",
           "expression": "true"
         },
-        "preview-hover": {
+        "has-focus": {
           "binding": ":",
-          "expression": "false"
+          "expression": "command . has-focus"
         },
-        "preview-pressed": {
+        "pressed": {
           "binding": ":",
-          "expression": "false"
-        },
-        "preview-focus": {
-          "binding": ":",
-          "expression": "false"
+          "expression": "command . pressed"
         }
       }
     },
@@ -1530,6 +1512,11 @@
             "direction": "in",
             "type": "string"
           },
+          "accessible-name": {
+            "kind": "property",
+            "direction": "in",
+            "type": "string"
+          },
           "selected": {
             "kind": "property",
             "direction": "in",
@@ -1540,19 +1527,14 @@
             "direction": "in",
             "type": "bool"
           },
-          "preview-hover": {
+          "has-focus": {
             "kind": "property",
-            "direction": "in",
+            "direction": "out",
             "type": "bool"
           },
-          "preview-pressed": {
+          "pressed": {
             "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "preview-focus": {
-            "kind": "property",
-            "direction": "in",
+            "direction": "out",
             "type": "bool"
           },
           "clicked": {
@@ -1568,6 +1550,10 @@
           "binding": null,
           "expression": ""
         },
+        "accessible-name": {
+          "binding": null,
+          "expression": ""
+        },
         "selected": {
           "binding": ":",
           "expression": "false"
@@ -1576,17 +1562,13 @@
           "binding": ":",
           "expression": "true"
         },
-        "preview-hover": {
+        "has-focus": {
           "binding": ":",
-          "expression": "false"
+          "expression": "command . has-focus"
         },
-        "preview-pressed": {
+        "pressed": {
           "binding": ":",
-          "expression": "false"
-        },
-        "preview-focus": {
-          "binding": ":",
-          "expression": "false"
+          "expression": "command . pressed"
         }
       }
     },
@@ -1652,21 +1634,6 @@
             "direction": "in",
             "type": "bool"
           },
-          "preview-hover": {
-            "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "preview-pressed": {
-            "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
-          "preview-focus": {
-            "kind": "property",
-            "direction": "in",
-            "type": "bool"
-          },
           "accessible-name": {
             "kind": "property",
             "direction": "in",
@@ -1696,18 +1663,6 @@
         "enabled": {
           "binding": ":",
           "expression": "true"
-        },
-        "preview-hover": {
-          "binding": ":",
-          "expression": "false"
-        },
-        "preview-pressed": {
-          "binding": ":",
-          "expression": "false"
-        },
-        "preview-focus": {
-          "binding": ":",
-          "expression": "false"
         },
         "accessible-name": {
           "binding": null,
@@ -1766,6 +1721,11 @@
             "type": "color"
           },
           "text-secondary": {
+            "kind": "property",
+            "direction": "out",
+            "type": "color"
+          },
+          "text-disabled": {
             "kind": "property",
             "direction": "out",
             "type": "color"
@@ -2002,6 +1962,10 @@
         "text-secondary": {
           "binding": ":",
           "expression": "dark-mode ? # bbbbbb : # 666666"
+        },
+        "text-disabled": {
+          "binding": ":",
+          "expression": "dark-mode ? # 777777 : # 8a 8a 8a"
         },
         "text-tertiary": {
           "binding": ":",
@@ -2642,17 +2606,17 @@
             "direction": "in",
             "type": "image"
           },
-          "symbol": {
-            "kind": "property",
-            "direction": "in",
-            "type": "string"
-          },
           "label": {
             "kind": "property",
             "direction": "in",
             "type": "string"
           },
           "close-button": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "enabled": {
             "kind": "property",
             "direction": "in",
             "type": "bool"
@@ -2670,10 +2634,6 @@
           "binding": null,
           "expression": ""
         },
-        "symbol": {
-          "binding": null,
-          "expression": ""
-        },
         "label": {
           "binding": null,
           "expression": ""
@@ -2681,6 +2641,10 @@
         "close-button": {
           "binding": ":",
           "expression": "false"
+        },
+        "enabled": {
+          "binding": ":",
+          "expression": "true"
         }
       }
     }

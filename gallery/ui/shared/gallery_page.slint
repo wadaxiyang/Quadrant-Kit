@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { ScrollView } from "std-widgets.slint";
-import { Badge, BadgeKind, SegmentButton, Theme, Typography, UiConstants } from "@quadrant-kit";
+import { ScrollView, Button } from "std-widgets.slint";
+import { Badge, BadgeKind, Theme, Typography, UiConstants } from "@quadrant-kit";
 import { GalleryNavigation } from "gallery_catalog.slint";
 import { GalleryMetrics } from "gallery_metrics.slint";
 import { SpecimenSourcePanel } from "specimen_source_panel.slint";
@@ -43,13 +43,13 @@ export component GalleryPage inherits Rectangle {
                 }
                 HorizontalLayout {
                     spacing: UiConstants.space_8;
-                    if root.documentation != "": SegmentButton {
-                        width: 132px; text: "Documentation"; selected: root.documentation_open;
+                    if root.documentation != "": Button {
+                        width: 132px; text: "Documentation"; primary: root.documentation_open;
                         accessible-expandable: true; accessible-expanded: root.documentation_open;
                         clicked => { self.focus(); root.documentation_open = !root.documentation_open; }
                     }
-                    if root.page_source != "": SegmentButton {
-                        width: 88px; text: "Source"; selected: root.source_open;
+                    if root.page_source != "": Button {
+                        width: 88px; text: "Source"; primary: root.source_open;
                         accessible-expandable: true; accessible-expanded: root.source_open;
                         clicked => { self.focus(); root.source_open = !root.source_open; }
                     }

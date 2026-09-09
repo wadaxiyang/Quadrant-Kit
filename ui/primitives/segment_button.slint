@@ -5,60 +5,35 @@
 // Derived from wsl-dashboard src/ui/components/common.slint at
 // 948589a255a4bd8a3ff9c3de49e2e13109378fcd.
 
-import { Theme, Typography } from "../foundation/theme.slint";
-import { UiConstants } from "../foundation/constants.slint";
+import { Button } from "std-widgets.slint";
 
 export component SegmentButton inherits Rectangle {
     in property <string> text;
+    in property <string> accessible_name;
     in property <bool> selected: false;
     in property <bool> enabled: true;
-    // Development-gallery overrides; false in product surfaces.
-    in property <bool> preview_hover: false;
-    in property <bool> preview_pressed: false;
-    in property <bool> preview_focus: false;
+    out property <bool> has-focus: command.has-focus;
+    out property <bool> pressed: command.pressed;
     callback clicked;
 
-    min-width: 54px;
-    height: UiConstants.button_height;
-    border-radius: UiConstants.control_radius;
-    border-width: (segment_focus.has-focus || root.preview_focus) ? 2px : 1px;
-    border-color: (segment_focus.has-focus || root.preview_focus) ? Theme.focus_ring : (root.selected ? Theme.accent : Theme.input_border);
-    background: !root.enabled ? Theme.control_bg :
-                (segment_touch.pressed || root.preview_pressed) ? Theme.selected_bg :
-                root.selected ? Theme.selected_bg :
-                (segment_touch.has-hover || root.preview_hover) ? Theme.control_bg_hover : Theme.control_bg;
-    opacity: root.enabled ? 1 : 0.5;
-    forward-focus: segment_focus;
-    accessible-role: button;
-    accessible-label: root.text;
-    accessible-enabled: root.enabled;
-    accessible-checkable: true;
-    accessible-checked: root.selected;
-    accessible-action-default => { if (root.enabled) { root.clicked(); } }
+    preferred-width: command.min-width;
+    preferred-height: command.min-height;
+    width: command.min-width;
+    height: command.min-height;
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+    forward-focus: command;
 
-    Text {
+    command := Button {
+        width: 100%; height: 100%;
         text: root.text;
-        color: root.selected ? Theme.accent : Theme.text_primary;
-        font-size: Typography.body;
-        font-weight: root.selected ? Typography.semibold : Typography.regular;
-        horizontal-alignment: center;
-        vertical-alignment: center;
-    }
-
-    segment_focus := FocusScope {
         enabled: root.enabled;
-        key-pressed(event) => {
-            if (event.text == Key.Return || event.text == Key.Space) {
-                root.clicked();
-                return accept;
-            }
-            return reject;
-        }
-    }
-
-    segment_touch := TouchArea {
-        enabled: root.enabled;
-        mouse-cursor: pointer;
-        clicked => { root.clicked(); }
+        // Native activation never toggles state. Only the host owns selected.
+        checkable: false;
+        checked: root.selected;
+        accessible-checkable: true;
+        accessible-checked: root.selected;
+        accessible-label: root.accessible_name == "" ? root.text : root.accessible_name;
+        clicked => { if (root.enabled) { root.clicked(); } }
     }
 }

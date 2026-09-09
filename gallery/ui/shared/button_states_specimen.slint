@@ -15,7 +15,7 @@ export component ButtonStatesSpecimen inherits Specimen {
 
     specimen_title: "Button and IconButton states";
     source_code: "import { FluentButton } from \"@quadrant-kit\";\n\nFluentButton { text: \"Unavailable\"; enabled: false; }\nFluentButton { text: \"Delete\"; danger: true; primary: true; }";
-    specimen_description: "FluentButton uses real pointer and keyboard states. IconButton static previews remain pending P3. Danger keeps a neutral native surface with a red outline.";
+    specimen_description: "FluentButton uses real pointer and keyboard states. IconButton also uses live native states. Danger keeps a neutral native surface with a red outline.";
     specimen_kind: "States";
     keyboard_info: "Enter and Space activate; pointer hover and press use the same visual hierarchy.";
     accessibility_info: "Disabled controls expose disabled state; danger is reinforced by label and color.";
@@ -34,8 +34,8 @@ export component ButtonStatesSpecimen inherits Specimen {
         }
         Row {
             StateSpecimen { label: "Icon normal"; IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.icon_actions += 1; root.last_icon_action = "Add"; } } }
-            StateSpecimen { label: "Icon focus"; IconButton { icon: FluentIcons.edit; tooltip: "Edit"; preview_focus: true; clicked => { root.icon_actions += 1; root.last_icon_action = "Edit"; } } }
-            StateSpecimen { label: "Icon danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; preview_hover: true; clicked => { root.icon_actions += 1; root.last_icon_action = "Delete"; } } }
+            StateSpecimen { label: "Icon focus"; IconButton { icon: FluentIcons.edit; tooltip: "Edit"; clicked => { root.icon_actions += 1; root.last_icon_action = "Edit"; } } }
+            StateSpecimen { label: "Icon danger"; IconButton { icon: FluentIcons.delete; tooltip: "Delete"; danger: true; clicked => { root.icon_actions += 1; root.last_icon_action = "Delete"; } } }
         }
     }
     Text {

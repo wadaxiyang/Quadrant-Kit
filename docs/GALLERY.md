@@ -412,3 +412,17 @@ python scripts/capture_gallery_baseline.py --mode Navigation --page 7 --output-d
 This generates 68 raw render scenes at 1040×800, 100%: 17 fixtures × two themes ×
 two pane modes. It complements native input checks; it is not the later full DPI
 matrix. The default-values specimen follows the controlled hierarchy specimen.
+
+
+## Fluent evolution P3
+
+Migrated icon/segment/card/field specimens use actual pointer and keyboard state;
+production preview flags are removed. Gallery disclosure buttons use native Button
+with expandable semantics. SettingRow demonstrates one host enabled binding shared
+with its native Switch. Existing typed catalog routes remain unchanged.
+
+`python scripts/run_button_checks.py --suite foundation` runs the isolated P3 host;
+`--build-only` produces an interactive executable. The default button suite continues
+to test FluentButton/Modal/PageHeader. These hosts never enter ordinary Gallery startup.
+Source, generated consumer, logs, binary and software images are retained under target/.
+See the P3 report for actual counts, catalog captures and native input limits.

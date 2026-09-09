@@ -66,7 +66,7 @@ export component SurfacesPage inherits GalleryPage {
     Specimen {
         specimen_title: "SurfaceCard states and variants";
         source_code: "import { SurfaceCard } from \"@quadrant-kit\";\n\nSurfaceCard { elevated: true; }\nSurfaceCard { selected: true; }";
-        specimen_description: "Static preview inputs make hover, pressed, and focus snapshots deterministic without firing business callbacks.";
+        specimen_description: "Move the pointer, press, or Tab to these live surfaces to inspect native input states.";
         specimen_kind: "States";
         keyboard_info: "Only interactive variants enter Tab order; decorative cards are not controls.";
         accessibility_info: "Normal/elevated cards have no role; interactive variants expose explicit semantics.";
@@ -75,13 +75,13 @@ export component SurfacesPage inherits GalleryPage {
             spacing: UiConstants.space_12;
             Row {
                 CardStateSample { label: "Base"; }
-                CardStateSample { label: "Hover"; interactive: true; preview_hover: true; }
-                CardStateSample { label: "Pressed"; interactive: true; preview_pressed: true; }
+                CardStateSample { label: "Hover to inspect"; interactive: true; }
+                CardStateSample { label: "Press to inspect"; interactive: true; }
             }
             Row {
                 CardStateSample { label: "Elevated"; elevated: true; }
                 CardStateSample { label: "Selected"; selected: true; }
-                CardStateSample { label: "Keyboard focus"; interactive: true; preview_focus: true; }
+                CardStateSample { label: "Tab to focus"; interactive: true; }
             }
             Row {
                 CardStateSample { label: "Disabled"; interactive: true; enabled: false; }

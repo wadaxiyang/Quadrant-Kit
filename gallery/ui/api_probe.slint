@@ -47,8 +47,8 @@ export component KitApiProbe inherits Window {
         SurfaceCard { interactive: true; accessible_name: "Sample"; clicked => { root.activated = true; } Text { text: "Card child"; } }
         Badge { text: "Sample"; kind: BadgeKind.accent; }
         command := FluentButton { text: "Apply"; icon: FluentIcons.add; enabled: root.controls_enabled; primary: true; clicked => { root.activated = true; } }
-        IconButton { icon: FluentIcons.add; tooltip: "Add"; clicked => { root.activated = true; } }
-        SegmentButton { text: "Select"; selected: root.activated; clicked => { root.activated = !root.activated; } }
+        IconButton { icon: FluentIcons.add; tooltip: "Add"; accessible_name: "Create item"; enabled: root.controls_enabled; clicked => { root.activated = true; } }
+        SegmentButton { text: "Select"; accessible_name: "Select preference"; enabled: root.controls_enabled; selected: root.activated; clicked => { root.activated = !root.activated; } }
         editor := FluentTextField { width: 160px; enabled: root.controls_enabled; text <=> root.sample_text; accepted(value) => { root.sample_text = value; } edited(value) => { root.sample_text = value; } }
         FluentTextArea { text <=> root.sample_text; edited(value) => { root.sample_text = value; } }
         SettingRow { title: "Preference"; description: "Sample"; enabled: root.controls_enabled;
@@ -70,7 +70,7 @@ export component KitApiProbe inherits Window {
             height: 40px;
             Text { text: root.navigation_entries[0].text; color: Theme.text_primary; }
         }
-        WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; clicked => { root.activated = false; } }
+        WindowControlButton { icon: FluentIcons.dismiss; label: "Close"; enabled: root.controls_enabled; clicked => { root.activated = false; } }
         SectionHeader { title: "Section"; badge_text: "New"; badge_kind: BadgeKind.neutral; Text { text: "Trailing content"; } }
         PageHeader { title: "Page"; show_action: true; action_text: "Add"; action_clicked => { root.activated = true; } }
         EmptyState { title: "Empty"; message: "No items"; }
