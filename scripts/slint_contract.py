@@ -346,7 +346,7 @@ def images(source):
 NATIVE_STRUCT_FIELDS = {'Date': ('day', 'month', 'year'), 'Time': ('hour', 'minute', 'second')}
 
 
-NATIVE_COMPONENT_EXPORTS = frozenset({'RadioGroup'})
+NATIVE_COMPONENT_EXPORTS = frozenset({'RadioGroup', 'ListView', 'TabWidget'})
 
 
 def native_type(name):

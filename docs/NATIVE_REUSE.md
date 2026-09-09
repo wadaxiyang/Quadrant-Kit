@@ -163,3 +163,8 @@ there is no extra wrapper tree, activation forwarding or private Slint import.
 P4B adds direct Slider/SpinBox subclasses and conditional public ProgressIndicator/Spinner
 children. running/visible control native indeterminate work; Kit adds no Timer or
 drag/edit handler. Native numeric bounds and int/read-only semantics remain native.
+
+P4C preserves ListView/TabWidget native identity through verified static exports;
+ScrollView/GroupBox inherit native slots. StandardListView composes one native view
+and names its limited enabled behavior scrollbars-enabled. No copied row/scroll/tab
+input and no claim that native container enabled recursively disables content.

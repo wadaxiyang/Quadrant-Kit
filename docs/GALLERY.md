@@ -431,3 +431,5 @@ P4A: `native-selection` is a conditional reachable page for all four selection
 wrappers, sharing checked state and demonstrating disabled, empty and long models.
 
 P4B: conditional `native-numeric` page demonstrates all four numeric/progress exports.
+
+P4C: `native-containers` conditionally demonstrates five exports and 10,000 list rows.

@@ -1,7 +1,7 @@
 # Architecture
 
 Compiler-special native controls may be statically re-exported through a primitive
-module when subclassing loses their native child grammar (currently RadioGroup).
+module when subclassing loses their native child grammar (currently RadioGroup, ListView and TabWidget).
 The facade still only re-exports current contracts; this does not create a runtime
 registry. The pinned runtime probe and exact native-owner guard cover this path.
 

@@ -46,6 +46,12 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | FluentProgressBar | IMPLEMENTED / native-wrapper; ProgressIndicator | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
 | FluentProgressRing | IMPLEMENTED / native-wrapper; Spinner | P4B native numeric/progress contract | native-numeric | P4B report | P4B report | P4B report | NOT_RUN: reader |
 
+| FluentScrollView | IMPLEMENTED / native-wrapper; ScrollView | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
+| FluentListView | IMPLEMENTED / native-wrapper; ListView | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
+| FluentStandardListView | IMPLEMENTED / native-wrapper; StandardListView | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
+| FluentGroupBox | IMPLEMENTED / native-wrapper; GroupBox | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
+| FluentTabWidget | IMPLEMENTED / native-wrapper; TabWidget | P4C native container contract and limitations | native-containers | P4C report | P4C report | P4C report | NOT_RUN: reader |
+
 Private NavigationItemRow is separately recorded by the native guard (ordinary
 input pending P5C); NavigationModel is a pure private global, not a visual export.
 Existing historical navigation input observations do not become P1 runtime tests.
@@ -65,7 +71,7 @@ No placeholder exports or historical compatibility paths are introduced; compile
 | P3 | Remaining current components | Native buttons; tokens/slots/wrapping; all original 21 accounted for | PARTIAL — core gate PASS; WinUI reference NOT_RUN; P3 package PASS after commit |
 | P4A | FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox | CheckBox/Switch/RadioGroup/ComboBox; no assumed three-state or RadioGroup index | PASS — P4A scoped contract |
 | P4B | FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing | Slider/int SpinBox/ProgressIndicator/Spinner; no floating NumberBox claim | PASS — P4B scoped contract |
-| P4C | FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget | ScrollView/ListView/StandardListView/GroupBox/TabWidget; resolve @children/compiler virtualization first | BACKLOG |
+| P4C | FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget | ScrollView/ListView/StandardListView/GroupBox/TabWidget; verified direct repeater / fixed Tab grammar | PASS — P4C scoped contract |
 | P4D | FluentStandardTableView, FluentDatePicker, FluentTimePicker | StandardTableView, DatePickerPopup/TimePickerPopup; actual structs/ranges and finite popup contract | BACKLOG |
 | P5A | Tooltip service and existing ToastHost | Builtin Tooltip plus content; finite toast lifecycle | NOT_STARTED |
 | P5B | Existing ModalManager | Fixed confirmation, explicit focus protocol; not complete ContentDialog | NOT_STARTED |

@@ -3,6 +3,7 @@
 import {
     FluentCheckBox, FluentSwitch, FluentRadioGroup, FluentComboBox,
     FluentSlider, FluentSpinBox, FluentProgressBar, FluentProgressRing,
+    FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget,
     Elevation, Motion, Theme, ThemeMode, Typography, UiConstants, FluentIcons,
     FluentIcon, TooltipHost, SurfaceCard, Badge, BadgeKind, FluentButton, IconButton,
     SegmentButton, FluentTextField, FluentTextArea, SettingRow,
@@ -43,6 +44,12 @@ export component KitApiProbe inherits Window {
     default-font-size: Typography.body;
     default-font-family: Theme.ui_font_family;
     VerticalLayout {
+        FluentScrollView { height: 80px; viewport-height: 200px; Text { text: "Scroll content"; } }
+        FluentListView { height: 80px; for index in 10000: Text { text: index; height: 24px; } }
+        FluentStandardListView { height: 80px; model: [{ text: "One" }]; current-item: 0; scrollbars-enabled: true; }
+        FluentGroupBox { title: "Group"; enabled: root.controls_enabled; FluentSwitch { text: "Child"; enabled: root.controls_enabled; } }
+        FluentTabWidget { height: 100px; current-index: 0; Tab { title: "One"; Text { text: "One"; } } Tab { title: "Two"; Text { text: "Two"; } } }
+
         FluentSlider { value: 20; minimum: 0; maximum: 100; step: 5; enabled: root.controls_enabled; }
         FluentSpinBox { value: 12; read-only: true; step-size: 2; }
         FluentProgressBar { progress: 0.5; running: false; indeterminate: true; }

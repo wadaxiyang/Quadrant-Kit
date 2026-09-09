@@ -14,7 +14,8 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P3 | PARTIAL — implementation and core gate PASS | [P3.md](P3.md): 20 Rust/71 Python tests, 49 runtime assertions, 140 Gallery captures, 120 paired Release processes, incremental rebuild/render restoration pass. Full WinUI runtime reference NOT_RUN; P3 source distribution BLOCKED on uncommitted source. |
 | P4A | PASS — scoped selection contract | [P4A.md](P4A.md): four public native controls, 17 runtime assertions, 20 Rust/72 Python tests, 40 Gallery images and 30 paired release samples. Native RadioGroup grammar/keyboard limitations are explicit. |
 | P4B | PASS — scoped numeric/progress contract | [P4B.md](P4B.md): four exports, 17 runtime assertions, 73 Python tests, Gallery build/40 captures and 30 paired release samples. |
-| P4C–P4D | NOT_STARTED | Ordered continuation is authorized; commit each unit before proceeding. |
+| P4C | PASS — scoped native containers | [P4C.md](P4C.md): 16 runtime assertions, 10k virtual list, 74 Python tests, 40 Gallery captures and 30 release pairs. |
+| P4D | NOT_STARTED | Next authorized unit. |
 | P5A–P5E, P6 | NOT_STARTED | Authorized after P4, in order. |
 | P7–P8 | NOT_STARTED | Not part of this request. |
 
@@ -30,4 +31,5 @@ Both `verify_distribution.py --package` and `cargo package --locked -p quadrant-
 PASS after that commit; the prior dirty-source result remains historical. The
 WinUI runtime-reference gap remains explicit. P4A is complete under the new
 ordered P4/P5/P6 authorization and committed as `666b9e48ee49f789c1960cc8413d04fcf0486142`.
-Both source package commands passed after that commit. P4B is complete; next is P4C.
+Both source package commands passed after that commit. P4B was committed as
+`7f46e63f9bbdf4ccad52ff20f2553e496dfa8b74`; both package commands passed. P4C is complete; next is P4D.

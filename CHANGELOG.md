@@ -1,5 +1,15 @@
 # Changelog
 
+## Fluent evolution P4A–P4C — local, unpublished
+
+- Add native selection, numeric/progress and container controls through the facade.
+- Preserve RadioGroup/ListView/TabWidget native compiler identity and child grammar.
+- Document int SpinBox, host value bounds, static tabs and non-recursive group enable.
+- StandardListView exposes scrollbars-enabled for its limited native disable behavior.
+- Progress controls unload their native child when hidden and stop indeterminate
+  motion with running=false. No root runtime dependency or consumer update.
+
+
 ## Gallery native window chrome — local, unpublished
 
 - Separate the shared GalleryToolbar from Windows/macOS window adapters. Remove

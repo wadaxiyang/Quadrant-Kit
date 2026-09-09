@@ -203,3 +203,12 @@ records reviewed removals/additions, true input evidence, all-page rendering and
 retained intermediate failures. Historical API counts above remain historical.
 Only NavigationItemRow retains pending native-command debt. Full reader/IME,
 WinUI runtime reference, modal lifecycle and P5 navigation acceptance remain separate.
+
+### P4C native containers
+
+`python scripts/run_button_checks.py --suite containers` builds an actual Rust
+consumer and dispatches public WindowEvent input. It compares 10,000-item Kit/native
+ListView delegate counts and scroll extents, then exercises model replacement,
+StandardListView selection, wheel input, explicit group-child enable coordination
+and static native tabs. `python scripts/run_perf.py --scenes lists-10000 --samples 30`
+uses matching native/Kit virtual-list geometry and records all paired samples.

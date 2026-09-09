@@ -1,0 +1,36 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { FluentScrollView, FluentListView, FluentStandardListView, FluentGroupBox, FluentTabWidget, FluentSwitch, Theme } from "@quadrant-kit";
+export component NativeContainersPage inherits GalleryPage {
+    private property <bool> group_enabled: true;
+    private property <bool> option: false;
+    private property <int> selection: -1;
+    page_description: "Native viewports, virtual rows and fixed tabs. Container enabled state does not recursively disable arbitrary children.";
+    Specimen {
+        specimen_title: "10,000 rows and native selection";
+        specimen_description: "ListView retains its direct single-for grammar. Scroll each viewport independently.";
+        source_code: "import { FluentListView } from \"@quadrant-kit\";\nFluentListView { for index in 10000: Text { text: index; height: 28px; } }";
+        FluentListView { height: 168px;
+            for index in 10000: Text { text: "Virtual row / 虚拟行 " + index; height: 28px; color: Theme.text_primary; }
+        }
+        FluentStandardListView { height: 110px; current-item <=> root.selection; model: [{ text: "First" }, { text: "Second / 第二项" }, { text: "Third" }]; }
+        Text { text: "Selected index: " + root.selection; color: Theme.text_primary; }
+    }
+    Specimen {
+        specimen_title: "Native containers";
+        specimen_description: "Fixed Tab children; native scrolling; explicit enabled binding for GroupBox content.";
+        FluentSwitch { text: "Enable group and child"; checked <=> root.group_enabled; }
+        FluentGroupBox { title: "Options"; enabled: root.group_enabled;
+            FluentSwitch { text: "Host-coordinated child"; enabled: root.group_enabled; checked <=> root.option; }
+        }
+        FluentScrollView { height: 100px; viewport-height: 240px;
+            Text { text: "Native scroll extent / 原生滚动范围"; color: Theme.text_primary; y: 200px; height: 28px; }
+        }
+        FluentTabWidget { height: 160px;
+            Tab { title: "First"; Text { text: "Fixed native tab content"; color: Theme.text_primary; } }
+            Tab { title: "Second"; Text { text: "Second tab / 第二页"; color: Theme.text_primary; } }
+        }
+    }
+}

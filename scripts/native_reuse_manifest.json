@@ -713,6 +713,106 @@
         "P4B numeric runtime and current Gallery/probe"
       ],
       "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentScrollView",
+      "implementation": "ui/primitives/scroll_view.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "ScrollView",
+      "native_dependencies": [
+        "ScrollView"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate scrolling, row selection or tab activation"
+      ],
+      "validation": [
+        "P4C native runtime, 10k list and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentListView",
+      "implementation": "ui/primitives/list_view.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "ListView",
+      "native_dependencies": [
+        "ListView"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate scrolling, row selection or tab activation"
+      ],
+      "validation": [
+        "P4C native runtime, 10k list and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentStandardListView",
+      "implementation": "ui/primitives/standard_list_view.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "StandardListView",
+      "native_dependencies": [
+        "StandardListView"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate scrolling, row selection or tab activation"
+      ],
+      "validation": [
+        "P4C native runtime, 10k list and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentGroupBox",
+      "implementation": "ui/primitives/group_box.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "GroupBox",
+      "native_dependencies": [
+        "GroupBox"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate scrolling, row selection or tab activation"
+      ],
+      "validation": [
+        "P4C native runtime, 10k list and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
+    },
+    {
+      "component": "FluentTabWidget",
+      "implementation": "ui/primitives/tab_widget.slint",
+      "public": true,
+      "classification": "standard-control-wrapper",
+      "status": "native-wrapper",
+      "native_owner": "TabWidget",
+      "native_dependencies": [
+        "TabWidget"
+      ],
+      "missing_capability": "",
+      "permitted_custom_behavior": [],
+      "forbidden_custom_behavior": [
+        "Duplicate scrolling, row selection or tab activation"
+      ],
+      "validation": [
+        "P4C native runtime, 10k list and current Gallery/probe"
+      ],
+      "review_on_slint_upgrade": true
     }
   ]
 }

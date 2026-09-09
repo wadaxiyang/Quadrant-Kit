@@ -1,0 +1,59 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { ListView, Palette } from "std-widgets.slint";
+import { FluentListView, FluentStandardListView, FluentScrollView, FluentGroupBox, FluentTabWidget, FluentSwitch, Theme, ThemeMode } from "@quadrant-kit";
+export component ContainersCheck inherits Window {
+    width: 900px; height: 620px; default-font-family: "Segoe UI Variable Text";
+    background: Theme.background;
+    in-out property <bool> dark;
+    in-out property <int> count: 10000;
+    out property <int> created: 0;
+    out property <int> native_created: 0;
+    out property <int> last_seen: -1;
+    out property <int> native_last_seen: -1;
+    in-out property <length> list_y <=> list.viewport-y;
+    in-out property <length> native_y <=> native.viewport-y;
+    out property <length> list_extent: list.viewport-height;
+    out property <length> native_extent: native.viewport-height;
+    in-out property <length> scroll_y <=> scroll.viewport-y;
+    in-out property <[StandardListViewItem]> rows: [{ text: "One" }, { text: "Two" }, { text: "Three" }];
+    in-out property <int> current_item <=> standard.current-item;
+    out property <int> selections: 0;
+    in-out property <bool> group_enabled: false;
+    in-out property <bool> child_checked <=> child.checked;
+    in-out property <int> tab <=> tabs.current-index;
+    out property <int> tab_children: 0;
+    public function focus_standard() { standard.focus(); }
+    public function focus_child() { child.focus(); }
+    changed dark => { Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light; Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light; }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    list := FluentListView { x: 20px; y: 20px; width: 260px; height: 200px;
+        for index in root.count: Text {
+            text: "Kit row " + index; height: 24px; color: Theme.text_primary;
+            private property <int> row_index: index;
+            init => { root.created += 1; root.last_seen = max(root.last_seen, self.row_index); }
+            changed row_index => { root.last_seen = max(root.last_seen, self.row_index); }
+        }
+    }
+    native := ListView { x: 310px; y: 20px; width: 260px; height: 200px;
+        for index in root.count: Text {
+            text: "Native row " + index; height: 24px; color: Theme.text_primary;
+            private property <int> row_index: index;
+            init => { root.native_created += 1; root.native_last_seen = max(root.native_last_seen, self.row_index); }
+            changed row_index => { root.native_last_seen = max(root.native_last_seen, self.row_index); }
+        }
+    }
+    standard := FluentStandardListView { x: 600px; y: 20px; width: 260px; height: 200px; model: root.rows;
+        current-item-changed(index) => { root.selections += 1; }
+    }
+    scroll := FluentScrollView { x: 20px; y: 270px; width: 260px; height: 120px; viewport-height: 600px;
+        Text { y: 550px; height: 28px; text: "Bottom / 底部"; color: Theme.text_primary; }
+    }
+    FluentGroupBox { x: 310px; y: 250px; width: 280px; height: 150px; title: "Host-coordinated group"; enabled: root.group_enabled;
+        child := FluentSwitch { text: "Child"; enabled: root.group_enabled; }
+    }
+    tabs := FluentTabWidget { x: 20px; y: 440px; width: 550px; height: 150px;
+        Tab { title: "First"; Text { text: "First content"; color: Theme.text_primary; init => { root.tab_children += 1; } } }
+        Tab { title: "Second"; Text { text: "Second content"; color: Theme.text_primary; init => { root.tab_children += 1; } } }
+    }
+}

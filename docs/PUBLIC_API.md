@@ -805,3 +805,51 @@ export component FluentProgressRing inherits Rectangle {
 }
 
 ```
+
+## P4C container contracts
+
+ListView and TabWidget preserve the exact public native identity through verified
+static re-exports. ListView requires a single direct for child; TabWidget requires
+fixed Tab children (title only). No arbitrary slot wrapper obscures virtualization.
+TabWidget retains native in-out current-index/orientation; no close, reorder or
+multi-window TabView API. Native inactive tab content may remain instantiated:
+hosts coordinate expensive content lifecycle and timers.
+
+ScrollView inherits enabled (scrollbars), visible-width/height, viewport geometry,
+scrollbar policies, mouse-drag-pan-enabled and scrolled. enabled is not a recursive
+content disable switch. GroupBox similarly has title/enabled/content-padding and
+its native child slot; hosts bind each interactive child to the same enabled source.
+
+StandardListView's native enabled only governs scrollbars, so the Kit composition
+names it scrollbars-enabled. There is deliberately no misleading whole-control
+enabled property. Rows still support native selection. Native current-item storage
+is two-way shared, with current-item-changed and item-pointer-event forwarded once.
+Model replacement and selection reconciliation remain host responsibilities;
+programmatic current-item assignment is not a user selection event. Builtin
+StandardListViewItem, Point and PointerEvent are language types, not Kit aliases.
+
+```slint
+export component FluentScrollView inherits ScrollView { }
+export { ListView as FluentListView } from "std-widgets.slint";
+export component FluentStandardListView inherits Rectangle {
+    in property <[StandardListViewItem]> model <=> view.model;
+    in-out property <int> current-item <=> view.current-item;
+    in property <bool> scrollbars-enabled <=> view.enabled;
+    callback current-item-changed(int);
+    callback item-pointer-event(int, PointerEvent, Point);
+    min-width: 50px;
+    min-height: 50px;
+    preferred-width: 100%;
+    preferred-height: 100%;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+    forward-focus: view;
+    view := StandardListView {
+        width: 100%; height: 100%;
+        current-item-changed(index) => { root.current-item-changed(index); }
+        item-pointer-event(index, event, position) => { root.item-pointer-event(index, event, position); }
+    }
+}
+export component FluentGroupBox inherits GroupBox { }
+export { TabWidget as FluentTabWidget } from "std-widgets.slint";
+```

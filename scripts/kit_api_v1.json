@@ -329,6 +329,14 @@
       },
       "defaults": {}
     },
+    "FluentGroupBox": {
+      "signature": {
+        "kind": "component",
+        "inherits": "GroupBox",
+        "members": {}
+      },
+      "defaults": {}
+    },
     "FluentIcon": {
       "signature": {
         "kind": "component",
@@ -682,6 +690,14 @@
         }
       }
     },
+    "FluentListView": {
+      "signature": {
+        "kind": "component",
+        "inherits": "ListView",
+        "members": {}
+      },
+      "defaults": {}
+    },
     "FluentProgressBar": {
       "signature": {
         "kind": "component",
@@ -782,6 +798,14 @@
       },
       "defaults": {}
     },
+    "FluentScrollView": {
+      "signature": {
+        "kind": "component",
+        "inherits": "ScrollView",
+        "members": {}
+      },
+      "defaults": {}
+    },
     "FluentSlider": {
       "signature": {
         "kind": "component",
@@ -798,10 +822,73 @@
       },
       "defaults": {}
     },
+    "FluentStandardListView": {
+      "signature": {
+        "kind": "component",
+        "inherits": "Rectangle",
+        "members": {
+          "model": {
+            "kind": "property",
+            "direction": "in",
+            "type": "[ StandardListViewItem ]"
+          },
+          "current-item": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "int"
+          },
+          "scrollbars-enabled": {
+            "kind": "property",
+            "direction": "in",
+            "type": "bool"
+          },
+          "current-item-changed": {
+            "kind": "callback",
+            "arguments": [
+              "int"
+            ],
+            "return": "void",
+            "pure": false
+          },
+          "item-pointer-event": {
+            "kind": "callback",
+            "arguments": [
+              "int",
+              "PointerEvent",
+              "Point"
+            ],
+            "return": "void",
+            "pure": false
+          }
+        }
+      },
+      "defaults": {
+        "model": {
+          "binding": "<=>",
+          "expression": "view . model"
+        },
+        "current-item": {
+          "binding": "<=>",
+          "expression": "view . current-item"
+        },
+        "scrollbars-enabled": {
+          "binding": "<=>",
+          "expression": "view . enabled"
+        }
+      }
+    },
     "FluentSwitch": {
       "signature": {
         "kind": "component",
         "inherits": "Switch",
+        "members": {}
+      },
+      "defaults": {}
+    },
+    "FluentTabWidget": {
+      "signature": {
+        "kind": "component",
+        "inherits": "TabWidget",
         "members": {}
       },
       "defaults": {}

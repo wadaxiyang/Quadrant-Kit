@@ -56,6 +56,13 @@ class PerfTests(unittest.TestCase):
             self.assertIn('width: 76px; height: 3px;', source)
             self.assertIn('width: 32px; height: 32px;', source)
 
+    def test_virtual_list_pairs_preserve_direct_repeater(self):
+        for variant in ('native', 'kit'):
+            source = run_perf.scene_source('lists-10000', variant)
+            self.assertIn('for index in 10000: Text { height: 24px;', source)
+            self.assertIn('width: 780px; height: 400px;', source)
+            self.assertNotIn('@children', source)
+
     def test_unknown_scene_fails(self):
         with self.assertRaises(ValueError):
             run_perf.scene_source('unknown', 'kit')

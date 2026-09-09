@@ -128,16 +128,18 @@ class NativeReuseTests(unittest.TestCase):
                 public_api(self.root)
 
     def test_compiler_special_native_export_has_real_owner(self):
-        self.write('export { RadioGroup as Command } from "std-widgets.slint";')
-        record = self.record()
-        record.update(native_owner='RadioGroup', native_dependencies=['RadioGroup'])
-        self.assertEqual(verify(self.root, self.manifest(record))['public_components'], 1)
-        self.assertEqual(public_api(self.root)['Command']['signature']['inherits'], 'RadioGroup')
-        record['native_owner'] = 'Button'
-        with self.assertRaisesRegex(ContractError, 'owner mismatch'):
-            verify(self.root, self.manifest(record))
-        with self.assertRaisesRegex(ContractError, 'records differ'):
-            verify(self.root, {'schema_version': 1, 'slint_version': '1.17.1', 'records': []})
+        for owner in ('RadioGroup', 'ListView', 'TabWidget'):
+            with self.subTest(owner=owner):
+                self.write(f'export {{ {owner} as Command }} from "std-widgets.slint";')
+                record = self.record()
+                record.update(native_owner=owner, native_dependencies=[owner])
+                self.assertEqual(verify(self.root, self.manifest(record))['public_components'], 1)
+                self.assertEqual(public_api(self.root)['Command']['signature']['inherits'], owner)
+                record['native_owner'] = 'Button'
+                with self.assertRaisesRegex(ContractError, 'owner mismatch'):
+                    verify(self.root, self.manifest(record))
+                with self.assertRaisesRegex(ContractError, 'records differ'):
+                    verify(self.root, {'schema_version': 1, 'slint_version': '1.17.1', 'records': []})
 
     def test_current_repository_and_pending_debt_are_explicit(self):
         root = Path(__file__).resolve().parents[2]
