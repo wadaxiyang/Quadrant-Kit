@@ -1,5 +1,13 @@
 # Changelog
 
+## Fluent evolution P6 — local, unpublished
+
+- Add per-window enable/reduced-motion policy for Kit-owned durations.
+- Add cancelable 160 ms Toast/finite-modal opacity and read-only presentation state.
+- Disable input and restore focus on logical close; stop bounded cleanup at stable states.
+- Preserve native-owned motion; document real before/after frames, idle and remaining limits.
+
+
 ## Fluent evolution P5E — local, unpublished
 
 - Add controlled FluentExpander with explicit host-conditional slot and focus protocol.

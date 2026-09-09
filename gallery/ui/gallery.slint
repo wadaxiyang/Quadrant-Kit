@@ -43,6 +43,8 @@ import { NativePopupsPage } from "pages/native_popups_page.slint";
 
 import { NativeInlinePage } from "pages/native_inline_page.slint";
 
+import { MotionPage } from "pages/motion_page.slint";
+
 export { GalleryNavigation, GalleryComponentLink } from "shared/gallery_catalog.slint";
 export { NavigationValidationWindow } from "navigation_validation.slint";
 export { KitApiProbe } from "api_probe.slint";
@@ -154,6 +156,7 @@ export component DesignGalleryWindow inherits Window {
                     if root.gallery_destination == "native-selection": NativeSelectionPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "native-numeric": NativeNumericPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "native-containers": NativeContainersPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "motion": MotionPage { width:100%;height:100%;restore_epoch:root.sample_modal_restore_epoch;modal_requested(kind)=>{root.sample_modal_kind=kind;root.sample_modal_visible=true;} }
                     if root.gallery_destination == "native-inline": NativeInlinePage { width:100%;height:100%; }
                     if root.gallery_destination == "native-popups": NativePopupsPage { width:100%;height:100%; }
                     if root.gallery_destination == "native-pickers": NativePickersPage { width: 100%; height: 100%; }

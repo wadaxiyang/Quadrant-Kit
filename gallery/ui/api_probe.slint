@@ -18,6 +18,7 @@ import {
 
 // Compiled through gallery.slint; normal Gallery startup does not instantiate it.
 export component KitApiProbe inherits Window {
+    out property <bool> kit_motion_enabled: Motion.animations_enabled && !Motion.reduced_motion;
     width: 760px;
     height: 800px;
     in-out property <bool> controls_enabled: true;
@@ -106,7 +107,7 @@ export component KitApiProbe inherits Window {
         PageHeader { title: "Page"; show_action: true; action_text: "Add"; action_clicked => { root.activated = true; } }
         EmptyState { title: "Empty"; message: "No items"; }
         MetricCard { label: "Items"; value: "0"; hint: "Sample"; }
-        ToastHost { shown: false; kind: ToastKind.info; message: "Saved"; dismissed => { root.activated = false; } }
-        ModalManager { restore_focus_requested => { } shown: false; kind: ModalKind.warning; title: "Apply?"; accepted => { root.activated = true; } dismissed => { root.activated = false; } }
+        ToastHost { init=>{if self.presented || self.animating {root.activated=false;}} shown: false; kind: ToastKind.info; message: "Saved"; dismissed => { root.activated = false; } }
+        ModalManager { init=>{if self.presented || self.animating {root.activated=false;}} restore_focus_requested => { } shown: false; kind: ModalKind.warning; title: "Apply?"; accepted => { root.activated = true; } dismissed => { root.activated = false; } }
     }
 }

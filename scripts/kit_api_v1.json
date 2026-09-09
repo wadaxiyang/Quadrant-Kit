@@ -1765,6 +1765,16 @@
             "direction": "in",
             "type": "bool"
           },
+          "presented": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "animating": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
           "accepted": {
             "kind": "callback",
             "arguments": [],
@@ -1817,6 +1827,14 @@
         "danger-primary": {
           "binding": ":",
           "expression": "false"
+        },
+        "presented": {
+          "binding": ":",
+          "expression": "lifetime . presented"
+        },
+        "animating": {
+          "binding": ":",
+          "expression": "lifetime . animating"
         }
       }
     },
@@ -1825,6 +1843,16 @@
         "kind": "global",
         "inherits": null,
         "members": {
+          "animations-enabled": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "bool"
+          },
+          "reduced-motion": {
+            "kind": "property",
+            "direction": "in-out",
+            "type": "bool"
+          },
           "fast": {
             "kind": "property",
             "direction": "out",
@@ -1843,17 +1871,25 @@
         }
       },
       "defaults": {
+        "animations-enabled": {
+          "binding": ":",
+          "expression": "true"
+        },
+        "reduced-motion": {
+          "binding": ":",
+          "expression": "false"
+        },
         "fast": {
           "binding": ":",
-          "expression": "100ms"
+          "expression": "animations-enabled && ! reduced-motion ? 100ms : 0ms"
         },
         "standard": {
           "binding": ":",
-          "expression": "160ms"
+          "expression": "animations-enabled && ! reduced-motion ? 160ms : 0ms"
         },
         "slow": {
           "binding": ":",
-          "expression": "200ms"
+          "expression": "animations-enabled && ! reduced-motion ? 200ms : 0ms"
         }
       }
     },
@@ -3013,6 +3049,16 @@
             "direction": "in",
             "type": "bool"
           },
+          "presented": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
+          "animating": {
+            "kind": "property",
+            "direction": "out",
+            "type": "bool"
+          },
           "dismissed": {
             "kind": "callback",
             "arguments": [],
@@ -3037,6 +3083,14 @@
         "auto-dismiss": {
           "binding": ":",
           "expression": "true"
+        },
+        "presented": {
+          "binding": ":",
+          "expression": "lifetime . presented"
+        },
+        "animating": {
+          "binding": ":",
+          "expression": "lifetime . animating"
         }
       }
     },

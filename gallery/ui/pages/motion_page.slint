@@ -1,0 +1,25 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { GalleryPage } from "../shared/gallery_page.slint";
+import { Specimen } from "../shared/specimen.slint";
+import { ModalDecisionsSpecimen } from "../shared/modal_decisions_specimen.slint";
+import { Motion, ToastHost, FluentButton, FluentCheckBox, Theme } from "@quadrant-kit";
+export component MotionPage inherits GalleryPage {
+    in property <int> restore_epoch;
+    callback modal_requested(int);
+    private property <bool> toast_shown: false;
+    page_description: "Only Kit-owned Toast and finite confirmation opacity follow these per-window controls. Native controls retain their own motion.";
+    Specimen {
+        specimen_title: "Per-window motion policy";
+        specimen_description: "Reducing or disabling Kit motion immediately settles its presentation and cleanup. Native button, tooltip, popup and progress behavior remains native-owned.";
+        FluentCheckBox { text: "Enable Kit motion"; checked <=> Motion.animations_enabled; }
+        FluentCheckBox { text: "Reduce Kit motion"; checked <=> Motion.reduced_motion; }
+        HorizontalLayout {
+            FluentButton { text: "Show toast"; clicked => { root.toast_shown = true; } }
+            FluentButton { text: "Close toast"; clicked => { root.toast_shown = false; } }
+        }
+        toast := ToastHost { shown: root.toast_shown; auto_dismiss: false; message: "Only opacity changes; logical close disables input immediately."; dismissed => { root.toast_shown = false; } }
+        Text { text: "Logical shown: " + (root.toast_shown ? "yes" : "no") + " / Presented: " + (toast.presented ? "yes" : "no") + " / Transitioning: " + (toast.animating ? "yes" : "no"); color: Theme.text_primary; wrap: word-wrap; }
+    }
+    ModalDecisionsSpecimen { restore_epoch: root.restore_epoch; modal_requested(kind) => { root.modal_requested(kind); } }
+}

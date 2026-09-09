@@ -105,3 +105,12 @@ host-controlled expanded value; this is the supported way to unload native child
 input/timers with Slint 1.17.1. Before programmatic collapse with focus in content,
 focus its header or a host fallback. InfoBar owns only a once-per-shown-cycle
 dismissal guard, while the host owns removing the inline message.
+
+## P6 motion policy
+
+Initialize Motion.animations_enabled and Motion.reduced_motion from host policy in
+each top-level window. Globals are per top-level instance. The effective duration
+controls only Kit-owned Toast/Modal opacity; native Slint input, progress and popup
+motion is unaffected. Treat shown as logical state and presented as a read-only
+bounded rendering lifetime. Close native popups/overlays before retaining hidden
+ancestor pages, and keep Modal restore callbacks bound to actual host focus targets.

@@ -52,9 +52,11 @@ export global Elevation {
 
 ```slint
 export global Motion {
-    out property <duration> fast: 100ms;
-    out property <duration> standard: 160ms;
-    out property <duration> slow: 200ms;
+    in-out property <bool> animations_enabled: true;
+    in-out property <bool> reduced_motion: false;
+    out property <duration> fast: animations_enabled && !reduced_motion ? 100ms : 0ms;
+    out property <duration> standard: animations_enabled && !reduced_motion ? 160ms : 0ms;
+    out property <duration> slow: animations_enabled && !reduced_motion ? 200ms : 0ms;
 }
 ```
 
@@ -559,6 +561,8 @@ export component ToastHost inherits Rectangle {
     in property <string> message;
     in property <ToastKind> kind: ToastKind.info;
     in property <bool> auto_dismiss: true;
+    out property <bool> presented: lifetime.presented;
+    out property <bool> animating: lifetime.animating;
     callback dismissed;
 }
 ```
@@ -593,6 +597,8 @@ export component ModalManager inherits Rectangle {
     in property <bool> show_secondary: false;
     in property <ModalKind> kind: ModalKind.info;
     in property <bool> danger_primary: false;
+    out property <bool> presented: lifetime.presented;
+    out property <bool> animating: lifetime.animating;
     callback accepted;
     callback dismissed;
     callback restore_focus_requested();
@@ -976,10 +982,11 @@ real state update; false/true assignments coalesced within one event are not a n
 observed cycle. The fixed 56px message area clips/elides beyond its two-line budget.
 
 Auto dismissal waits four seconds. Passive hover pauses it; leaving starts a fresh
-four-second interval. shown=false or own visible=false destroys the native close
-button/tooltip and timer subtree. Retained ancestor pages must set shown=false or
-unload the toast. No focus acquisition and no Kit animation in this P5A behavior
-baseline; a user may focus the native close command normally.
+four-second interval. Logical shown=false disables close input and stops that
+timer immediately. P6 may retain its disabled rendering subtree for a bounded
+opacity exit; own visible=false destroys it immediately. Retained ancestor pages
+must set shown=false or unload. Toast never acquires focus; a user may focus its
+native close command normally. The P5A report preserves its no-animation baseline.
 
 TooltipHost is a passive presenter, not a hover service. Put it in public native
 Tooltip, as IconButton does. Native Tooltip owns delay, pointer positioning, clipping
@@ -1002,7 +1009,8 @@ must set shown=false in its handler. Ignored requests leave focus in the fixed
 actions but do not repeat commands. Hosts keep show_secondary stable while shown
 and do not programmatically move focus behind the active overlay.
 
-The whole focus/input subtree is conditional on shown. Logical close (including a
+The focus/input subtree is active only while shown. P6 may retain disabled
+presentation during bounded exit. Logical close (including a
 programmatic close after an observed open) calls restore_focus_requested once;
 the host restores its known opener or a valid fallback. Kit cannot capture an
 arbitrary external element reference. Gallery wires this protocol to its three
@@ -1216,3 +1224,17 @@ export component FluentInfoBar inherits Rectangle {
     }
 }
 ```
+
+## P6 current motion and presentation state
+
+Motion.animations_enabled (default true) and reduced_motion (default false) are
+host-owned per-window policy inputs. Effective fast/standard/slow become zero
+when disabled or reduced; native-owned animations do not follow these outputs.
+ToastHost and ModalManager expose read-only presented and animating. shown remains
+the sole logical host state. presented may remain true for up to the effective
+160 ms exit; input and Toast auto-dismiss stop on logical close, and Modal restore
+is requested then, never at animation completion. A rapid reopen reuses current
+opacity, restarts bounded cleanup and refocuses the modal native action. Own-root
+hiding or zero duration settles immediately. Hosts close/unload retained hidden
+ancestors; no cross-window policy or OS preference detection is supplied by Kit.
+See [MOTION.md](MOTION.md) for the inventory, state diagram and measured limits.

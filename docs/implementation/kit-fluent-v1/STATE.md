@@ -21,7 +21,7 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P5C | PASS — scoped bounded navigation | [P5C.md](P5C.md): reactive invalidation, native actions, 152 runtime assertions, full core, 40 captures; 256 validation p95 8.13 ms. |
 | P5D | PASS — scoped native popups | [P5D.md](P5D.md): three exports, 115 scaled runtime assertions, Windows menu input subset, 76 Python tests, Gallery/40 captures. |
 | P5E | PASS — scoped inline contract | [P5E.md](P5E.md): host-conditional Expander, InfoBar, 19 runtime + 23 popup regressions; full core and 40 captures. |
-| P6 | NOT_STARTED | Authorized next; P5 summary/limits in [P5.md](P5.md). |
+| P6 | PASS — scoped motion lifecycle and measured gate | [P6.md](P6.md): 32 new + 31 preserved runtime assertions, 100 cycles / 20 transients, 800 before-after software frames, four 60s idle intervals, full core/79 Python and 40 captures. Actual presentation/reader NOT_RUN. |
 | P7–P8 | NOT_STARTED | Not part of this request. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
@@ -54,3 +54,8 @@ commands passed. P5D scoped delivery is complete; next is P5E.
 
 P5D was committed as `ddbffbc54ed8d4c7501f12a981293824cad30575`; both package
 commands passed. P5E completes the scoped P5 implementation; next is P6.
+
+P5E was committed as `1fcb2365d54ff6c1b0527a0db0383d9508fbb782`; both package
+commands passed. P6 completes the authorized P4/P5/P6 sequence. Each unit has a
+separate commit/report. No P7/P8, push, tag, release or Tasks revision change was
+performed; original root SPEC addition/deletion remain untouched.

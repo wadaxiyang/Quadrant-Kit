@@ -264,3 +264,14 @@ teardown, explicit header focus, native disabled behavior and InfoBar close cycl
 The popup suite additionally forces disabled Split focus before Space to guard
 the native edge found by the P5E reproducer. Native reader/live-region semantics
 remain a separate verification category.
+
+### P6 motion
+
+`python scripts/run_button_checks.py --suite motion --profile release` tests
+actual intermediate opacity pixels, native actions during entry, immediate exit
+input release, reduced/disabled cleanup and 100 reversals with 20 transient rows.
+`python scripts/run_motion_bench.py --label <measurement-name>` creates an exact
+source release report under target/motion-bench: 200 software-buffer frame samples
+and at least 60 seconds idle for 1/20 Toast instances. Each process has one matched
+frame driver, stops it before idle, and uses GetProcessTimes on Windows. Unsupported
+render hooks remain null, not zero-redraw evidence. See P6.md for paired sources.

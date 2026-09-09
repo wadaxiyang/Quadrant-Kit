@@ -17,7 +17,7 @@ from run_perf import ROOT, execute, generate, resolved_fingerprint, source_ident
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-only', action='store_true', help='Build an interactive host without claiming input PASS')
-    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric', 'containers', 'pickers', 'toast', 'modal', 'navigation', 'popup', 'inline'], default='button')
+    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric', 'containers', 'pickers', 'toast', 'modal', 'navigation', 'popup', 'inline', 'motion'], default='button')
     parser.add_argument('--timeout-seconds', type=int, default=30, help='Bounded runtime allowance for lifecycle/idle suites (1..300)')
     parser.add_argument('--profile', choices=['debug', 'release'], default='debug')
     args = parser.parse_args(argv)
@@ -43,6 +43,8 @@ def main(argv=None):
         stem, executable_name = 'popup_check', 'kit-p5d-popup-check'
     if args.suite == 'inline':
         stem, executable_name = 'inline_check', 'kit-p5e-inline-check'
+    if args.suite == 'motion':
+        stem, executable_name = 'motion_check', 'kit-p6-motion-check'
     output = ROOT / 'target/button-checks' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     source = source_identity(ROOT)
     report = {'suite': args.suite, 'profile': args.profile, 'source': source, 'status': 'IN_PROGRESS', 'commands': [], 'backend': 'winit-software', 'input': 'public WindowEvent dispatch; OS input/accessibility is separate'}

@@ -5,6 +5,7 @@ design-guidance	Design guidance		1
 tokens	Theme / Colors	design-guidance	1	1	TokensPage	tokens_page.slint		theme colors spacing elevation motion constants
 typography	Typography	design-guidance	2	2	TypographyPage	typography_page.slint		font text type scale
 icons	Icons	design-guidance	3	3	IconsPage	icons_page.slint	FluentIcon	fluent svg symbols icon catalog
+motion	Motion policy	design-guidance	1		MotionPage	motion_page.slint		motion reduced animation lifecycle
 controls-group	Controls		4					
 controls	Controls overview	controls-group	4	4	ControlsPage	controls_page.slint		controls comparison input command selection overview
 fluent-button	FluentButton	controls-group	4		FluentButtonPage	fluent_button_page.slint	FluentButton	controls button input text editing command selection

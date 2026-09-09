@@ -1,0 +1,14 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { ToastHost, Theme, ThemeMode } from "@quadrant-kit";
+import { Palette } from "std-widgets.slint";
+export component MotionBench inherits Window {
+    width:1200px;height:500px;background:Theme.background;
+    in property <int> count:1;
+    in property <bool> shown:false;
+    init=>{Theme.mode=ThemeMode.light;Theme.ui_font_family="Segoe UI Variable Text";Palette.color-scheme=ColorScheme.light;}
+    for index in root.count: ToastHost {
+        x:12px+mod(index,4)*294px;y:12px+floor(index/4)*86px;width:280px;
+        shown:root.shown;auto_dismiss:false;message:"A bounded transient message";
+    }
+}

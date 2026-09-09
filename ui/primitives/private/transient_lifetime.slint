@@ -1,0 +1,39 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+// A private presentation lifetime; it never emits a business action.
+export component TransientLifetime inherits Rectangle {
+    in property <bool> requested: false;
+    in property <duration> duration: 160ms;
+    out property <bool> presented: root.phase != 0;
+    out property <bool> animating: root.phase == 1 || root.phase == 3;
+    out property <float> progress: root.phase == 0 ? 0 : root.phase == 2 ? 1 : root.level;
+    // hidden / entering / visible / exiting
+    private property <int> phase: 0;
+    private property <float> level: 0;
+    width: 0px; height: 0px;
+    animate level { duration: root.duration; easing: ease-out; }
+    init => { root.transition(); }
+    changed requested => { root.transition(); }
+    changed duration => {
+        if root.duration <= 0ms { root.settle(); }
+        else if root.animating { root.transition(); }
+    }
+    function settle() {
+        finish.stop();
+        root.level = root.requested ? 1 : 0;
+        root.phase = root.requested ? 2 : 0;
+    }
+    function transition() {
+        finish.stop();
+        root.level = root.requested ? 1 : 0;
+        if root.duration <= 0ms { root.settle(); }
+        else {
+            root.phase = root.requested ? 1 : root.phase == 0 ? 0 : 3;
+            if root.animating { finish.start(); finish.restart(); }
+        }
+    }
+    finish := Timer {
+        running: false; interval: max(1ms, root.duration);
+        triggered => { self.stop(); root.phase = root.requested ? 2 : 0; }
+    }
+}

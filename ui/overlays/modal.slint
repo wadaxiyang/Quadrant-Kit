@@ -6,7 +6,7 @@
 // src/ui/components/modal_manager.slint at 948589a255a4bd8a3ff9c3de49e2e13109378fcd.
 // WSL-specific dialogs and data were removed in favor of one reusable shell.
 
-import { Elevation, Theme, Typography } from "../foundation/theme.slint";
+import { Elevation, Motion, Theme, Typography } from "../foundation/theme.slint";
 import { UiConstants } from "../foundation/constants.slint";
 import { FluentIcons as Icons } from "../foundation/fluent_icons.slint";
 import { FluentIcon } from "../primitives/fluent_icon.slint";
@@ -14,6 +14,8 @@ import { FluentButton } from "../primitives/fluent_button.slint";
 import { SurfaceCard } from "../primitives/surface_card.slint";
 
 export enum ModalKind { info, warning, danger }
+
+import { TransientLifetime } from "../primitives/private/transient_lifetime.slint";
 
 export component ModalManager inherits Rectangle {
     in property <bool> shown: false;
@@ -24,6 +26,12 @@ export component ModalManager inherits Rectangle {
     in property <bool> show_secondary: false;
     in property <ModalKind> kind: ModalKind.info;
     in property <bool> danger_primary: false;
+    out property <bool> presented: lifetime.presented;
+    out property <bool> animating: lifetime.animating;
+    lifetime := TransientLifetime {
+        requested: root.shown && root.visible;
+        duration: root.visible ? Motion.standard : 0ms;
+    }
     callback accepted;
     callback dismissed;
     callback restore_focus_requested();
@@ -39,16 +47,21 @@ export component ModalManager inherits Rectangle {
         }
     }
     function request_accept() {
-        if root.shown && !root.request_made { root.request_made = true; root.accepted(); }
+        if root.shown && root.visible && !root.request_made { root.request_made = true; root.accepted(); }
     }
     function request_dismiss() {
-        if root.shown && !root.request_made { root.request_made = true; root.dismissed(); }
+        if root.shown && root.visible && !root.request_made { root.request_made = true; root.dismissed(); }
     }
-    if root.shown: FocusScope {
+    if root.presented: FocusScope {
+        enabled: root.shown && root.visible;
+        opacity: lifetime.progress;
+        private property <bool> active: root.shown && root.visible;
+        changed active => { if self.active { if root.show_secondary { secondary.focus(); } else { primary.focus(); } } }
         width: 100%; height: 100%;
         focus-on-tab-navigation: false;
-        init => { if root.show_secondary { secondary.focus(); } else { primary.focus(); } }
+        init => { if self.active { if root.show_secondary { secondary.focus(); } else { primary.focus(); } } }
         capture-key-pressed(event) => {
+            if !root.shown || !root.visible { return reject; }
             if event.text == Key.Escape { root.request_dismiss(); return accept; }
             if event.text == Key.Tab && !event.modifiers.control && !event.modifiers.alt {
                 if root.show_secondary && primary.has-focus { secondary.focus(); }
@@ -59,7 +72,7 @@ export component ModalManager inherits Rectangle {
         }
         Rectangle {
             width: 100%; height: 100%; background: Elevation.dialog_overlay;
-            TouchArea { }
+            TouchArea { enabled: root.shown && root.visible; }
         }
         SurfaceCard {
             x: (parent.width - self.width) / 2;
@@ -96,12 +109,12 @@ export component ModalManager inherits Rectangle {
                     alignment: end; spacing: 8px;
                     secondary := FluentButton {
                         width: 92px; text: root.secondary_text;
-                        visible: root.show_secondary; enabled: root.show_secondary;
+                        visible: root.show_secondary; enabled: root.shown && root.visible && root.show_secondary;
                         clicked => { root.request_dismiss(); }
                     }
                     primary := FluentButton {
                         width: 92px; text: root.primary_text;
-                        primary: true; danger: root.danger_primary;
+                        primary: true; danger: root.danger_primary; enabled: root.shown && root.visible;
                         clicked => { root.request_accept(); }
                     }
                 }

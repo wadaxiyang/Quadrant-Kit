@@ -123,3 +123,33 @@ text; the native reference uses a minimal Tooltip Text while Kit uses TooltipHos
 Selected native Button disables automatic toggling just like SegmentButton. The
 window/features/font/DPI and sample rules above remain unchanged. No budget is
 raised. P3 report separates successful collection from budget/steady-state claims.
+
+## P6 bounded motion comparison
+
+Release sources before/after P6 use byte-identical measurement Slint/Rust, the same
+resolved external graph, Fluent/winit/software, 1200x500 and requested Segoe UI
+Variable Text at 100%. Each count has one before and one after process: 200 raw
+software-buffer samples (100 toggles pairs) and at least 60 seconds settled idle.
+All samples are retained; this is not the 30-pair full P7 matrix.
+
+| Toast count | Before p50 / p95 ms | After p50 / p95 ms | Idle one-core CPU before / after |
+|---|---|---|---|
+| 1 | 4.3748 / 6.9911 | 4.1576 / 6.3147 | 0% / 0% |
+| 20 | 5.3667 / 7.0746 | 5.7165 / 6.4411 | 0% / 0% |
+
+Both p95 increments meet the unchanged max(1 ms, 10% of A) allowance and idle
+increments meet 0.2 percentage points. The 20-instance median rises slightly;
+lower p95 in this small comparison is not a universal speedup claim. Rendering
+notification is unsupported here, so actual presentation/redraw counts remain
+NOT_RUN rather than zero. CPU uses two real GetProcessTimes readings over each
+60-second interval with no active frame-driver timer during idle. No working-set
+trimming or accessibility removal. The old P0 unmatched hidden-Toast binary
+attribution remains separate; P6 does not close full P7 native/memory budgets.
+
+Raw: target/motion-bench/20260909T185333555763Z/result.json and
+target/motion-bench/20260909T190613605793Z/result.json; exact identities and allowance
+calculation in target/p6-comparison.json and the staged P6 report.
+
+Font scope of the P6 harness: Theme.ui_font_family is assigned, while Window uses
+its unchanged default font resolution in both runs. No per-glyph font-family
+verification or system-font redistribution is claimed.

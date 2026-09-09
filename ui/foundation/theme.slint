@@ -19,9 +19,11 @@ export global Typography {
 }
 
 export global Motion {
-    out property <duration> fast: 100ms;
-    out property <duration> standard: 160ms;
-    out property <duration> slow: 200ms;
+    in-out property <bool> animations_enabled: true;
+    in-out property <bool> reduced_motion: false;
+    out property <duration> fast: animations_enabled && !reduced_motion ? 100ms : 0ms;
+    out property <duration> standard: animations_enabled && !reduced_motion ? 160ms : 0ms;
+    out property <duration> slow: animations_enabled && !reduced_motion ? 200ms : 0ms;
 }
 
 export global Theme {

@@ -79,3 +79,9 @@ previous manifest path. From the new Kit root run
 build. This rebuilds local package artifacts without replacing source or removing
 historical QA directories. Consumer builds resolve the published package in Cargo
 storage and must never persist the helper path as a runtime resource setting.
+
+P6 shares one private `primitives/private/TransientLifetime` presentation helper
+between Toast and Modal. It supplies bounded opacity/cleanup only, preserving
+the existing overlays -> primitives -> foundation direction and static facade.
+Motion policy remains a host-initialized per-window foundation global; there is
+no runtime registration, global timer service or cross-window coordinator.

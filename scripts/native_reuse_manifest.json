@@ -17,7 +17,8 @@
         "Conditional fixed confirmation and passive scrim",
         "Finite two-action Tab/ShiftTab containment and Escape request",
         "Initial native action focus; host restore request on logical close",
-        "At most one accepted/dismissed request per visible cycle"
+        "At most one accepted/dismissed request per visible cycle",
+        "P6 bounded opacity lifetime with immediate logical-close input disable and cancelable cleanup"
       ],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
@@ -30,7 +31,7 @@
         "Current API/probe and native reuse guard"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "3d59fed99801fc41dd9fb72bcfb5550599563d13d8dd729db7e4cfbc32bd4ecb"
+      "reviewed_implementation_sha256": "d374824fc0a551ac55b7513e2373af6159b7836973069872bdfde38f51484a0b"
     },
     {
       "component": "ToastHost",
@@ -45,7 +46,8 @@
       "missing_capability": "No public std transient toast presenter.",
       "permitted_custom_behavior": [
         "One dismissal request per shown cycle; conditional child/Timer lifetime",
-        "Passive hover pause; full timeout restarts on pointer leave"
+        "Passive hover pause; full timeout restarts on pointer leave",
+        "P6 bounded opacity lifetime with immediate logical-close input disable and cancelable cleanup"
       ],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
@@ -58,7 +60,7 @@
         "Current API/probe/native guard"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "fbbd22ba347541f1581740868059a39c0d98e07050e03e18175530da025c25f7"
+      "reviewed_implementation_sha256": "bcc9239b677477bb47bf0130b6bd7b2fc095f5534f3d7b9231626583cbf9c44f"
     },
     {
       "component": "NavigationBackButton",
@@ -982,6 +984,29 @@
         "Gallery/current API probe and boundary checks"
       ],
       "review_on_slint_upgrade": true
+    },
+    {
+      "component": "TransientLifetime",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/primitives/private/transient_lifetime.slint",
+      "public": false,
+      "status": "reviewed-exception",
+      "native_dependencies": [],
+      "missing_capability": "Native popup lifetime does not apply to an inline Toast or fixed confirmation composition",
+      "permitted_custom_behavior": [
+        "Only bounded private opacity phase and one cleanup timer; no command/input ownership"
+      ],
+      "forbidden_custom_behavior": [
+        "Business callbacks",
+        "Hidden indefinite timer",
+        "Input handling"
+      ],
+      "validation": [
+        "P6 reversal/reduced-motion/100-cycle runtime",
+        "P6 before/after frame and 60-second idle evidence"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "6b9c69a821386fe2bc8ffef5a7362486910d3ed30da8f9e3fecaec42ff4d4ef2"
     }
   ]
 }

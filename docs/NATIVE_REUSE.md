@@ -198,3 +198,9 @@ InfoBar uses native IconButton closure, no timer, and a per-shown-cycle guard.
 Forced programmatic focus on a disabled native Button can still enter its native
 key handler; Expander and Split primary suppress the resulting callback when
 disabled/hidden. This guard does not implement keyboard activation itself.
+
+P6 adds one private TransientLifetime composition in primitives/private, shared by
+Toast and Modal without a patterns/overlays dependency. It owns only cancelable
+opacity progress and a bounded cleanup Timer; no input or business callback.
+Native controls retain their animation ownership. The two overlay records include
+the exact reviewed lifetime/input-disable changes; the private helper is guarded.
