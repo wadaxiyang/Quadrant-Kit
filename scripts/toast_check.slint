@@ -1,0 +1,27 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette, Button } from "std-widgets.slint";
+import { ToastHost, ToastKind, TooltipHost, FluentButton, Theme, ThemeMode } from "@quadrant-kit";
+export component ToastCheck inherits Window {
+    width: 760px; height: 480px; default-font-family: "Segoe UI Variable Text";
+    background: Theme.background;
+    in-out property <length> tooltip_x: 600px;
+    in-out property <bool> shown: false;
+    in-out property <bool> automatic: true;
+    in-out property <bool> dark: false;
+    in-out property <string> message: "Saved / 已保存";
+    out property <int> dismissals: 0;
+    out property <int> underneath_actions: 0;
+    out property <bool> first_focused: first.has-focus;
+    public function focus_first() { first.focus(); }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    changed dark => { Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light; Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light; }
+    first := FluentButton { x: 20px; y: 20px; width: 180px; height: 32px; text: "Focus anchor"; }
+    FluentButton { x: 20px; y: 80px; width: 360px; height: 56px; text: "Under hidden toast"; clicked => { root.underneath_actions += 1; } }
+    Button { x: root.tooltip_x; y: 400px; width: 140px; height: 32px; text: "Native tooltip";
+        Tooltip { TooltipHost { text: "Tooltip near the edge / 边缘提示"; shown: true; } }
+    }
+    ToastHost { x: 20px; y: 80px; width: 360px; shown: root.shown; auto_dismiss: root.automatic; message: root.message; kind: ToastKind.success;
+        dismissed => { root.dismissals += 1; }
+    }
+}

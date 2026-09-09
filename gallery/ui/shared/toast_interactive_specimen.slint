@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { FluentTextField, SegmentButton, ToastHost, ToastKind, UiConstants } from "@quadrant-kit";
+import { FluentButton, FluentSwitch, FluentTextField, SegmentButton, ToastHost, ToastKind, UiConstants } from "@quadrant-kit";
 import { Specimen } from "specimen.slint";
 import { PropertyPanel } from "property_panel.slint";
 import { PreviewContainer } from "preview_container.slint";
@@ -10,12 +10,14 @@ export component ToastInteractiveSpecimen inherits Specimen {
 
     in property <int> preview_mode: 1;
     callback modal_requested(int);
+    private property <bool> toast_shown: false;
+    private property <bool> automatic: true;
     private property <int> toast_kind: 0;
     private property <string> toast_message: "The operation completed successfully.";
 
     specimen_title: "Toast · interactive";
-    source_code: "import { ToastHost, ToastKind } from \"@quadrant-kit\";\n\nToastHost { shown: true; kind: ToastKind.success; message: \"Saved\"; }";
-    specimen_description: "Change semantic kind and content while preserving the shared width, wrapping, status icon, and dismiss behavior.";
+    source_code: "import { ToastHost, ToastKind } from \"@quadrant-kit\";\n\nToastHost { shown: host_visible; kind: ToastKind.success; message: \"Saved\"; dismissed => { host_visible = false; } }";
+    specimen_description: "Show a real transient message. The host closes it on its single dismissal request; hover pauses the timeout.";
     keyboard_info: "Dismiss IconButton enters Tab order and activates with Enter or Space; hover pauses auto-dismiss.";
     accessibility_info: "Status icon is semantic decoration; visible message and labeled dismiss action remain available.";
 
@@ -27,14 +29,17 @@ export component ToastInteractiveSpecimen inherits Specimen {
             height: 76px;
             ToastHost {
                 width: min(parent.width, 420px);
-                shown: true;
+                shown: root.toast_shown;
+                dismissed => { root.toast_shown = false; }
                 message: root.toast_message;
                 kind: root.toast_kind == 1 ? ToastKind.info : root.toast_kind == 2 ? ToastKind.error : ToastKind.success;
-                auto_dismiss: false;
+                auto_dismiss: root.automatic;
             }
         }
     }
 
+    FluentButton { text: "Show toast"; clicked => { root.toast_shown = true; } }
+    FluentSwitch { text: "Auto dismiss after four seconds"; checked <=> root.automatic; }
     PropertyPanel {
         VerticalLayout {
             spacing: UiConstants.space_8;

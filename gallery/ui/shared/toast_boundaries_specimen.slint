@@ -11,7 +11,7 @@ export component ToastBoundariesSpecimen inherits Specimen {
 
     specimen_title: "Toast content boundaries";
     source_code: "import { ToastHost } from \"@quadrant-kit\";\n\nToastHost { shown: true; message: \"A long outcome message wraps within the available toast width.\"; }";
-    specimen_description: "Short, normal, and deliberately long messages verify content-driven height and constrained width.";
+    specimen_description: "Short, normal, and deliberately long messages verify fixed-height elision and constrained width.";
     specimen_kind: "Boundaries";
     keyboard_info: "Dismiss actions use the same keyboard contract in every semantic variant.";
     accessibility_info: "Color is paired with a semantic icon and explicit message text.";

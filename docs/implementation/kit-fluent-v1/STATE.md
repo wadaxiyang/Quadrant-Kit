@@ -16,7 +16,8 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P4B | PASS — scoped numeric/progress contract | [P4B.md](P4B.md): four exports, 17 runtime assertions, 73 Python tests, Gallery build/40 captures and 30 paired release samples. |
 | P4C | PASS — scoped native containers | [P4C.md](P4C.md): 16 runtime assertions, 10k virtual list, 74 Python tests, 40 Gallery captures and 30 release pairs. |
 | P4D | PASS — scoped table and picker contract | [P4D.md](P4D.md): 18 runtime assertions, full 20 Rust/75 Python core gate, 40 captures and 30 release pairs. [P4 summary](P4.md). |
-| P5A–P5E, P6 | NOT_STARTED | Authorized after P4, in order. |
+| P5A | PASS — scoped tooltip/Toast lifecycle | [P5A.md](P5A.md): old duplicate-request reproducer; 11 runtime assertions, 75 Python tests, Gallery build/41 captures; current API unchanged. |
+| P5B–P5E, P6 | NOT_STARTED | Authorized continuation in order. |
 | P7–P8 | NOT_STARTED | Not part of this request. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
@@ -34,3 +35,6 @@ ordered P4/P5/P6 authorization and committed as `666b9e48ee49f789c1960cc8413d04f
 Both source package commands passed after that commit. P4B was committed as
 `7f46e63f9bbdf4ccad52ff20f2553e496dfa8b74`; both package commands passed. P4C was committed as `6bca23dd0117c23fd322261272d50671cc96501a`;
 both package commands passed. P4D completes P4; next is P5A.
+
+P4D was committed as `f93cdac96cbeedfc738bf2ca711cb0b9a9868e42`; both package
+commands passed. P5A is complete; next is P5B.

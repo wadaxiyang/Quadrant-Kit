@@ -956,3 +956,29 @@ export component FluentTimePicker inherits Rectangle {
     }
 }
 ```
+
+## P5A transient lifecycle
+
+ToastHost shown is host-owned. Each false-to-true shown cycle permits at most one
+dismissed request, shared by native close input and the automatic timer. Hosts set
+shown=false in dismissed. If the host ignores it, the timer stops and close input
+is disabled until a new cycle. Programmatic hide/unload emits no dismissed event.
+Changing message/kind within a cycle does not restart it. Reopening should span a
+real state update; false/true assignments coalesced within one event are not a new
+observed cycle. The fixed 56px message area clips/elides beyond its two-line budget.
+
+Auto dismissal waits four seconds. Passive hover pauses it; leaving starts a fresh
+four-second interval. shown=false or own visible=false destroys the native close
+button/tooltip and timer subtree. Retained ancestor pages must set shown=false or
+unload the toast. No focus acquisition and no Kit animation in this P5A behavior
+baseline; a user may focus the native close command normally.
+
+TooltipHost is a passive presenter, not a hover service. Put it in public native
+Tooltip, as IconButton does. Native Tooltip owns delay, pointer positioning, clipping
+escape and dismissal. Keyboard help and screen-reader announcement are not promised
+by the passive presenter or inferred from hover screenshots. No Kit tooltip timer.
+
+Pinned native Tooltip placement can extend beyond the containing window; an
+embedded software-window snapshot may crop edge content. Kit keeps this native
+placement boundary; TooltipHost does not promise work-area clamping or keyboard
+activation. Prefer short supplementary text and keep essential information inline.

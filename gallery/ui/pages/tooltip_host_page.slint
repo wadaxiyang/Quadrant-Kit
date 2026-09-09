@@ -4,12 +4,17 @@
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
 import { TooltipHost } from "@quadrant-kit";
-import { Switch } from "std-widgets.slint";
+import { Button, Switch } from "std-widgets.slint";
 export component TooltipHostPage inherits GalleryPage {
     private property <bool> shown: true;
-    page_description: "The host decides when a short tooltip is shown. This example exposes visibility directly.";
+    page_description: "Native Tooltip owns hover delay, popup positioning and dismissal; TooltipHost only presents its content.";
     Specimen {
-        specimen_title: "Optional help";
+        specimen_title: "Native tooltip service";
+        specimen_description: "Hover the native button; leave to dismiss. No Kit hover timer or popup controller.";
+        Button { text: "Hover for help"; Tooltip { TooltipHost { shown: true; text: "Native service, shared presentation"; } } }
+    }
+    Specimen {
+        specimen_title: "Passive presenter boundary";
         specimen_description: "The host decides when a short tooltip is shown. This example exposes visibility directly.";
         source_code: "import { TooltipHost } from \"@quadrant-kit\";\nTooltipHost { shown: true; text: \"More information\"; }";
         keyboard_info: "Tab enters the visibility switch; Space toggles it. TooltipHost itself is non-interactive.";

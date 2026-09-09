@@ -1,5 +1,14 @@
 # Changelog
 
+## Fluent evolution P5A — local, unpublished
+
+- ToastHost now requests dismissal at most once per shown cycle. Host owns closing
+  and reopening; changing the message alone does not reset the cycle.
+- Unload hidden native Toast input and timer; pause on hover, restart full timeout
+  on leave. Remove Toast geometry/opacity motion for the P5 behavior baseline.
+- Keep native Tooltip service and document its edge-placement capture limits.
+
+
 ## Fluent evolution P4D — local, unpublished
 
 - Add native table composition and host-controlled date/time pickers with public

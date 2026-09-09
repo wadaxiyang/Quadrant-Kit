@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "slint_version": "1.17.1",
-  "review_scope": "P3 current-source review; scoped runtime evidence in P3 report",
+  "review_scope": "Incremental component-scoped review; see each validation record and phase report",
   "records": [
     {
       "component": "ModalManager",
@@ -43,8 +43,8 @@
       ],
       "missing_capability": "No public std transient toast presenter.",
       "permitted_custom_behavior": [
-        "visibility and timeout dismissal request",
-        "hover-based timeout pause"
+        "One dismissal request per shown cycle; conditional child/Timer lifetime",
+        "Passive hover pause; full timeout restarts on pointer leave"
       ],
       "forbidden_custom_behavior": [
         "new ordinary button activation",
@@ -53,12 +53,11 @@
         "hidden native proxies"
       ],
       "validation": [
-        "current-api-probe",
-        "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "P5A current runtime regression and native tooltip evidence",
+        "Current API/probe/native guard"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "f661b2a2ab444ad659bdcb79f7950eed7b69fd7f519f3672979c6030cba2e043"
+      "reviewed_implementation_sha256": "fbbd22ba347541f1581740868059a39c0d98e07050e03e18175530da025c25f7"
     },
     {
       "component": "NavigationBackButton",

@@ -171,3 +171,8 @@ input and no claim that native container enabled recursively disables content.
 
 P4D composes native table and date/time popups. No business sorting/calendar logic.
 Table scrollbars-enabled accurately names the native limited disable scope.
+
+P5A reviews ToastHost's single-cycle dismissal guard, conditional native child/Timer
+lifetime and passive hover pause. Ordinary close activation remains the visible
+native IconButton. Native Tooltip remains the only tooltip service; Gallery now
+shows it explicitly alongside the separately labeled passive presenter.

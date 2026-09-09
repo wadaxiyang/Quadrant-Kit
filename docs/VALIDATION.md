@@ -221,3 +221,11 @@ ownership, disabled/rapid popup lifetime and opener focus. Native popup screensh
 include a bottom-right placement. This is separate from OS-level reader validation.
 `python scripts/run_perf.py --scenes table-100 --samples 30` pairs 100-row native/Kit
 tables with identical columns, dimensions, font, backend and renderer.
+
+### P5A transient input/lifetime
+
+`python scripts/run_button_checks.py --suite toast --timeout-seconds 45` waits
+through real four-second timeouts and dispatches native pointer/key input. It checks
+one request per cycle, host ownership, hover pause, hidden input, rapid reversals
+and native tooltip focus behavior. The runner accepts a bounded 1..300 second
+allowance for longer lifecycle/idle suites; default remains 30 seconds.

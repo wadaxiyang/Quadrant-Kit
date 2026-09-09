@@ -71,3 +71,10 @@ removing those would lose useful layout/semantic behavior rather than remove deb
 Actual P3 Windows Gallery Light/Dark captures confirmed readable native caption
 controls after DWM composition. Software snapshots of transparent caption pixels
 do not represent that composed result. See the P3 report for source and observations.
+
+## P5A current transient delta
+
+The historical P0 Toast animation observation above remains scoped to that source.
+P5A removes Toast height/opacity animations while establishing finite behavior;
+P6 owns future bounded transitions. Native Tooltip service retains its own placement
+and edge-window capture limits. See P5A for actual images/input and NOT_RUN metrics.

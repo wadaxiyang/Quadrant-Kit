@@ -435,3 +435,6 @@ P4B: conditional `native-numeric` page demonstrates all four numeric/progress ex
 P4C: `native-containers` conditionally demonstrates five exports and 10,000 list rows.
 
 P4D: `native-pickers` conditionally shows table sort requests and native date/time popups.
+
+P5A: Toast interactive specimens now offer Show/auto-dismiss and actually close from
+the host callback. Tooltip page separates native service from passive presentation.
