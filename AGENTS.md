@@ -105,10 +105,10 @@ trim process working sets or remove accessibility to manufacture a win.
 ## Staged execution and truthfulness
 
 For the active task read docs/specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md and
- docs/implementation/kit-fluent-v1/STATE.md. The v1.1 modularity/version policy
-supersedes the earlier requirement to preserve old call signatures; historical
-reports keep their recorded scope and results. The report directory name is not
-an API-compatibility promise.
+ docs/STATUS.md. The v1.1 modularity/version policy supersedes the earlier
+requirement to preserve old call signatures. Specification scope, roadmap and
+acceptance are split under docs/specs/. Historical reports are recoverable from
+the Git revision documented in docs/HISTORY.md; their results retain original scope.
 
 A generic implementation request means P0 only; explicit later instructions take
 precedence. Run only the requested phase. For P4/P5, run the first unfinished
@@ -149,8 +149,9 @@ checkout/build access because it changes and restores a token and SVG.
 For component changes synchronize facade exports, current API docs/snapshot/probe,
 current use sites, Gallery/catalog, component status, native reuse and relevant
 motion/accessibility/performance evidence. Remove superseded implementation and
-API remnants. Permanent rules belong here; detailed phase logs belong in
- docs/implementation/kit-fluent-v1/.
+API remnants. Permanent rules belong here; current gaps belong in docs/STATUS.md and concise
+source/evidence pointers in docs/HISTORY.md. Keep raw logs under ignored target/;
+avoid a new permanent document for each retry or short UI follow-up.
 
 ModalManager remains a single confirmation overlay; complete focus containment,
 restoration and screen-reader support require actual evidence, not a scrim.

@@ -1,15 +1,17 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 # SPDX-License-Identifier: GPL-3.0-only
 import copy
+import json
 import sys
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from evaluate_perf import evaluate
+import run_perf
 from run_perf import scene_source
 from run_interaction_perf import parse_samples, interaction_gates, SCENES
-import json
+from run_motion_bench import parse_measurement, parse_memory
 
 
 class AcceptanceTests(unittest.TestCase):
@@ -87,3 +89,105 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(gates['text-long/dispatch_plus_frame_ms']['status'], 'FAIL')
         with self.assertRaises(ValueError):
             interaction_gates([])
+
+
+class PerfHarnessTests(unittest.TestCase):
+    def test_percentiles_keep_outliers(self):
+        self.assertEqual(run_perf.percentile([1, 2, 3, 100], .95), 100)
+        self.assertEqual(run_perf.percentile([1, 2, 3, 100], .5), 2)
+
+    def test_missing_hooks_are_not_reported_as_zero(self):
+        result = run_perf.summarize([{'scene': 'empty', 'variant': 'native', 'construct_ms': 5}])
+        self.assertEqual(result['empty']['native']['first_render_callback_ms'], {'n': 0, 'status': 'NOT_RUN'})
+        result = run_perf.summarize([{'scene': 'buttons-1', 'variant': 'kit', 'first_software_frame_ms': 42.5}])
+        self.assertEqual(result['buttons-1']['kit']['first_render_callback_ms'], {'n': 0, 'status': 'NOT_RUN'})
+        self.assertEqual(result['buttons-1']['kit']['first_software_frame_ms']['p50'], 42.5)
+
+    def test_generated_pairs_keep_matching_content_and_geometry(self):
+        for variant in ('native', 'kit'):
+            buttons = run_perf.scene_source('buttons-100', variant)
+            self.assertIn('for index in 100:', buttons)
+            self.assertIn('width: 820px; height: 440px;', buttons)
+            self.assertIn('width: 76px; height: 32px;', buttons)
+            icons = run_perf.scene_source('icons-100', variant)
+            self.assertIn('for index in 100:', icons)
+            self.assertIn('width: 44px; height: 32px;', icons)
+            self.assertIn('add-16-regular.svg', icons)
+            progress = run_perf.scene_source('progress-100', variant)
+            self.assertEqual(progress.count('for index in 50:'), 2)
+            self.assertEqual(progress.count('progress: 0.6; indeterminate: false;'), 2)
+            self.assertIn('width: 76px; height: 3px;', progress)
+            self.assertIn('width: 32px; height: 32px;', progress)
+            virtual_list = run_perf.scene_source('lists-10000', variant)
+            self.assertIn('for index in 10000: Text { height: 24px;', virtual_list)
+            self.assertIn('width: 780px; height: 400px;', virtual_list)
+            self.assertNotIn('@children', virtual_list)
+            table = run_perf.scene_source('table-100', variant)
+            self.assertEqual(table.count('{text: "Row '), 100)
+            self.assertEqual(table.count('width: 300px'), 2)
+            self.assertIn('width: 780px; height: 400px;', table)
+        self.assertNotIn('FluentButton', run_perf.scene_source('buttons-100', 'native'))
+        native = run_perf.scene_source('segments-100', 'native')
+        self.assertIn('checkable: false;', native)
+        self.assertIn('checked: mod(index, 2) == 0;', native)
+        self.assertIn('selected: mod(index, 2) == 0;', run_perf.scene_source('segments-100', 'kit'))
+
+    def test_import_only_and_invalid_scenes(self):
+        source = run_perf.scene_source('import-only', 'kit')
+        self.assertIn('@quadrant-kit', source)
+        self.assertNotIn('Theme.mode', source)
+        self.assertNotIn('FluentButton {', source)
+        self.assertNotIn('ToastHost {', source)
+        with self.assertRaises(ValueError):
+            run_perf.scene_source('unknown', 'kit')
+
+    def test_resolved_features_and_version_drift_fail(self):
+        graph = {'packages': [{'id': 'slint', 'name': 'slint', 'version': '1.17.1', 'source': 'registry'}],
+                 'resolve': {'nodes': [{'id': 'slint', 'features': ['default']}]}}
+        original = run_perf.resolved_fingerprint(graph)
+        graph['resolve']['nodes'][0]['features'].append('extra')
+        self.assertNotEqual(run_perf.resolved_fingerprint(graph), original)
+        graph['packages'][0]['version'] = '1.18.0'
+        with self.assertRaises(ValueError):
+            run_perf.resolved_fingerprint(graph)
+
+
+class MotionMeasurementTests(unittest.TestCase):
+    def sample(self):
+        frames = '\n'.join(f'FRAME count=1 sample={i} ms={1+i%2}.0 pixel=243' for i in range(200))
+        return frames + '\nIDLE count=1 seconds=60.000000 cpu_seconds=0.0312500 one_core_percent=0.052083 render_callbacks=0 hook_supported=false\nRESULT=PASS\n'
+
+    def test_complete_samples_and_render_hook_states(self):
+        result = parse_measurement(self.sample(), 1)
+        self.assertEqual(result['p95_ms'], 2)
+        self.assertEqual(len(result['frames']), 200)
+        self.assertIsNone(result['idle_render_callbacks'])
+        supported = parse_measurement(
+            self.sample().replace('render_callbacks=0 hook_supported=false',
+                                  'render_callbacks=3 hook_supported=true'), 1)
+        self.assertEqual(supported['idle_render_callbacks'], 3)
+
+    def test_partial_duplicate_and_mismatched_data_fail_closed(self):
+        text = self.sample()
+        bad_samples = (text.replace('sample=199', 'sample=198'),
+                       text.replace('sample=199', 'sample=200'),
+                       text.replace('seconds=60.000000', 'seconds=59.999999'),
+                       text.replace('one_core_percent=0.052083', 'one_core_percent=0.000000'))
+        for bad in bad_samples:
+            with self.subTest(bad=bad[-160:]), self.assertRaises(ValueError):
+                parse_measurement(bad, 1)
+        with self.assertRaises(ValueError):
+            parse_measurement(text, 20)
+        with self.assertRaises(ValueError):
+            parse_measurement('\n'.join(text.splitlines()[1:]), 1)
+
+    def test_lifecycle_memory_requires_all_checkpoints(self):
+        lines = [f'MEMORY sample={i} private_bytes=100 working_set_bytes=200' for i in range(19, 200, 20)]
+        lines.append('MEMORY_FINAL private_bytes=100 working_set_bytes=200')
+        self.assertEqual(len(parse_memory('\n'.join(lines))['cycles']), 10)
+        with self.assertRaises(ValueError):
+            parse_memory('\n'.join(lines[1:]))
+
+
+if __name__ == '__main__':
+    unittest.main()

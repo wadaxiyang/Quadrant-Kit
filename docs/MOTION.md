@@ -63,14 +63,5 @@ is not a universal activity signal in Slint: hosts close/unload overlays before
 retaining hidden pages. Expander still requires its explicit host conditional slot.
 There is no general popup manager, arbitrary focus capture or animation service.
 
-## Evidence boundaries
 
-P6's runtime suite checks actual intermediate opacity pixels, entry/exit input,
-reduced policy during transitions, deadline restart, 20 simultaneous rows and 100
-open/close cycles. Release before/after runs use the same 1200x500 software-buffer
-scene, 200 raw samples per 1/20 Toast count and at least 60 seconds controlled idle.
-All raw samples and source identities remain under target and are summarized in
-[the P6 report](implementation/kit-fluent-v1/P6.md). No working-set trimming or
-accessibility removal is used. Software-buffer cost is not actual screen-present
-latency; an unsupported rendering hook is recorded as NOT_RUN, never zero redraw.
-Native reader behavior and physical monitor changes remain separate. Current P7 measurements and any unmet gates are recorded in [P7.md](implementation/kit-fluent-v1/P7.md). P6 does not certify a full ContentDialog or all-platform zero animation.
+Evidence and unclosed performance/reader gates: [STATUS](STATUS.md), [HISTORY](HISTORY.md).

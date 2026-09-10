@@ -48,11 +48,10 @@ jobs:
       - if: runner.os == 'Windows'
         run: cargo build --locked -p quadrant-kit-gallery
       - if: runner.os == 'Windows'
-        run: pwsh -NoProfile -File scripts/capture_gallery_baseline.ps1 -Mode Smoke -Page 4 -Preview 1
-      - if: runner.os == 'Windows'
         run: |
           python scripts/capture_gallery_baseline.py --mode Smoke --destination home
           python scripts/capture_gallery_baseline.py --mode Smoke --destination all-components
+          python scripts/capture_gallery_baseline.py --mode Smoke --destination controls
           python scripts/capture_gallery_baseline.py --mode Smoke --destination navigation-view
       - if: runner.os == 'Windows' && always()
         uses: actions/upload-artifact@v4

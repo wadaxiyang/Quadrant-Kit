@@ -1,13 +1,16 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 # SPDX-License-Identifier: GPL-3.0-only
+import io
 from pathlib import Path
 import sys
+import tarfile
 import tempfile
 import tomllib
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from slint_contract import parse
+from verify_package_consumer import extract_files
 from verify_remote import KIT_URL, SLINT, check_resolution, generate_consumer, isolated_environment, validate_request
 
 
@@ -54,6 +57,23 @@ class RemoteVerificationTests(unittest.TestCase):
             kit['manifest_path'] = str(cache / 'sibling/Cargo.toml')
             with self.assertRaises(ValueError):
                 check_resolution(data, cache, 'a' * 40)
+
+
+class LocalPackageVerificationTests(unittest.TestCase):
+    def test_extraction_rejects_escape_and_links(self):
+        for name, link in (('../outside', False), ('/absolute', False), ('package/link', True)):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                archive = root / 'case.crate'
+                with tarfile.open(archive, 'w:gz') as package:
+                    member = tarfile.TarInfo(name)
+                    if link:
+                        member.type = tarfile.SYMTYPE
+                        member.linkname = '../outside'
+                    package.addfile(member, io.BytesIO(b''))
+                with self.assertRaises(ValueError):
+                    extract_files(archive, root / 'extracted')
+                self.assertFalse((root / 'outside').exists())
 
 
 if __name__ == '__main__':

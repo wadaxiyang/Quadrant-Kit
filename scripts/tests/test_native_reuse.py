@@ -3,6 +3,7 @@
 import copy
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -10,6 +11,8 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from check_native_reuse import implementation_digest, verify
 from slint_contract import ContractError, implementation_facts, parse, public_api
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 class NativeReuseTests(unittest.TestCase):
@@ -170,6 +173,29 @@ class NativeReuseTests(unittest.TestCase):
         (self.root / 'ui/foundation/private/hidden.slint').write_text('global Helpers { Timer {} }', encoding='utf-8')
         with self.assertRaisesRegex(ContractError, 'Foundation instantiates UI'):
             verify(self.root, self.manifest(record))
+
+
+class RuntimeCheckPolicyTests(unittest.TestCase):
+    def test_migrated_button_cannot_downgrade_to_pending(self):
+        original = json.loads((ROOT / 'scripts/native_reuse_manifest.json').read_text(encoding='utf-8'))
+        for name in ('FluentButton', 'IconButton', 'SegmentButton', 'WindowControlButton'):
+            manifest = copy.deepcopy(original)
+            record = next(r for r in manifest['records'] if r['component'] == name)
+            parsed = parse((ROOT / record['implementation']).read_text(encoding='utf-8'))
+            record.update(status='custom/pending-migration', classification='standard-control-pending',
+                          missing_capability='Attempted downgrade', permitted_custom_behavior=['ordinary command'],
+                          reviewed_implementation_sha256=implementation_digest(
+                              parsed['definitions'][name], parsed['bodies'][name]))
+            with self.subTest(name=name), self.assertRaisesRegex(ContractError, 'New pending command debt'):
+                verify(ROOT, manifest)
+
+    def test_runtime_runner_cli_contract(self):
+        script = str(ROOT / 'scripts/run_button_checks.py')
+        help_result = subprocess.run([sys.executable, script, '--help'], capture_output=True, text=True)
+        self.assertEqual(help_result.returncode, 0, help_result.stderr)
+        self.assertIn('--build-only', help_result.stdout)
+        invalid = subprocess.run([sys.executable, script, '--invented-input'], capture_output=True, text=True)
+        self.assertEqual(invalid.returncode, 2)
 
 
 if __name__ == '__main__':

@@ -1,329 +1,110 @@
-# Validation and boundary contracts
+# Validation
 
-## Current P4 selection checks
+要求 Python >=3.11、固定 Rust/Slint 工具链及平台原生构建依赖。命令从 Kit 根目录执行。
+选择与改动相关的检查；记录实际命令、源码 SHA/dirty/内容哈希、环境、结果和原始报告。
+静态、编译、输入、截图、读屏、性能分别报告 PASS / FAIL / NOT_RUN / BLOCKED。
 
-`python scripts/run_button_checks.py --suite selection` builds and runs the isolated
-P4A native event host, including programmatic state, disabled input and model changes.
-The `numeric` suite covers native Slider/SpinBox bounds, editing/read-only/disabled,
-and ProgressBar/ProgressRing running/hidden/stable-render state. The paired
-`progress-100` scene creates 50 native/Kit bars and 50 rings with identical geometry.
-RadioGroup static re-export is deliberately verified by the scanner and generated
-Rust compilation; build-script-only generation cannot prove compiler-special child
-lowering works. `run_perf.py --scenes selection-100 --samples 30` compares paired
-native/Kit CheckBoxes under the existing release measurement protocol.
+## Core checks
 
-## Retained Fluent evolution P2 checks
+```console
+cargo fmt --all --check
+cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+cargo test --workspace --locked
+python scripts/check_ui_boundaries.py
+python scripts/check_native_reuse.py
+python -m unittest discover -s scripts/tests -p "test_*.py"
+cargo build --locked -p quadrant-kit-gallery
+```
 
-P2 migrates FluentButton to a visible native Button. The explicitly reviewed current
-snapshot removes show_icon/accent/preview inputs and adds accessible_name plus
-read-only native state outputs. Other component declarations were unchanged in that P2 phase; later contracts are described in PUBLIC_API. Run
-`python scripts/run_button_checks.py` for the isolated current event/geometry host;
-it saves source, build/runtime logs and light/dark state images. Windows indexed
-and physical input is separately recorded in the P2 report. Performance schema 2
-separates software frame-buffer readiness from unsupported AfterRendering/present.
+边界检查包括分层/循环、Gallery 公共入口、当前 API/默认值、原生复用、Cargo 解析图、
+本地资源路径、hash 与许可。根包正常依赖为空；Gallery/测试路径例外不授权 Product 覆盖。
+未知语法显式失败。词法分析不验证表达式类型、继承成员、实际输入或辅助技术；
+锁定编译器、`gallery/ui/api_probe.slint` 与运行检查补足这些类别。
 
-## P1 foundation checks retained
-
-Current API checks compare the facade, reviewed current snapshot, PUBLIC_API
-declarations/defaults and actual probe imports/uses. Export/member/type counts
-derive from those current artifacts; historical counts below are measurements,
-not permanent API restrictions. Keep valid behavioral assertions when changing
-current call sites; do not maintain frozen old/new consumer fixtures.
-
-`python scripts/check_native_reuse.py` is implemented and covered by positive/
-negative fixtures in normal Python test discovery. `check_ui_boundaries.py` also
-calls it, so the existing Linux/Windows/macOS CI boundary steps inherit enforcement.
-It checks component-record coverage/public ownership, real native references,
-aliases/composition, duplicate input, literal hidden proxies and reviewed current
-custom-input debt. It prints pending migrations and runtime_verified=false.
-See NATIVE_REUSE.md for limits; native runtime/a11y is never inferred from its PASS.
-
-The scanner additionally retains balanced implementation bodies for that checker
-and resolves only verified Slint 1.17.1 Date/Time public type exports. Builtin model
-references are accepted as declarations; the locked compiler checks their semantics.
-Unsupported public syntax/unknown std re-exports still fail. The native compilation
-probe exercises aliases/re-exports and actual type bindings.
-
-The existing Kit API probe includes host-controlled selection/state, explicit
-slot enabled bindings, child content, focus entry methods and a narrow editor.
-This proves compilation only. The status/manifest/catalog set and README's editable
-SPEC Mermaid source also have tests. No public API/default or baseline changes
-are adopted by P1. Phase-specific results belong in
-[P1.md](implementation/kit-fluent-v1/P1.md); historical sections below keep their
-original facts. Package checks still require clean committed source; no automatic
-commit or baseline acceptance is authorized by a test failure.
-
-Current native-window integration checks and platform limits are recorded in
-[GALLERY_NATIVE_CHROME_VALIDATION.md](GALLERY_NATIVE_CHROME_VALIDATION.md).
-
-The current evolution authority is [Fluent SPEC v1.1](specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md)
-and its [stage ledger](implementation/kit-fluent-v1/STATE.md). Extraction SPEC v2
-and the NavigationView/Gallery rebuild gates retain their historical scope.
-Kit's Python standard-library
-scanner checks its own import, dependency, cycle, API and asset contracts. Tasks
-has completed its separate cutover and owns its Product/runtime guards. Kit can
-be built, checked and learned without opening Tasks. Historical phase results
-below retain their original scope; publication is summarized at the end.
-
-## Guard scope
-
-`python scripts/check_ui_boundaries.py` reads the full Kit/Gallery Slint trees, the facade's reachable exports, the reviewed API baseline, asset manifest, source headers, Cargo manifests and host-filtered `cargo metadata --locked`. It checks:
-
-- foundation → no higher layer; primitives → foundation; patterns/overlays → their own layer, primitives and foundation. Same-layer imports must be acyclic; patterns and overlays cannot import each other. Implementation cannot import the facade.
-- Gallery may import its own files, std-widgets and the exact named `@quadrant-kit` facade. Raw Kit paths, external imports and canonical path escapes fail.
-- Multiline declarations/imports, re-export aliases, comment/string delimiters, escaped strings, public property direction/type, callback arguments/returns, pure public functions, enum order/values, struct fields and explicit base types. Unknown public syntax fails explicitly.
-- All 59 currently reachable public names, extra/missing exports and duplicate definitions. Actual Product names/tokens are rejected; generic FocusScope, focus-ring, task text and copyright references remain legal.
-- Static image references share the same scanner with the distribution checker. Referenced files must stay in the package; all icon assets have a current hash/MIT record, and handwritten source retains GPL/copyright headers. MIT SVGs are never given GPL source headers.
-- Kit helper has no normal/runtime dependency edges. Gallery's same-repository Kit path build dependency is allowed. Product packages and source patches/replacements fail; resolved Slint stays at 1.17.1.
-
-This is deliberately not a complete Slint compiler. Expression typing, builtin inherited properties, event behavior and native accessibility require the pinned Slint compiler, Gallery probe and runtime evidence. String interpolation and new declaration syntax outside the supported subset currently fail and require an explicit scanner extension with fixtures. Literal Unicode escapes follow the installed Slint 1.17.1 literal implementation. Formatting/comments and underscore/hyphen spelling normalize; string contents retain semantic whitespace.
-
-The Cargo module also retains fixtures for Tasks Git+full-SHA, alias, workspace-inherited, target/build/dev, local-source and resolved-revision rules. These test source-policy machinery and do not validate the current external Tasks checkout. Product configuration, Agent/GUI graphs and window contracts remain owned and verified by that repository; its historical cutover is recorded separately below.
-
-## Reviewed baselines
-
-The subsequent user-requested Windows shell integration is recorded in
-[GALLERY_TITLE_BAR_VALIDATION.md](GALLERY_TITLE_BAR_VALIDATION.md). It supersedes
-the earlier main-Gallery native-decoration deferral without rewriting historical
-phase evidence. Its checks apply to the changed host and explicit Slint feature.
-
-Navigation Phase 6 catalog/route behavior is recorded in
-[NAVIGATION_REBUILD_PHASE6.md](NAVIGATION_REBUILD_PHASE6.md). Current keyboard/focus
-polish, the six-command common gate, native input observations and 184 simulated-DPI
-render scenes are recorded in [NAVIGATION_REBUILD_PHASE7.md](NAVIGATION_REBUILD_PHASE7.md).
-Real monitor transitions and unavailable platform/accessibility coverage remain
-separately NOT_RUN. The final local construction gate and identified package/MSRV/
-incremental evidence are tracked in [NAVIGATION_REBUILD_PHASE8.md](NAVIGATION_REBUILD_PHASE8.md).
-The unchanged public API was reviewed in [Phase 3](NAVIGATION_REBUILD_PHASE3.md).
-
-Current repository tests compare every PUBLIC_API.md Slint declaration, including
-defaults, with the facade; reconcile all 59 probe imports and their uses; check 290 explicit properties, 34 callbacks, nine public functions, 42 components, six globals, eight enums and three structs; and reject live legacy navigation/shell identifiers. Native inherited members additionally depend on the pinned compiler/probe. The catalog test separately requires all 42 visual exports to have real typed
-destinations. Probe compilation complements these declaration/token checks.
-
-`scripts/kit_api_v1.json` schema 1 records the exact current facade. The historical navigation baseline had 35 names; Fluent additions/removals are reviewed in the staged reports. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 added NavigationView with 15 properties and six callbacks. Phase 3 removes SidebarItem and three legacy sidebar tokens, rebinding two navigation defaults to their identical resolved values; all other surviving contracts are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.
-
-Initial migration differences are explicitly authorized by SPEC v2:
-
-| Area | Removed from the old embedded Kit |
-|---|---|
-| Public names | Branding, TaskRowShell, InboxItem, InboxPane |
-| Theme | q1_accent, q2_accent, q3_accent, q4_accent |
-| Typography | timer |
-| UiConstants | focus_wide_breakpoint |
-| FluentIcons | quadrants/today/focus/review/completed regular and filled aliases, restore_task |
-
-All other declared generic defaults remain unchanged. The existing 32-entry asset baseline was reviewed against the live static closure and byte hashes; SVG bytes and licensing were not refreshed or rewritten. Extraction hashes are historical provenance, while this API baseline and asset manifest are live guards.
-
-To propose an intentional API update:
+## API review
 
 ```console
 python scripts/check_ui_boundaries.py --write-baseline target/kit_api_candidate.json
 git diff --no-index scripts/kit_api_v1.json target/kit_api_candidate.json
 ```
 
-The write command only emits a candidate; it does not report validation success. Review both signature and default changes, update public documentation/probes as needed, then deliberately adopt and commit the baseline. CI invokes only the read/check command and never refreshes a baseline.
+第一条只生成候选，不表示通过。审核新增/删除、成员、类型和默认表达式，同步 API 文档、
+probe、调用和行为断言后才采用快照。CI 不自动刷新。函数体等行为不由声明快照证明。
+公共 API 文档声明、组件状态/manifest/catalog 和 README 架构图另有一致性测试；
+文档内的本地链接与章节锚点也由 Python 测试检查。
 
-## Reproducible checks
-
-Use the commands in the root README with Python 3.11+. `cargo package --locked -p quadrant-kit` must run from a clean committed checkout. Distribution verification checks Git-tracked closure against package list and compares required Slint/resource/license bytes in the actual `.crate` archive without extracting it.
+## Runtime suites
 
 ```console
-python scripts/verify_incremental.py
+python scripts/run_button_checks.py --suite navigation --profile release
+```
+
+同一入口支持下列 suite；`--build-only` 不宣称输入通过，长生命周期可设置有界
+`--timeout-seconds`（1..300）。生成源码、锁文件、解析图、日志、图像和结果保存在 target。
+
+| Suite | 重点 |
+|---|---|
+| button / foundation | 按钮、焦点、禁用、文本、基础组合 |
+| selection | 原生 checked、RadioGroup 静态 child 语法、模型/程序更新 |
+| numeric | Slider/SpinBox 边界、只读与 progress 停止/隐藏 |
+| containers | 原生滚动、列表选择、虚拟化、GroupBox/TabWidget |
+| pickers | 表格状态/排序请求、Date/Time 原生类型、取消与焦点 |
+| toast / modal | 一次性请求、关闭、有限焦点与恢复 |
+| navigation | 层级、非法模型、受控状态、键盘、居中收起态与搜索保留 |
+| popup / inline | 原生 popup/menu、关闭、焦点和 host 条件子内容 |
+| motion | 快速反转、reduced-motion、退出输入/Timer 与 100 次生命周期 |
+| gallery-settings | 实际 toolbar/公共 Back、主题/预览及页面重建 |
+
+WindowEvent 输入是控件运行证据；Unicode 编辑不等于 OS IME。Native Menu 的系统输入
+只在验证进程拥有前台窗口时发送。UIA 也不等于完整读屏验证。
+
+## Gallery and native window
+
+```console
+python scripts/capture_gallery_baseline.py --mode Smoke --destination navigation-view
+python scripts/capture_gallery_baseline.py --mode Catalog
+```
+
+场景、参数和练习见 [GALLERY](GALLERY.md#snapshot-interface)。成功写出图像与人工视觉
+判读分开；模拟 scale 不证明真实显示器切换，软件图像不包含 DWM 合成区域。
+
+Windows 整窗与 UIA 检查：先把构建好的 exe 复制为
+`target/gallery-settings-uia/gallery.exe`，再执行：
+
+```console
+powershell -NoProfile -File scripts/probe_gallery_settings.ps1 -Executable target/gallery-settings-uia/gallery.exe -OutputDirectory target/gallery-settings-uia
+```
+
+该脚本只操作自己的 Gallery，记录 PrintWindow、普通/最大化几何、Back/Settings、
+收起态唯一 Toggle、无搜索/箭头、主/页脚居中和展开恢复。构建时不要运行输出目录里的
+exe，以免 Windows 链接器无法替换它。
+
+## Distribution
+
+从干净、已提交且包含当前预期源码的 checkout 执行：
+
+```console
+python scripts/verify_distribution.py --package
+cargo package --locked -p quadrant-kit --list
+cargo package --locked -p quadrant-kit
+python scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.0.crate
+python scripts/verify_package_consumer.py --help
 cargo +1.92.0 build --locked -p quadrant-kit -p quadrant-kit-gallery --target-dir target/msrv-1.92
 ```
 
-The incremental command requires exclusive checkout/build access. It builds Gallery, changes a deep Theme accent token, rebuilds, restores exact original bytes and rebuilds again; then repeats with a referenced SVG. It requires the Gallery build script to rerun and the binary hash to change. It saves verbose build logs and a JSON report under the selected target's `incremental-verification/`. This is build invalidation evidence, not an assertion of pixel equality.
+先看实际 archive consumer 脚本参数再选输入。包检查核对 Git-tracked 源码/静态资源闭包
+及实际 archive 字节；不为清洁状态擅自提交文件。发行与外部接入见 [CONSUMER_GUIDE](CONSUMER_GUIDE.md)。
 
-`.github/workflows/ci.yml` runs on push, pull_request and workflow_dispatch with contents:read. Linux runs quality, boundary/tests, Gallery/probe, package/archive and incremental checks; Windows builds/checks and captures a smoke scene; macOS checks workspace all-targets and the guard; a separate Windows job actually builds helper and Gallery with Rust 1.92.0. CI execution and retained remote consumption are Phase 3 gates, not inferred from this workflow's presence.
+明确授权远程验证后，用 `verify_distribution.py --remote`，指定 `--kit-url`、已验证
+40 位 `--rev` 和 `--retained-ref`；支持 `--run-gui`、`--result`。它匿名获取/核对保留
+引用，隔离 Cargo/Git 源码与凭证覆盖，生成全新 Git+SHA 消费者。Build-only 的运行状态
+是 NOT_RUN；本地包消费者不等于新远程消费者。
 
-## Phase 2 local evidence — 2026-09-06
+## Exclusive and performance checks
 
-Implementation checked: `960373bd30d350699ed29fec667cb69ab3ad77fd`; this evidence is recorded by a subsequent documentation-only commit. Local logs are kept under ignored `target/phase2/` and `target/incremental-verification/`; screenshots carry their own source/environment identity. Development Rust remains 1.94.1; dependency versions and Slint renderer defaults were not upgraded.
+`python scripts/verify_incremental.py` 需要独占 checkout/build：它修改再精确恢复深层
+token 与 SVG，验证 build-script 重跑及二进制变化，记录源码恢复状态。不要并发编辑。
+性能场景、采样和预算见 [PERFORMANCE](PERFORMANCE.md)；不得改变预算掩盖失败。
 
-| Check | Result | Evidence |
-|---|---|---|
-| Windows fmt, clippy all-targets/all-features with warnings denied, Rust tests | PASS; 5 Rust tests | `fmt.log`, `clippy.log`, `tests.log` |
-| Windows boundary/API/assets/resolved Cargo and Python fixtures | PASS; 28 exports, 32 SVGs, 31 Python tests | `boundaries-final.log`, `python-tests-final.log` |
-| Windows native Gallery + compiled API probe | PASS | `build-final.log` |
-| Rust 1.92.0 Windows MSVC helper and Gallery actual build | PASS; separate MSRV target | `msrv.log` |
-| Linux Ubuntu 24.04 x86_64 under WSL2: fmt, clippy all-targets/all-features, Rust tests, Gallery/probe build | PASS; 5 Rust tests; own Linux target | `linux-fmt.log`, `linux-clippy.log`, `linux-tests.log`, `linux-build.log` |
-| Linux boundary/API/assets/resolved Cargo and Python fixtures | PASS; 31 Python tests | `linux-boundaries-final.log`, `linux-python-tests-final.log` |
-| Independent local Git clone, own target, no Tasks checkout | PASS: boundary guard and Gallery build | `isolated-boundaries.log`, `isolated-build.log` |
-| Source package and actual archive closure | PASS: 72 files packaged; 59 required files byte-checked, including 32 SVGs | `package.log`, `distribution.log` |
-| Deep token and SVG incremental invalidation | PASS: both trigger Gallery build-script rerun and binary change; exact source bytes restored | `incremental-verification/result.json`; verbose logs name the changed token/SVG |
-| Windows and Linux WSLg Controls rendering smoke | PASS: page 4, preview 1, Light, 1040×800, 100%, winit-software | `capture-windows.log`, `capture-linux.log`; source-keyed PNG/JSON pairs under `target/visual-baselines/` |
-| macOS workspace all-targets | NOT_RUN locally: no macOS host/SDK; native CI job prepared | Must run on the published candidate in Phase 3 |
-| Remote CI, retained commit and Git+SHA consumer | NOT_RUN: candidate has not been pushed | Phase 3 |
-
-The Linux first build failed on missing fontconfig development files; the first WSLg render failed on missing libxkbcommon-x11. Both were resolved with Ubuntu packages extracted into a user-owned validation sysroot, with pkg-config and runtime library paths scoped to validation commands. No system package replacement or repository-specific linker override was committed. Initial stale apt indexes also produced 404s, resolved with a private refreshed package index. Linux/Windows screenshots share the same clean source SHA and content hash; fonts differ by platform, so pixel equivalence is not claimed.
-
-**Gate 2 local requirements are satisfied:** Kit can be independently reviewed, built, tested and packaged, the public contract excludes Product APIs and licensing material is present. This is not completion of all platform/publication gates or of the full extraction. macOS and real remote consumption remain mandatory before final migration acceptance.
-
-Native keyboard/IME, real system-theme transitions, real monitor DPI changes and complete accessibility acceptance remain unverified. In particular ModalManager does not yet promise a complete focus trap/restoration contract; text wrappers retain std-widgets behavior but custom control screen-reader/focus coverage remains a P1 follow-up. Phase 1 screenshot evidence is documented separately in GALLERY.md.
-
-## Phase 3 publication verification
-
-The distribution command now supports anonymous retained-reference verification and a generated Git+SHA consumer with fresh cache/target/source directories. Its additional fixtures cover request validation, inherited source/credential isolation, manifest generation and resolved source/path mismatches. See CONSUMER_GUIDE.md for parameters. Publication evidence belongs to the actual remote run/report and the Tasks migration ledger, not to a self-referential SHA inside this candidate. Historical NOT_RUN entries above describe Phase 2.
-
-### Published source and acceptance evidence
-
-The adopted source `838ecfbead2d0a1966907ddd742cb6f34516d3f6` passed all four jobs
-in [candidate CI](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34003620362),
-[retained-tag CI](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34004051391)
-and [main CI](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34004053852).
-These are actual completed runs at that exact source, covering Linux quality,
-package/archive and incremental checks, Windows native Gallery/screenshot,
-macOS all-targets/guards and actual Rust 1.92 helper/Gallery builds. The suite
-contains 35 Python fixtures and five Rust tests at this source.
-
-The protected retained tag and peeled source are listed in CONSUMER_GUIDE.md.
-Independent anonymous fetch, a neutral Git+SHA consumer with fresh Cargo/target
-directories, and Light/Dark consumer rendering passed. Private reports are under
-`target/phase3/`; the externally recorded integration evidence is in the
-[Tasks ledger](https://github.com/wadaxiyang/Quadrant-Tasks/blob/main/docs/migrations/kit-extraction-v2.md).
-Tasks does not need to be present to run any Kit check. Documentation added after
-the adopted source is validated at its own commit; it does not retarget consumers.
-
-Phase 7 also executed the reversible Badge exercise documented in GALLERY.md.
-At that historical publication point, remaining work included complete native keyboard/IME/screen-reader coverage, modal Tab containment/restoration and the full state/size/backend matrix. Later Fluent P5B/P6 reports establish the finite modal action/restore contract; reader and broader platform limits remain separate. These
-are explicit coverage limits. Product's user-accepted tray/reminder/DPI scenarios
-do not certify every Kit component or operating-system theme transition.
-
-
-## Fluent evolution P3 current gate
-
-Run the common checks above and `python scripts/run_button_checks.py --suite foundation`.
-The current API snapshot intentionally changes seven declarations; the component
-set stays at 35 names/21 visuals, now 234 properties and 20 callbacks. The P3 report
-records reviewed removals/additions, true input evidence, all-page rendering and
-retained intermediate failures. Historical API counts above remain historical.
-No pending native-command allowance remains after P5C. Full reader/IME,
-WinUI runtime reference and full native accessibility remain separate; current finite modal/navigation evidence is recorded in P5B/P5C.
-
-### P4C native containers
-
-`python scripts/run_button_checks.py --suite containers` builds an actual Rust
-consumer and dispatches public WindowEvent input. It compares 10,000-item Kit/native
-ListView delegate counts and scroll extents, then exercises model replacement,
-StandardListView selection, wheel input, explicit group-child enable coordination
-and static native tabs. `python scripts/run_perf.py --scenes lists-10000 --samples 30`
-uses matching native/Kit virtual-list geometry and records all paired samples.
-
-### P4D native table and picker checks
-
-`python scripts/run_button_checks.py --suite pickers` verifies public WindowEvent
-table input, native date/time acceptance/cancel, invalid calendar text, host value
-ownership, disabled/rapid popup lifetime and opener focus. Native popup screenshots
-include a bottom-right placement. This is separate from OS-level reader validation.
-`python scripts/run_perf.py --scenes table-100 --samples 30` pairs 100-row native/Kit
-tables with identical columns, dimensions, font, backend and renderer.
-
-### P5A transient input/lifetime
-
-`python scripts/run_button_checks.py --suite toast --timeout-seconds 45` waits
-through real four-second timeouts and dispatches native pointer/key input. It checks
-one request per cycle, host ownership, hover pause, hidden input, rapid reversals
-and native tooltip focus behavior. The runner accepts a bounded 1..300 second
-allowance for longer lifecycle/idle suites; default remains 30 seconds.
-
-### P5B finite confirmation
-
-`python scripts/run_button_checks.py --suite modal` checks actual native button
-Return/Space, initial Cancel/primary focus, Tab/ShiftTab cycling, Escape, scrim,
-programmatic/rapid close, one request per cycle and host restore callback counts.
-`python scripts/run_button_checks.py --suite button` retains the current upstream
-button/composition regression, now navigating from initial Cancel to Confirm.
-These are finite WindowEvent contracts, separate from actual OS reader containment.
-
-### P5C bounded navigation
-
-`python scripts/run_button_checks.py --suite navigation --profile release` runs
-16/64/256/257 model replacement/row-change/selected-only checks, real public
-WindowEvent keyboard/pointer sequences, and 30 cold validation timings per size.
-Raw BENCH lines retain every sample. `--profile` defaults to debug for other suites.
-This is bounded ScrollView composition, not a virtualized infinite tree.
-
-### Navigation appearance and Gallery settings follow-up
-
-The navigation suite also checks flat pointer selection, keyboard focus, held-key
-repeat, Escape/outside release/focus-loss/disable cancellation. Its existing model,
-hierarchy and footer traversal assertions remain intact. The updated compact
-contract checks centered painted icons, full-width destination activation without
-a chevron target, keyboard expansion and expanded-only search.
-`python scripts/run_button_checks.py --suite gallery-settings --profile release`
-mounts the actual Gallery toolbar and Settings page in a generated verification
-host. Native keyboard input checks theme/preview propagation, system-theme changes,
-page recreation and programmatic updates after user input. It also exercises
-caption Back pointer/keyboard activation, repeat suppression and cancellation. This is WindowEvent
-evidence, separate from OS UI Automation and a screen reader.
-After building Gallery, copy the executable into an ignored verification directory
-(e.g. `target/gallery-settings-uia/gallery.exe`), then run `powershell -NoProfile -File
-scripts/probe_gallery_settings.ps1 -Executable target/gallery-settings-uia/gallery.exe
--OutputDirectory target/gallery-settings-uia` on one line. Never run the build output
-while a linker might replace it. The probe launches only its own Gallery process,
-verifies restored/maximized native caption geometry and hit regions, saves actual
-PrintWindow images, checks toggle/name placement, invokes Settings/Home/Back, and
-uses foreground-guarded Space to fold/unfold the pane. It does not claim reader
-certification or physical monitor DPI coverage. Capture the affected pages
-with `python scripts/capture_gallery_baseline.py --mode Matrix --destination settings`
-and the same command with `--destination home`.
-
-### P5D popups and native menus
-
-`python scripts/run_button_checks.py --suite popup --profile release` exercises
-actual native popup state/dismissal, focus restore, separate command regions and
-scroll content. On Windows, native Menu uses an OS modal loop; the test sends
-Down/Return only after verifying that its own process owns the foreground window.
-This is a real Windows input subset, not reader verification. Raw logs retain the
-foreground check and all native/current failures.
-
-### P5E inline lifetime
-
-`python scripts/run_button_checks.py --suite inline --profile release` verifies
-controlled requests, required host-conditional Expander slots, child mount/timer
-teardown, explicit header focus, native disabled behavior and InfoBar close cycles.
-The popup suite additionally forces disabled Split focus before Space to guard
-the native edge found by the P5E reproducer. Native reader/live-region semantics
-remain a separate verification category.
-
-### P6 motion
-
-`python scripts/run_button_checks.py --suite motion --profile release` tests
-actual intermediate opacity pixels, native actions during entry, immediate exit
-input release, reduced/disabled cleanup and 100 reversals with 20 transient rows.
-`python scripts/run_motion_bench.py --label <measurement-name>` creates an exact
-source release report under target/motion-bench: 200 software-buffer frame samples
-and at least 60 seconds idle for 1/20 Toast instances. Each process has one matched
-frame driver, stops it before idle, and uses GetProcessTimes on Windows. Unsupported
-render hooks remain null, not zero-redraw evidence. See P6.md for paired sources.
-
-
-### P7 current integration commands
-
-Use the performance commands and metric boundaries in PERFORMANCE.md. For Windows
-UI Automation tree/name/Invoke inspection, first build the current verification
-host with `python scripts/run_button_checks.py --suite button --build-only`, then
-run `powershell -NoProfile -File scripts/probe_windows_accessibility.ps1 -Executable
-<reported-executable> -OutputDirectory <target-directory>` on one line. The probe
-launches and inspects only its own process. The current Button fixture additionally requires exactly one visible command count, observed native focus and a UIA disabled state. This remains separate from a real screen-reader session.
-
-After committing a clean current source, run `python scripts/verify_package_consumer.py`.
-It builds/verifies the actual .crate, compares required bytes, extracts regular
-files only into target/, and compiles the current full API probe plus a neutral
-consumer against that extracted package. A copied executable renders Light/Dark
-from an empty runtime directory. The test reuses the registry/build cache; it does
-not certify remote retention/CI, a cold build, or any external Tasks dependency.
-Run `verify_incremental.py` in an exclusive clean test clone, using its documented
-`--target-dir` only when no other build is using that directory.
-
-### P8 current local candidate
-
-[P8.md](implementation/kit-fluent-v1/P8.md) records the final source, core checks,
-128 Windows Catalog captures, clean P7 package consumer/incremental/MSRV evidence,
-Linux checks and remaining limits. Reproduce directory coverage with
-`python scripts/capture_gallery_baseline.py --mode Catalog --output-directory target/verify-p8/visual`.
-The current Linux smoke uses the documented public backend and the host's existing
-validation sysroot; Chinese glyph coverage is incomplete, so a successful render
-process is not full visual acceptance. Hosts must provide appropriate font coverage;
-do not copy system fonts into the source package. Current remote publication/CI
-and retained Git+SHA consumer checks remain separately unauthorized/unperformed.
+CI 配置在 [.github/workflows/ci.yml](../.github/workflows/ci.yml)。工作流存在不等于该
+SHA 已通过；平台/发布现状见 [STATUS](STATUS.md)，历史执行见 [HISTORY](HISTORY.md)。

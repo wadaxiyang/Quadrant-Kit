@@ -1,12 +1,8 @@
 # Public API — current Quadrant Kit
 
-`ui/kit.slint` is the only supported Slint entry. All current public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. The retained extraction source in CONSUMER_GUIDE.md exposes its original API; current Fluent delivery and publication status is tracked in the stage ledger.
+`ui/kit.slint` is the only supported Slint entry. All current public names below participate in `gallery/ui/api_probe.slint`, compiled through Gallery. Root Rust API is limited to `SLINT_LIBRARY_NAME: &str` and `slint_library_path() -> PathBuf`; generated Slint runtime types belong to the consumer. Current delivery and verification gaps are tracked in [STATUS](STATUS.md); historical versions and evidence are in [HISTORY](HISTORY.md).
 
 Signatures below are copied from the current sources, including declared defaults. They describe explicitly declared API; inherited Slint element properties still apply. Internal filenames are links for reading implementation, not additional supported import entry points. `scripts/kit_api_v1.json` records the reviewed current contract (see the current snapshot and facade for the exact set). These counts and historical signatures are not permanent invariants. APIs can be added, removed, renamed or adjusted with a concrete reason, synchronized current callers/docs/probes and an explicitly reviewed snapshot. Each version keeps one implementation, without old aliases or compatibility branches. The guard reports signature and default-expression differences separately; see [validation](VALIDATION.md) for its scope and explicit update process.
-
-Phase 3 removes SidebarItem, Theme.sidebar_bg and the two UiConstants.sidebar_* widths.
-The new pane tokens retain their resolved transparent/54 px values; content_radius
-and other shared tokens remain. See [Phase 3 cutover](NAVIGATION_REBUILD_PHASE3.md).
 
 ## Coverage and behavior
 
@@ -15,12 +11,16 @@ and other shared tokens remain. See [Phase 3 cutover](NAVIGATION_REBUILD_PHASE3.
 - SurfaceCard, Badge, MetricCard and SettingRow have dedicated pages. Non-interactive reference specimens are labeled Reference.
 - Feedback overview compares outcomes; ToastHost, ModalManager and TooltipHost have dedicated pages. ModalManager is one finite confirmation overlay with native action activation, scoped Tab/Escape handling and an explicit host focus-restore callback; full dialog and screen-reader semantics remain unverified.
 - NavigationView demonstrates controlled three-level primary and two-level footer models. Navigation foundations composes NavigationBackButton, NavigationPaneToggleButton and NavigationContentSurface. PageHeader, SectionHeader, EmptyState and WindowControlButton have dedicated destinations.
-- IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#observable-action-specimens) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
-- Navigation keyboard/focus polish and its Windows input/render evidence are recorded in [Phase 7](NAVIGATION_REBUILD_PHASE7.md). P5C adds bounded Up/Down/Home/End item traversal; full IME/screen-reader/platform coverage remains unverified. Screenshot rendering is not interaction or accessibility proof.
+- IconButton, PageHeader and WindowControlButton actions have visible counters in the running Gallery. [Reproduction steps and native results](GALLERY.md#pages-and-interaction) cover mouse/Enter/Space activation and IconButton disabled suppression; the compile-only probe is separate evidence.
+- Navigation supports bounded Up/Down/Home/End item traversal; scoped Windows input/render evidence is in [HISTORY](HISTORY.md#最新导航证据); full IME/screen-reader/platform coverage remains unverified. Screenshot rendering is not interaction or accessibility proof.
 
-The historical extraction removed Branding, TaskRowShell, InboxItem and InboxPane, plus Q1–Q4 colors, Typography.timer, UiConstants.focus_wide_breakpoint and 11 product icon aliases. The subsequent local navigation rebuild intentionally replaces SidebarItem with the controlled NavigationView API. That historical 35-name contract has since evolved through the Fluent phases below.
+Version changes are recorded in [CHANGELOG](../CHANGELOG.md). This document describes only the current contract.
 
 ## Declarations
+
+Declaration excerpts preserve source spelling and defaults. References to private
+children require the linked implementation context; use Gallery integration
+snippets when composing a consumer.
 
 ### Elevation
 
@@ -312,7 +312,7 @@ or preview state. There is no checkable/selected application state in this wrapp
 The empty native control is 32×32 logical pixels. Defaults use native content
 minimums; explicit width/height remain host inputs. Long labels need sufficient
 host width (no automatic wrapping or truncation API); abbreviate the visible label
-and set `accessible_name` to the full action if necessary. The P2 negative sizing
+and set `accessible_name` to the full action if necessary. A recorded negative sizing
 case confirms that forcing 160px on a longer label can paint text outside both
 std Button and Kit bounds; this is not a supported automatic-elision contract.
 An empty/invalid image
@@ -320,7 +320,7 @@ renders no icon; valid icons use native 20px geometry and native text-color tint
 For an icon-only command, provide `accessible_name`; otherwise the text is its
 accessible label. The component has no supported arbitrary-content slot.
 
-**P2 Breaking changes:** `show_icon` is removed (image presence decides), `accent`
+**Version changes:** `show_icon` is removed (image presence decides), `accent`
 is removed (choose normal or primary), and all three `preview_*` inputs are removed.
 `has-focus`, `pressed`, and `accessible_name` are added. Text/icon/primary/danger/
 enabled and clicked retain their directions; the public Rectangle base is retained.
@@ -674,7 +674,7 @@ a focused row recovers to a visible enabled ancestor or the pane focus scope.
 Back and pane-toggle buttons suppress commands and visible native focus when disabled; native logical focus may remain. Compact tooltips expose
 ancestor-qualified labels outside the pane clip.
 
-Current row/model coverage: [navigation follow-up](implementation/kit-fluent-v1/NAVIGATION_SETTINGS_FOLLOWUP.md).
+Current row/model coverage: [navigation evidence](HISTORY.md#最新导航证据).
 Rows use flat private navigation targets: transparent idle, subtle hover/selection
 and a left accent indicator. Keyboard focus has an explicit outline; pointer focus
 does not leave a permanent border. Public TouchArea owns pointer capture/cancellation;
@@ -684,25 +684,14 @@ This is a reviewed NavigationView-only exception, not native Button styling.
 Passive eliding labels/icons do not intercept input. Models remain bounded to 256
 combined entries, using ScrollView; this is not unbounded virtual navigation.
 
-## Current-version change protocol (P1)
+## Current-version change protocol
 
-For any component/type/member change, explain the concrete benefit and scope, then
-update its sole implementation, facade when names change, internal callers,
-Gallery/catalog, this document and the existing API probe. Review the candidate
-signature/default diff (including direction, type, base, callback order and state
-ownership), deliberately adopt it only after reconciliation, and document Breaking
-changes and current use. Remove replaced code; no old/new consumer matrix or
-no-op compatibility properties. P1 adopts no new snapshot and changes no public API.
+The current facade, declarations, reviewed snapshot and probe must agree. Review
+intentional changes using [VALIDATION](VALIDATION.md#api-review); retain one current
+implementation, not compatibility aliases or frozen consumers. Historical removals
+are recorded in [CHANGELOG](../CHANGELOG.md).
 
-Define inputs/defaults, outputs/action timing, programmatic updates, empty/invalid
-models, focus/keyboard/disabled/read-only, sizing/long text and slot ownership before
-implementing each new contract. SettingRow's slot controls explicitly bind enabled;
-NavigationView/SegmentButton retain host-controlled state. API probe focus methods,
-slot children, narrow editor and host setters compile without claiming runtime
-behavior. Native wrapper decisions and public type limits are in NATIVE_REUSE.md.
-
-
-## P3 current contracts and Breaking changes
+## Commands, fields and slots
 
 - IconButton and SegmentButton remove all three preview inputs and add
   `accessible_name`, read-only `has-focus` and `pressed`. Bind the name on the
@@ -718,7 +707,7 @@ behavior. Native wrapper decisions and public type limits are in NATIVE_REUSE.md
 - IconButton uses native 20px icon tint and content sizing: the default is 44×32px
   for a populated icon in pinned Fluent, and 32×32px for no icon. Explicitly forcing
   less than native min-width can displace/clip icon content. Native Tooltips own
-  popup timing/position; TooltipHost remains passive content. Danger is the P2
+  popup timing/position; TooltipHost remains passive content. Danger uses a
   neutral native surface plus passive outline, not a red-filled template.
 - WindowControlButton removes unused `symbol`, adds `enabled: true`, and defaults
   to 46×40px instead of inheriting arbitrary parent height. Supply an image and
@@ -745,14 +734,15 @@ behavior. Native wrapper decisions and public type limits are in NATIVE_REUSE.md
   labels; EmptyState removes unused `milestone`. Badge and FluentIcon keep their
   already-small presentation structures; icon optical offsets still need the wrapper.
 
-All command state is native-owned except documented host-controlled selection.
+Ordinary command state is native-owned except documented host-controlled selection
+and the reviewed flat navigation targets.
 Native logical focus may survive disable/re-enable; commands and disabled visuals
 are suppressed, and re-enabling emits no action. Forced undersized native text
 buttons still need sufficient width or abbreviated visible text and a full name.
-See [P3 evidence and limits](implementation/kit-fluent-v1/P3.md), including the
-unrun full IME, reader, modal lifecycle and WinUI reference comparison.
+See [current verification limits](STATUS.md) and [historical evidence](HISTORY.md),
+including the unrun full IME, reader and actual WinUI reference comparison.
 
-## P4A native selection contracts
+## Native selection
 
 These wrappers use the pinned public native API without extra input objects or
 shadow state. `checked` on CheckBox/Switch is native in-out bool; `toggled()` is a
@@ -780,7 +770,7 @@ export { RadioGroup as FluentRadioGroup } from "std-widgets.slint";
 export component FluentComboBox inherits ComboBox { }
 ```
 
-## P4B numeric and progress contracts
+## Numeric and progress
 
 FluentSlider inherits native float value/minimum/maximum/step, orientation, enabled,
 has-focus and changed(float)/released(float). FluentSpinBox inherits native int
@@ -837,7 +827,7 @@ export component FluentProgressRing inherits Rectangle {
 
 ```
 
-## P4C container contracts
+## Containers
 
 ListView and TabWidget preserve the exact public native identity through verified
 static re-exports. ListView requires a single direct for child; TabWidget requires
@@ -885,7 +875,7 @@ export component FluentGroupBox inherits GroupBox { }
 export { TabWidget as FluentTabWidget } from "std-widgets.slint";
 ```
 
-## P4D table and date/time contracts
+## Tables and pickers
 
 StandardTableView keeps builtin TableColumn/StandardListViewItem data. columns and
 current-row share native storage; sorting callbacks request host work and do not
@@ -988,7 +978,7 @@ export component FluentTimePicker inherits Rectangle {
 }
 ```
 
-## P5A transient lifecycle
+## Transient lifecycle
 
 ToastHost shown is host-owned. Each false-to-true shown cycle permits at most one
 dismissed request, shared by native close input and the automatic timer. Hosts set
@@ -1000,10 +990,10 @@ observed cycle. The fixed 56px message area clips/elides beyond its two-line bud
 
 Auto dismissal waits four seconds. Passive hover pauses it; leaving starts a fresh
 four-second interval. Logical shown=false disables close input and stops that
-timer immediately. P6 may retain its disabled rendering subtree for a bounded
+timer immediately. The presenter may retain its disabled rendering subtree for a bounded
 opacity exit; own visible=false destroys it immediately. Retained ancestor pages
 must set shown=false or unload. Toast never acquires focus; a user may focus its
-native close command normally. The P5A report preserves its no-animation baseline.
+native close command normally.
 
 TooltipHost is a passive presenter, not a hover service. Put it in public native
 Tooltip, as IconButton does. Native Tooltip owns delay, pointer positioning, clipping
@@ -1015,7 +1005,7 @@ embedded software-window snapshot may crop edge content. Kit keeps this native
 placement boundary; TooltipHost does not promise work-area clamping or keyboard
 activation. Prefer short supplementary text and keep essential information inline.
 
-## P5B finite confirmation contract — behavior change
+## Finite confirmation
 
 ModalManager is a fixed confirmation with one or two native actions. Initial focus
 is Cancel when show_secondary=true, otherwise the primary action. Return/Space is
@@ -1026,7 +1016,7 @@ must set shown=false in its handler. Ignored requests leave focus in the fixed
 actions but do not repeat commands. Hosts keep show_secondary stable while shown
 and do not programmatically move focus behind the active overlay.
 
-The focus/input subtree is active only while shown. P6 may retain disabled
+The focus/input subtree is active only while shown. The presenter may retain disabled
 presentation during bounded exit. Logical close (including a
 programmatic close after an observed open) calls restore_focus_requested once;
 the host restores its known opener or a valid fallback. Kit cannot capture an
@@ -1042,7 +1032,7 @@ primary/footer validation. Both whole-model replacement and row-change notificat
 re-evaluate it; invalid models suppress rows and their commands. The host still
 owns repair. Changing selected_id does not invalidate structural validation.
 
-## P5D native flyout and command composition
+## Flyout and command composition
 
 FluentFlyout inherits actual PopupWindow: show(), close() and read-only is-open
 are native. The default close-policy is close-on-click-outside; native Escape
@@ -1134,7 +1124,7 @@ Drop-down uses the native Button icon slot for the local chevron (before text);
 SplitButton uses an icon-only native secondary button. Native colorize-icon keeps
 these SVGs visible across themes without depending on text-symbol font coverage.
 
-## P5E controlled inline compositions
+## Inline compositions
 
 FluentExpander expanded is host-owned. A native header Button requests the next
 value through expanded_requested(bool); ignoring the request keeps current state.
@@ -1242,7 +1232,7 @@ export component FluentInfoBar inherits Rectangle {
 }
 ```
 
-## P6 current motion and presentation state
+## Motion and presentation state
 
 Motion.animations_enabled (default true) and reduced_motion (default false) are
 host-owned per-window policy inputs. Effective fast/standard/slow become zero

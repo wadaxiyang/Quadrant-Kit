@@ -9,8 +9,7 @@ import re
 import shutil
 import subprocess
 
-from run_perf import ROOT, execute, generate, source_identity
-from observe_idle import observe
+from run_perf import ROOT, execute, generate, observe_idle, source_identity
 
 
 def main():
@@ -64,7 +63,7 @@ def main():
             shutil.copyfile(ROOT/'target/release'/binary_name,project/'bench.exe')
             for repeat in range(1 if instrumented else 3):
                 log = project/f'run-{repeat}.log'
-                idle = observe([str(project/'bench.exe')],project,log,env)
+                idle = observe_idle([str(project/'bench.exe')],project,log,env)
                 raw = log.read_text(encoding='utf-8')
                 samples = [json.loads(line[5:]) for line in raw.splitlines() if line.startswith('PAGE ')]
                 if 'RESULT=PASS' not in raw or [s['index'] for s in samples] != list(range(200)):

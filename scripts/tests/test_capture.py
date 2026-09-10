@@ -4,7 +4,6 @@ import base64
 import copy
 from pathlib import Path
 import subprocess
-import shutil
 import sys
 import tempfile
 import contextlib
@@ -105,14 +104,6 @@ class CaptureReuseTests(unittest.TestCase):
                 path.write_text(source.replace(old,new),encoding='utf-8')
                 with self.assertRaises(ValueError):
                     load_catalog(path)
-
-    @unittest.skipUnless(shutil.which('pwsh'), 'PowerShell 7 not available')
-    def test_powershell_rejects_conflicts_and_unknown_routes_before_capture(self):
-        script = str(ROOT/'scripts/capture_gallery_baseline.ps1')
-        for args in [['-Page','0','-Destination','home'],['-Destination','missing'],['-Mode','Navigation','-Destination','home']]:
-            result = subprocess.run(['pwsh','-NoProfile','-File',script,*args],capture_output=True,timeout=30)
-            self.assertNotEqual(result.returncode,0)
-            self.assertNotIn(b'Captured ',result.stdout)
 
     def test_content_identity_tracks_uncommitted_bytes_but_ignores_outputs(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -1,222 +1,62 @@
-# Performance protocol — current measurements and retained budgets
+# Performance
 
-P0 adds a neutral, generated harness instead of measuring Gallery as a button.
-Root Kit retains zero normal/runtime dependency edges. That fact is not a speed
-or memory result. P0 smoke results do not certify release performance.
+根包无 runtime 依赖不是速度或内存测量。比较中立的原生 A 与 Kit B 场景，增量为 B−A；
+完整 Gallery 不能用作单按钮基准。实现/资产/配置变化后，旧测量只作为历史证据。
 
-```console
-python scripts/run_perf.py --help
-python scripts/run_perf.py --generate-only
-python scripts/run_perf.py --profile debug --samples 3
-python scripts/run_perf.py --profile release --samples 30
-python scripts/run_perf.py --native-probe
-```
+## Commands and scope
 
-Each invocation creates fresh projects only in `target/perf-harness/<UTC run>/`.
-Native and Kit variants use the same template/features, Fluent, embedded resources,
-winit-software, system Segoe UI Variable Text, 100%, Light, 820×440. The original P0 scenarios were
-empty, import-only, one Button, 100 Buttons, text input and hidden Toast; the current 21-scene matrix is described in the P7 section. Empty/hidden
-native controls are empty-window references (there is no std Toast). The 100
-buttons are 100 real declarations in a for, all within the visible window; there
-is no Gallery catalog/page/platform adapter in the measurement binary.
+| 命令 | 内容 |
+|---|---|
+| `python scripts/run_perf.py --generate-only` | 生成隔离的原生/Kit 消费者 |
+| `python scripts/run_perf.py --native-probe` | 编译公开原生能力探针 |
+| `python scripts/run_perf.py --profile release --samples 30` | 21 配对场景、交替 A/B 顺序，共 1,260 个进程 |
+| `python scripts/evaluate_perf.py <result.json> --output <gate.json>` | 完整有限样本与各预算；collection 与 gate 分开 |
+| `python scripts/inspect_perf_artifacts.py <result.json>` | 保存二进制 hash、PE 区段、SVG 与额外原生窗口几何 |
+| `python scripts/run_interaction_perf.py --pairs 3` | 六场景、每进程 200 个控件操作及软件帧 |
+| `python scripts/run_idle_perf.py` | 五个匹配场景，在无活动 driver 时各采 >=60s idle |
+| `python scripts/run_gallery_lifecycle.py` | 三次 100 往返和 idle；独立第四个页 Timer 探针 |
+| `python scripts/run_motion_bench.py --label current --counts 0 1 20` | 100 开关周期、200 帧及 >=60s idle |
 
-The only local Kit path whitelist is inside generated test projects. It never
-changes external Tasks source rules. Every project seeds Cargo.lock from the
-workspace, explicitly reconciles it with `cargo metadata --offline`, saves the
-resolved output/lock, then builds `--locked --offline`. Build profile/toolchain
-and actual commands are recorded. Dependencies share the existing target cache;
-project/binary paths and raw logs stay separate. This is a new-process warm-cache
-measurement, not a cold build/start claim. No working-set trimming/cache flush.
+具体选项用各脚本 `--help`。报告、生成项目、命令、lock/解析图和原始样本留在 target。
+`--scenes` 可选择有明确风险的子集；只测子集不得宣称全矩阵通过。
 
-The Rust clock starts at main entry, and separately marks construction and show
-return. `first_render_callback_ms` is emitted only for an actual AfterRendering
-hook. Unsupported hooks produce no numeric sample, never zero or a substitute
-present timestamp. It excludes OS loader time and is not actual display present.
-The P2 external Windows sampler reads PrivateUsage (Private Bytes) at 1 and 2
-seconds after Popen, plus WorkingSetSize at 2 seconds. Their within-process
-difference is recorded; it is evidence about this interval, not a 60-second idle
-or general steady-state guarantee. A 1.5s timer marker establishes a working event loop; the
-2.5s timer exits. These two harness timers are identical in A/B and must not be
-counted as Kit idle work. The short fixed sample is not 60-second idle acceptance.
+## Matching and measurement
 
-Order alternates native/Kit then Kit/native. All samples are retained with no
-outlier deletion; summary uses nearest-rank p50/p95, n, min/max. Three samples
-validate plumbing and reveal gross spread only; at least 30 paired release runs
-and controlled environment noise are needed before freezing quantitative gates.
-GPU memory, exact present/process-spawn timing, interaction frames, layout/instance
-counts, 60-second CPU/ticks, real IME, navigation 16/64/256/257 and 100-cycle
-overlay/page lifetimes are NOT_RUN until explicitly measured in later phases.
+- 匹配 release 工具链、Slint/features、后端/renderer、窗口、字体、DPI、主题、内容和资源。
+  默认微基准为 Fluent/winit-software、820x440、Light、100%、请求系统 Segoe UI Variable Text。
+- 新进程使用已有编译/系统缓存，不能称为受控冷启动。构造、show 返回、render callback、
+  软件缓冲完成和真实屏幕 present 分别记录；不支持的 hook 留空，不补零。
+- `first_software_frame_ms` 从 Rust main 到非透明 `take_snapshot()` 完成，排除 loader，
+  也不代表屏幕呈现。它只能接受对应的命名指标预算。
+- 普通配对至少 30 组，交替顺序，保留全部样本及 p50/p95/n/min/max。禁止删离群点、
+  修剪 working set、关闭辅助技术或改 features 制造优势。噪声过大则改善采样或标不可判定。
+- Private Bytes 与 Working Set 分开；1s/2s 固定观察不证明稳态。Idle 使用真实 CPU
+  时间差和 >=60s 无 driver 区间，CPU 为单核百分比。GPU/精确重绘数未采到则 NOT_RUN。
+- 1,000 控件场景仅有 100 个在固定视口可见；ListView 100/1,000/10,000 行保留原生
+  直接 repeater 虚拟化。累计创建次数不是同时驻留数量，也不等于模型数据零内存。
+- 交互同时检查 dispatch 和 dispatch+snapshot；快截图不能掩盖慢输入。Unicode 不是 IME。
+- Navigation 检查 16/64/256/257；保留每模型 256 上限及非法 fail-closed，不把大列表预算套给导航。
+- 浮层和页面至少 100 周期；检查计时器、活跃实例、焦点与内存趋势。独立插入页 Timer 的
+  验证副本不能与未插桩的时序/内存混算。关闭后内存未归还不自动等于泄漏。
 
-## P1 decisions from actual P0 evidence
+## Unchanged budgets
 
-P0 Release data at `target/perf-harness/20260909T030437314388Z/result.json` has
-three paired new processes per side, with construction ranges of 0.246–2.278ms.
-All 36 rendering hooks were unsupported. Construction is not startup/present, and
-a 2s memory observation is not established steady state. Therefore P1 does not
-use those samples to freeze startup, memory or interaction thresholds. The exact
-missing conditions below are obligations, not deleted budgets. No UI behavior
-changed in P1. P2 changes FluentButton and extends the harness, so P0 measurements
-remain historical pre-migration evidence, not a directly interchangeable sample set.
+以下工程阈值未因文档精简而放宽。缺少相应采样或稳定性证据的门禁仍未关闭。
 
-**Frozen now:** matched simple-scene binary delta ≤ max(512KiB, 5% of A), with
-identical release toolchain/features/geometry/state and explicitly accounted
-required assets. This deterministic metric does not need process timing samples.
-Also fixed: no new unnecessary hidden animation/timer work, no working-set trimming,
-no sacrificing input/accessibility, and the current 256-item-per-model limit.
-Their runtime verification is distinct from freezing the engineering constraint.
+| 指标 | B−A 上限 / 规则 |
+|---|---|
+| Startup p50 | max(10ms, 10% of A) |
+| Startup p95 | max(20ms, 15% of A) |
+| Steady Private Bytes | max(2MiB, 5% of A)，另查随数量增长斜率 |
+| Interaction frame p95 | max(1ms, 10% of A)；A 能稳定 60Hz 时 B 不应破坏它 |
+| Idle CPU | 增量 <=0.2 个百分点；无非必要持续刷新 |
+| Simple binary size | max(512KiB, 5% of A)，匹配并说明必需代码/资源 |
+| Navigation validation | 256 项目标 <=16.67ms；不扩大模型上限掩盖超时 |
+| Hidden work | 关闭周期结束后无非必要 Timer 或持续装饰动画 |
 
-The hidden-Toast raw binary delta is 2,264,064 bytes versus empty (2.159MiB).
-It is above the unadjusted simple-scene allowance and remains **unaccepted** until
-code/assets and scope are attributed. A missing std Toast is not permission to
-raise the budget or claim equivalent A/B behavior. P5A/P7 must retain this finding.
+隐藏 Toast 对空窗口是非等价比较，原始超标仍 BLOCKED。匹配代码/资源的另一个隐藏
+参考只比较该状态成本，不证明可见 Toast 等价或原生存在 Toast API。
 
-## Retained SPEC thresholds and waiting conditions
-
-Let A be native and B be Kit; delta is B−A. None is silently relaxed or removed.
-
-| Metric | Threshold (unchanged) | P1 decision / waiting condition |
-|---|---|---|
-| Startup p50 | ≤ max(10ms, 10% of A) | PROVISIONAL: distinguish loader/main/render/present; acquire supported marker and ≥30 paired release runs before P2 acceptance |
-| Startup p95 | ≤ max(20ms, 15% of A) | PROVISIONAL: same marker and ≥30 pairs, retain min/max/outliers, improve sampler if noise exceeds allowance |
-| Steady Private Bytes | ≤ max(2MiB, 5% of A) | PROVISIONAL: prove settling interval, ≥30 pairs and count-dependent slope in P2/P7 |
-| Interaction frame p95 | ≤ max(1ms, 10% of A), preserve 60Hz when native sustains it | PROVISIONAL: actual frame sampler and matched real input in P2/P7 |
-| Idle CPU increment | ≤0.2 percentage points, no unnecessary sustained redraw | PROVISIONAL numeric limit: ≥60s controlled idle/native noise and separate harness/OS activity in P5/P7 |
-| Simple binary increment | ≤ max(512KiB, 5% of A) | FROZEN: release, identical features/assets and resolution; unmatched Toast comparison unaccepted |
-| Navigation validation at 256 | Target ≤ one 60Hz frame (about 16.67ms) | PROVISIONAL latency: P5C runtime instrument; hard model size remains 256 |
-| Hidden work | No continuous decoration animation or unnecessary running Timer after close | FIXED new-code rule: verify lifecycle/rapid reversals and 100 cycles in P5/P6/P7; existing debt remains recorded |
-
-No numeric budget is frozen by a debug measurement. Native-vs-Kit source details
-and probe limits are in NATIVE_REUSE.md; measured values and failures belong in
-the P0 report, with raw evidence retained under target.
-
-## P2 software frame marker
-
-Harness schema 2 adds `first_software_frame_ms`: elapsed from Rust main entry to
-completion of a synchronous public `Window.take_snapshot()` with nontransparent
-pixels after show. Native/Kit both execute it. It measures software render-buffer
-readiness, including construction/show, and excludes OS loader time and actual
-screen presentation. `first_render_callback_ms` remains absent if AfterRendering
-is unsupported; the snapshot value is never substituted into that field.
-
-P2 compares 1 and 100 real buttons, 30 paired Release processes per side, preserving
-all raw samples. `private_bytes_1s` and `memory_sample_delta_bytes` supplement the
-2s memory sample. Apply retained startup thresholds to this explicitly named frame
-milestone only; actual presentation and long-run idle remain unverified. Deterministic
-binary and source-declaration comparisons are separate. Results and remaining budget
-limits are in implementation/kit-fluent-v1/P2.md. No existing threshold is raised.
-
-P2 measured result: 30 paired processes per side for 1/100 buttons passed the
-binary and named software-frame delta allowances. Binary increments were
-42/43.5 KiB; 2s Private Bytes p50 increments were 52/260 KiB. Software-frame p50
-deltas were -0.214/+0.481ms. Single-button memory was unchanged from 1s to 2s in
-all samples; 100-button observations included small changes, so full steady-state
-and idle acceptance remain unclaimed. See [P2 report](implementation/kit-fluent-v1/P2.md)
-for exact raw data, environment and all unrun metrics.
-
-
-## P3 paired foundation scenes
-
-`python scripts/run_perf.py --profile release --scenes icons-100 segments-100 --samples 30`
-compares 100 actual icon commands and 100 host-bound selected/unselected commands.
-Both icon variants use the same embedded asset, 20px icon, 44×32 geometry and tooltip
-text; the native reference uses a minimal Tooltip Text while Kit uses TooltipHost.
-Selected native Button disables automatic toggling just like SegmentButton. The
-window/features/font/DPI and sample rules above remain unchanged. No budget is
-raised. P3 report separates successful collection from budget/steady-state claims.
-
-## P6 bounded motion comparison
-
-Release sources before/after P6 use byte-identical measurement Slint/Rust, the same
-resolved external graph, Fluent/winit/software, 1200x500 and requested Segoe UI
-Variable Text at 100%. Each count has one before and one after process: 200 raw
-software-buffer samples (100 toggles pairs) and at least 60 seconds settled idle.
-All samples are retained; this is not the 30-pair full P7 matrix.
-
-| Toast count | Before p50 / p95 ms | After p50 / p95 ms | Idle one-core CPU before / after |
-|---|---|---|---|
-| 1 | 4.3748 / 6.9911 | 4.1576 / 6.3147 | 0% / 0% |
-| 20 | 5.3667 / 7.0746 | 5.7165 / 6.4411 | 0% / 0% |
-
-Both p95 increments meet the unchanged max(1 ms, 10% of A) allowance and idle
-increments meet 0.2 percentage points. The 20-instance median rises slightly;
-lower p95 in this small comparison is not a universal speedup claim. Rendering
-notification is unsupported here, so actual presentation/redraw counts remain
-NOT_RUN rather than zero. CPU uses two real GetProcessTimes readings over each
-60-second interval with no active frame-driver timer during idle. No working-set
-trimming or accessibility removal. The old P0 unmatched hidden-Toast binary
-attribution remains separate; P6 does not close full P7 native/memory budgets.
-
-Raw: target/motion-bench/20260909T185333555763Z/result.json and
-target/motion-bench/20260909T190613605793Z/result.json; exact identities and allowance
-calculation in target/p6-comparison.json and the staged P6 report.
-
-Font scope of the P6 harness: Theme.ui_font_family is assigned, while Window uses
-its unchanged default font resolution in both runs. No per-glyph font-family
-verification or system-font redistribution is claimed.
-
-
-## P7 scale and lifecycle protocol
-
-The current `run_perf.py` matrix has 21 native/Kit scene pairs. Run release with
-30 pairs per scene (1,260 processes), alternating A/B order, retaining every sample.
-Button and CheckBox groups use 1/100/1,000 real instances; the fixed 820x440 viewport
-shows 100 of the 1,000 instances. The largest groups measure allocation growth,
-not 1,000 simultaneously visible controls. Direct native ListView repeaters use
-100/1,000/10,000 model rows in the same 780x400 viewport. Empty, import-only, one
-control, empty/long/grouped fields, icons, segments, progress and tables remain
-separate. Hidden Toast still uses an explicitly unmatched empty-window reference.
-`--target-dir` permits an exclusive shared compilation cache for an isolated source
-snapshot; it does not change source resolution or consumer ownership.
-
-`python scripts/evaluate_perf.py <result.json> --output <gate.json>` requires all
-30 release pairs with finite complete metrics. Collection PASS and budget PASS
-are distinct. The retained thresholds apply to the named software-buffer marker
-and fixed 2s memory observations. No actual present or established steady-state
-claim follows from those proxies. An unmatched hidden-Toast comparison stays
-BLOCKED even when another matched scene passes. No outlier deletion or budget
-adjustment is performed.
-
-`python scripts/run_interaction_perf.py --pairs 3` runs six scenes in independent
-alternating native/Kit processes, each with 200 transactions. Text transactions focus each of two fields, press End, and insert/delete at the caret, preserving the complete long string after 200 samples. It measures public native
-key/focus and wheel dispatch separately from a following software snapshot, records
-Private Bytes/Working Set and cumulative delegate creation, and validates actual
-edit/focus callbacks. A cumulative create count is not a simultaneous resident
-count. Unicode editing does not certify OS IME composition. No public layout
-counter or screen-present hook is invented.
-
-`python scripts/run_gallery_lifecycle.py` compiles the current Gallery UI, catalog
-and navigation into a generated host without the native chrome adapter. Three
-uninstrumented processes each make 100 round trips (200 transitions) across the
-current destinations and then idle for 60.1s. Raw first/repeat visit timings and
-memory are retained. A separate fourth build inserts a running 20ms Timer in each
-page root and asserts only the selected page ticks. These timers exist only in
-that temporary verification copy and stop before idle. Their timing/memory values
-must not be merged with the uninstrumented production-page measurements. The
-external Windows sampler reports one-core CPU percentages, not CPU normalized by
-logical processor count. The driver stops before each idle interval.
-
-`python scripts/run_motion_bench.py --label p7 --counts 0 1 20` extends the P6
-lifecycle harness with memory observations during 100 open/close cycles and a
-zero-instance baseline in the same binary. Each count retains 200 frames and at
-least 60 seconds idle. This current run does not rewrite the P6 before/after
-sources or substitute current memory samples into historical results.
-
-
-`python scripts/run_idle_perf.py` adds one matched independent native/Kit pair for
-empty, 1,000 Buttons, 1,000 CheckBoxes, grouped text and a 10,000-row virtual list.
-After two seconds settling, each process has a 60.1-second interval with no active
-benchmark driver. CPU uses actual GetProcessTimes; Private Bytes and Working Set
-are read at both endpoints. This verifies a longer interval for those concrete
-scenes, not 30 independent long-idle repetitions or exact redraw counts. All
-compilation finishes before the alternating measurement pass starts.
-
-The additional hidden-toast-composed scene uses the same two required SVGs and
-public native Button/Tooltip/content in its reference. It compares hidden-state
-code/resource cost only, not visible Toast motion, request ownership or a nonexistent
-std Toast API. The original unmatched empty comparison is retained separately.
-
-`python scripts/inspect_perf_artifacts.py <result.json>` checks saved-binary hashes,
-PE raw section sizes and byte-identical embedded local SVGs. Separate extra launches
-check actual Win32 client dimensions; these are not appended to the 30 timing pairs.
-
-Current results: [P7.md](implementation/kit-fluent-v1/P7.md). Interaction reports gate both snapshot p95 and per-sample dispatch-plus-snapshot p95; a fast snapshot cannot hide slow dispatch. Idle and interaction runners exit nonzero on a budget failure.
+P7/P8 通过的命名软件缓冲/固定时点内存门禁，不自动关闭实际 present、长期内存、
+GPU 或跨平台接受。关键数字及原始结果在 [HISTORY](HISTORY.md#p7p8-主要证据)，
+当前未完成项在 [STATUS](STATUS.md)。

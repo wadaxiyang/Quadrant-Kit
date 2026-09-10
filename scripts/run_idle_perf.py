@@ -8,8 +8,8 @@ import os
 import shutil
 import subprocess
 
-from observe_idle import observe
-from run_perf import ROOT, execute, generate, scene_source, source_identity, resolved_fingerprint
+from run_perf import (ROOT, execute, generate, observe_idle, resolved_fingerprint,
+                      scene_source, source_identity)
 
 SCENES = ('empty', 'buttons-1000', 'selection-1000', 'text-group', 'lists-10000')
 HOST = '''// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
@@ -64,7 +64,7 @@ def main():
         for index,scene in enumerate(SCENES):
             for variant in (('native','kit') if index%2==0 else ('kit','native')):
                 project=output/f'{scene}-{variant}'
-                idle=observe([str(project/'bench.exe')],project,project/'runtime.log',env)
+                idle=observe_idle([str(project/'bench.exe')],project,project/'runtime.log',env)
                 if 'RESULT=PASS' not in (project/'runtime.log').read_text(encoding='utf-8'):
                     raise RuntimeError('Missing completion')
                 report['runs'].append(dict(scene=scene,variant=variant,idle=idle))

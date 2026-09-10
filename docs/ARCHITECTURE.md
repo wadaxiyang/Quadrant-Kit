@@ -1,87 +1,53 @@
 # Architecture
 
-Compiler-special native controls may be statically re-exported through a primitive
-module when subclassing loses their native child grammar (currently RadioGroup, ListView and TabWidget).
-The facade still only re-exports current contracts; this does not create a runtime
-registry. The pinned runtime probe and exact native-owner guard cover this path.
+Kit is a source-only library. The Rust helper returns `ui/kit.slint` using its
+compile-time manifest directory; it has no runtime dependencies. That path belongs
+to a consumer build, never runtime settings. The [README diagram](../README.md#架构与组件接入)
+is the single editable dependency diagram.
 
-The root Rust package returns its own `ui/kit.slint` location using `env!("CARGO_MANIFEST_DIR")`. The returned path exists during consumer compilation; it is not a runtime resource URL and must not be persisted into application settings. Gallery is the only member application in this workspace.
+| Layer | Owns | May depend on |
+|---|---|---|
+| Facade (`ui/kit.slint`) | Current static exports only | All implementation layers |
+| Foundation | Tokens, typography, motion policy, local assets, pure recipes | Acyclic foundation helpers; public Slint design outputs |
+| Primitives | Native wrappers and passive presenters | Foundation, small acyclic primitive helpers, public Slint |
+| Patterns | Navigation, pages, settings and other compositions | Primitives/foundation, acyclic patterns, public Slint |
+| Overlays | Temporary content and bounded presentation | Primitives/foundation, acyclic overlays, public Slint |
+| Gallery / consumer | Windows, theme detection, fonts, routing, business state | Public facade and host modules |
 
-Dependency arrows mean consumer → dependency:
+Patterns and overlays never import one another; implementation never imports back
+through the facade or depends on Gallery. Gallery imports Kit only through
+`@quadrant-kit`. Same-layer imports remain acyclic. No registry, factory, runtime
+theme parser, page cache or host service is required to use a component.
 
-```text
-Gallery → @quadrant-kit facade → patterns / overlays → primitives → foundation
-```
+## Component changes
 
-The facade only re-exports symbols. Same-layer helpers must remain acyclic; implementation files import lower layers directly rather than the facade. Gallery imports its own page/shared files relatively and Kit only by its public named entry. There is no dependency on any Tasks crate or source directory.
+1. Implement in the owning layer using public native controls where available.
+2. Add a static facade export only for a new public component/type.
+3. Define current inputs/defaults, state ownership, events, focus, disabled and slot rules.
+4. Update [API](PUBLIC_API.md), reviewed snapshot/probe, [native manifest](../scripts/native_reuse_manifest.json),
+   [status](COMPONENT_STATUS.md), Gallery specimen and relevant tests together.
+5. Remove replaced implementations and old aliases. Review intentional API changes;
+   CI never adopts a new baseline automatically. See [validation](VALIDATION.md#api-review).
 
-Foundation owns general semantic colors, typography, motion, elevation, layout constants, and generic image properties. Primitives provide small controls; patterns compose navigation/page/settings/window presentation; overlays provide transient feedback and one confirmation layer. Product business composition and platform window actions are consumer responsibilities.
+Separate interface files or another wrapper layer are useful only when they remove
+real duplication. RadioGroup, ListView and TabWidget retain verified public native
+re-exports because an extra subclass breaks compiler-special child lowering.
 
-## Static entry and ownership (P1)
+## Host ownership
 
-| Layer | Owns | May depend on | Must not own |
-|---|---|---|---|
-| Facade | Explicit current exports in ui/kit.slint | All implementation layers | Instances, state, event dispatch, old API adapters |
-| Foundation | Globals, constants, resources, pure recipes | Acyclic foundation helpers; public Palette/StyleMetrics outputs when needed | Visible/input instances, timers, host detection |
-| Primitives | Native wrappers and passive presenters | Foundation; small acyclic same-layer helpers; public Slint | Routing, platform/window code, generic input framework |
-| Patterns | Navigation, page/settings composition, slot protocols | Primitives/foundation; acyclic patterns; public Slint | Overlays imports, domain models, page caches/history |
-| Overlays | Temporary content, bounded visibility/focus requests | Primitives/foundation; acyclic overlays; public Slint | Patterns imports, notification services/modal stacks |
-| Gallery/host | Data and event handling, pages, system theme/font, window lifecycle | Public facade and std widgets; host-specific modules | Private Kit paths or copies of Kit components |
+Each top-level window initializes Theme, Palette, font and Motion independently.
+Kit globals are not a cross-window service. Hosts own OS actions and detection,
+navigation history, committed picker values and lifecycle of arbitrary slots.
+NavigationView emits requests; Gallery's router is only a consumer of that API.
+NavigationBackButton owns shared appearance/input; Gallery supplies caption geometry.
 
-The README Mermaid is the editable allowed-dependency diagram, not an instance or
-event graph. Foundation currently has no std import; its public design-output edge
-is a permitted future capability. Same-layer imports must be acyclic, and patterns
-and overlays never depend on each other. Component API declarations may live with
-their implementation: separate interface files and another wrapper layer are not
-required merely for modularity.
+Toast/Modal share a private TransientLifetime presenter under primitives. It owns
+bounded opacity/cleanup, never commands or business state. Expander content requires
+an explicit host conditional. Details: [API](PUBLIC_API.md), [Motion](MOTION.md).
 
-Implement a component in its owning layer, explicitly export its public names at
-the facade, then instantiate it through @quadrant-kit. Only callers that need it
-change. Adding a member to an existing component does not register it again. The
-Gallery catalog indexes examples, the native manifest records development review,
-and the API snapshot checks current consistency; none is a runtime registry or a
-second source of public export truth. Public type re-exports are restricted to
-verified upstream contracts by the scanner; native capability probes complement it.
+Static resources are embedded during the consumer build; assets and attribution
+remain local. See [consumer setup](CONSUMER_GUIDE.md) and [provenance](PROVENANCE.md).
 
-Historically, P1 changed no public API or visual implementation. The old extraction freeze is
-superseded by the current-version policy. Delivered controls, limitations and exact substage
-ownership are in COMPONENT_STATUS.md; current custom-input exceptions and their
-review scope are in NATIVE_REUSE.md.
-
-## Component conventions
-
-Use Theme, Typography, and UiConstants for semantic styles and logical sizes. APIs may change for a concrete benefit with synchronized current callers, docs, probes and a reviewed snapshot. Each version contains only its current implementation, without old-name aliases, adapters or duplicate behavior branches. Reuse public std-widgets/builtins for native behavior; retain one native input owner and no production preview-only inputs. Do not introduce production properties solely to force screenshot states.
-
-Theme.mode, Theme.system_dark, and Theme.ui_font_family are host inputs. dark_mode is derived. Different Slint component instances do not automatically share these globals. Consumers initialize every independent window before showing it, and also coordinate std-widgets Palette. Kit does not detect OS theme, select fonts, start a process, or access settings. Gallery's host owns its system-theme observation, with a light fallback for Unknown.
-
-Static SVG references resolve within the package and are embedded by the consumer build. Images supplied dynamically by consumers are not Kit-owned assets. Keep Microsoft MIT assets separate from GPL source attribution; see PROVENANCE.md.
-
-ModalManager has one host-controlled shown/title/message/action state. Native buttons own Return/Space; the fixed action set handles Tab/Shift+Tab and Escape. P5B/P6 verify initial action focus, bounded traversal and a host restore request on logical close. This finite confirmation contract does not establish arbitrary-content containment, nested modal stacks or actual screen-reader behavior.
-
-## Read a token and a component
-
-`UiConstants.space_4` in `ui/foundation/constants.slint` is an `out` length
-property whose value is 4 logical pixels. `Badge` imports that global directly
-inside the implementation layer; consumers import Badge through the facade.
-Badge's `in` text/kind properties let a caller choose content and semantic color,
-while its Text child binds to them. The component has no business model or
-callback. See the [Gallery exercise](GALLERY.md#first-exercise-token-to-badge-to-gallery)
-for a reversible change to its internal corner radius.
-
-The public baseline protects explicit properties/defaults, callbacks, enums and
-bases. An internal rectangle style can change while that baseline still passes;
-visual/behavioral review is required as well. The compiled probe catches type
-integration, but is not an exhaustive runtime state or accessibility test.
-
-If the entire built checkout is relocated, old helper rlibs can retain the
-previous manifest path. From the new Kit root run
-`cargo clean -p quadrant-kit -p quadrant-kit-gallery`, then the locked Gallery
-build. This rebuilds local package artifacts without replacing source or removing
-historical QA directories. Consumer builds resolve the published package in Cargo
-storage and must never persist the helper path as a runtime resource setting.
-
-P6 shares one private `primitives/private/TransientLifetime` presentation helper
-between Toast and Modal. It supplies bounded opacity/cleanup only, preserving
-the existing overlays -> primitives -> foundation direction and static facade.
-Motion policy remains a host-initialized per-window foundation global; there is
-no runtime registration, global timer service or cross-window coordinator.
+After relocating a built checkout, stale helper artifacts may contain the old path.
+From the new root run `cargo clean -p quadrant-kit -p quadrant-kit-gallery`, then
+the locked Gallery build. Do not persist helper paths or change consumer source rules.
