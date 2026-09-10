@@ -1,4 +1,4 @@
-# Performance protocol — P2 measurement and retained budgets
+# Performance protocol — current measurements and retained budgets
 
 P0 adds a neutral, generated harness instead of measuring Gallery as a button.
 Root Kit retains zero normal/runtime dependency edges. That fact is not a speed
@@ -153,3 +153,70 @@ calculation in target/p6-comparison.json and the staged P6 report.
 Font scope of the P6 harness: Theme.ui_font_family is assigned, while Window uses
 its unchanged default font resolution in both runs. No per-glyph font-family
 verification or system-font redistribution is claimed.
+
+
+## P7 scale and lifecycle protocol
+
+The current `run_perf.py` matrix has 21 native/Kit scene pairs. Run release with
+30 pairs per scene (1,260 processes), alternating A/B order, retaining every sample.
+Button and CheckBox groups use 1/100/1,000 real instances; the fixed 820x440 viewport
+shows 100 of the 1,000 instances. The largest groups measure allocation growth,
+not 1,000 simultaneously visible controls. Direct native ListView repeaters use
+100/1,000/10,000 model rows in the same 780x400 viewport. Empty, import-only, one
+control, empty/long/grouped fields, icons, segments, progress and tables remain
+separate. Hidden Toast still uses an explicitly unmatched empty-window reference.
+`--target-dir` permits an exclusive shared compilation cache for an isolated source
+snapshot; it does not change source resolution or consumer ownership.
+
+`python scripts/evaluate_perf.py <result.json> --output <gate.json>` requires all
+30 release pairs with finite complete metrics. Collection PASS and budget PASS
+are distinct. The retained thresholds apply to the named software-buffer marker
+and fixed 2s memory observations. No actual present or established steady-state
+claim follows from those proxies. An unmatched hidden-Toast comparison stays
+BLOCKED even when another matched scene passes. No outlier deletion or budget
+adjustment is performed.
+
+`python scripts/run_interaction_perf.py --pairs 3` runs six scenes in independent
+alternating native/Kit processes, each with 200 transactions. Text transactions focus each of two fields, press End, and insert/delete at the caret, preserving the complete long string after 200 samples. It measures public native
+key/focus and wheel dispatch separately from a following software snapshot, records
+Private Bytes/Working Set and cumulative delegate creation, and validates actual
+edit/focus callbacks. A cumulative create count is not a simultaneous resident
+count. Unicode editing does not certify OS IME composition. No public layout
+counter or screen-present hook is invented.
+
+`python scripts/run_gallery_lifecycle.py` compiles the current Gallery UI, catalog
+and navigation into a generated host without the native chrome adapter. Three
+uninstrumented processes each make 100 round trips (200 transitions) across the
+current destinations and then idle for 60.1s. Raw first/repeat visit timings and
+memory are retained. A separate fourth build inserts a running 20ms Timer in each
+page root and asserts only the selected page ticks. These timers exist only in
+that temporary verification copy and stop before idle. Their timing/memory values
+must not be merged with the uninstrumented production-page measurements. The
+external Windows sampler reports one-core CPU percentages, not CPU normalized by
+logical processor count. The driver stops before each idle interval.
+
+`python scripts/run_motion_bench.py --label p7 --counts 0 1 20` extends the P6
+lifecycle harness with memory observations during 100 open/close cycles and a
+zero-instance baseline in the same binary. Each count retains 200 frames and at
+least 60 seconds idle. This current run does not rewrite the P6 before/after
+sources or substitute current memory samples into historical results.
+
+
+`python scripts/run_idle_perf.py` adds one matched independent native/Kit pair for
+empty, 1,000 Buttons, 1,000 CheckBoxes, grouped text and a 10,000-row virtual list.
+After two seconds settling, each process has a 60.1-second interval with no active
+benchmark driver. CPU uses actual GetProcessTimes; Private Bytes and Working Set
+are read at both endpoints. This verifies a longer interval for those concrete
+scenes, not 30 independent long-idle repetitions or exact redraw counts. All
+compilation finishes before the alternating measurement pass starts.
+
+The additional hidden-toast-composed scene uses the same two required SVGs and
+public native Button/Tooltip/content in its reference. It compares hidden-state
+code/resource cost only, not visible Toast motion, request ownership or a nonexistent
+std Toast API. The original unmatched empty comparison is retained separately.
+
+`python scripts/inspect_perf_artifacts.py <result.json>` checks saved-binary hashes,
+PE raw section sizes and byte-identical embedded local SVGs. Separate extra launches
+check actual Win32 client dimensions; these are not appended to the 30 timing pairs.
+
+Current results: [P7.md](implementation/kit-fluent-v1/P7.md). Interaction reports gate both snapshot p95 and per-sample dispatch-plus-snapshot p95; a fast snapshot cannot hide slow dispatch. Idle and interaction runners exit nonzero on a budget failure.

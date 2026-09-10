@@ -275,3 +275,22 @@ source release report under target/motion-bench: 200 software-buffer frame sampl
 and at least 60 seconds idle for 1/20 Toast instances. Each process has one matched
 frame driver, stops it before idle, and uses GetProcessTimes on Windows. Unsupported
 render hooks remain null, not zero-redraw evidence. See P6.md for paired sources.
+
+
+### P7 current integration commands
+
+Use the performance commands and metric boundaries in PERFORMANCE.md. For Windows
+UI Automation tree/name/Invoke inspection, first build the current verification
+host with `python scripts/run_button_checks.py --suite button --build-only`, then
+run `powershell -NoProfile -File scripts/probe_windows_accessibility.ps1 -Executable
+<reported-executable> -OutputDirectory <target-directory>` on one line. The probe
+launches and inspects only its own process. The current Button fixture additionally requires exactly one visible command count, observed native focus and a UIA disabled state. This remains separate from a real screen-reader session.
+
+After committing a clean current source, run `python scripts/verify_package_consumer.py`.
+It builds/verifies the actual .crate, compares required bytes, extracts regular
+files only into target/, and compiles the current full API probe plus a neutral
+consumer against that extracted package. A copied executable renders Light/Dark
+from an empty runtime directory. The test reuses the registry/build cache; it does
+not certify remote retention/CI, a cold build, or any external Tasks dependency.
+Run `verify_incremental.py` in an exclusive clean test clone, using its documented
+`--target-dir` only when no other build is using that directory.

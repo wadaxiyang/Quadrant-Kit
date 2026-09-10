@@ -31,6 +31,7 @@ SLINT = '''// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 import { Theme, ThemeMode, FluentButton, FluentIcon, FluentIcons,
          ModalManager, ModalKind, ToastHost, ToastKind } from "@quadrant-kit";
+import { Palette } from "std-widgets.slint";
 export component ConsumerWindow inherits Window {
     width: 640px;
     height: 440px;
@@ -38,8 +39,13 @@ export component ConsumerWindow inherits Window {
     background: Theme.background;
     in-out property <bool> confirmed: false;
     in-out property <ThemeMode> mode: ThemeMode.light;
-    changed mode => { Theme.mode = root.mode; }
-    init => { Theme.mode = root.mode; Theme.system_dark = false; }
+    default-font-family: Theme.ui_font_family;
+    function apply_theme() {
+        Theme.mode = root.mode;
+        Palette.color-scheme = Theme.dark_mode ? ColorScheme.dark : ColorScheme.light;
+    }
+    changed mode => { root.apply_theme(); }
+    init => { Theme.system_dark = false; root.apply_theme(); }
     VerticalLayout {
         padding: 24px;
         spacing: 16px;

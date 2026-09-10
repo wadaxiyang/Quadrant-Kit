@@ -1,9 +1,10 @@
 # Fluent evolution stage ledger
 
 Authority: [SPEC v1.1](../../specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md).
-Current request: commit P3, then execute all P4, P5 and P6 units in order, committing
-each completed unit. This explicit multi-phase request supersedes the default
-single-subphase stop. No push, tag, release or external consumer change is requested.
+Current request: continue with P7 then P8, retaining the user's ordered local
+commit workflow. P3/P4/P5/P6 are committed. This explicit multi-phase request
+supersedes the default single-phase stop. No push, tag, release or external
+consumer change is requested.
 P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 
 | Stage | Status | Evidence / next conditions |
@@ -22,7 +23,8 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P5D | PASS — scoped native popups | [P5D.md](P5D.md): three exports, 115 scaled runtime assertions, Windows menu input subset, 76 Python tests, Gallery/40 captures. |
 | P5E | PASS — scoped inline contract | [P5E.md](P5E.md): host-conditional Expander, InfoBar, 19 runtime + 23 popup regressions; full core and 40 captures. |
 | P6 | PASS — scoped motion lifecycle and measured gate | [P6.md](P6.md): 32 new + 31 preserved runtime assertions, 100 cycles / 20 transients, 800 before-after software frames, four 60s idle intervals, full core/79 Python and 40 captures. Actual presentation/reader NOT_RUN. |
-| P7–P8 | NOT_STARTED | Not part of this request. |
+| P7 | PARTIAL — measured Windows gates PASS | [P7.md](P7.md): 1,260 startup samples, 7,200 interaction frames, 257 runtime assertions, UIA and idle/lifetime evidence. Presentation, long-term memory and broader platform gates remain limited. Post-commit integration follows. |
+| P8 | NOT_STARTED | Follows the P7 report; candidate status must preserve unmet gates. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
 and pushed as `f47933832376566d69f66fa430ff0e76e120253d`. Both package commands,

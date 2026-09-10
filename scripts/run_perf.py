@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 # SPDX-License-Identifier: GPL-3.0-only
-"""Neutral native/Kit A/B harness. P2 adds software-frame and 1s/2s memory observations."""
+"""Neutral current native/Kit A/B harness; raw collection is separate from budgets."""
 import argparse
 import ctypes
 from ctypes import wintypes
@@ -20,7 +20,11 @@ import time
 from capture_gallery_baseline import source_identity
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'text-input', 'hidden-toast', 'icons-100', 'segments-100', 'selection-100', 'progress-100', 'lists-10000', 'table-100')
+SCENES = ('empty', 'import-only', 'buttons-1', 'buttons-100', 'buttons-1000',
+          'text-input', 'text-empty', 'text-long', 'text-group', 'hidden-toast',
+          'icons-100', 'segments-100', 'selection-1', 'selection-100',
+          'selection-1000', 'progress-100', 'lists-100', 'lists-1000',
+          'lists-10000', 'table-100', 'hidden-toast-composed')
 NEGATIVE = {
     'palette-write': ('import { Palette } from "std-widgets.slint"; export component Probe inherits Window { init => { Palette.accent-background = #ff0000; } }', 'Assignment on a output property'),
     'radio-index': ('import { RadioGroup } from "std-widgets.slint"; export component Probe inherits Window { RadioGroup { current-index: 0; RadioButton { text: "One"; } } }', 'Unknown property current-index'),
@@ -50,12 +54,13 @@ def scene_source(scene, variant):
         control = 'SegmentButton' if kit else 'Button'
         state = 'selected: mod(index, 2) == 0;' if kit else 'checked: mod(index, 2) == 0; checkable: false; accessible-checkable: true;'
         body = f'for index in 100: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 76px; height: 32px; text: "Test"; enabled: true; {state} }}'
-    elif scene == 'selection-100':
+    elif scene.startswith('selection-'):
+        count = int(scene.split('-')[1])
         imports += 'import { CheckBox } from "std-widgets.slint";\n'
         if kit:
             imports += 'import { FluentCheckBox } from "@quadrant-kit";\n'
         control = 'FluentCheckBox' if kit else 'CheckBox'
-        body = f'for index in 100: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 76px; height: 32px; text: "Test"; checked: mod(index, 2) == 0; enabled: true; }}'
+        body = f'for index in {count}: {control} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 40px; width: 76px; height: 32px; text: "Test"; checked: mod(index, 2) == 0; enabled: true; }}'
     elif scene == 'progress-100':
         imports += 'import { ProgressIndicator, Spinner } from "std-widgets.slint";\n'
         if kit:
@@ -63,12 +68,13 @@ def scene_source(scene, variant):
         bar, ring = ('FluentProgressBar', 'FluentProgressRing') if kit else ('ProgressIndicator', 'Spinner')
         body = f'for index in 50: {bar} {{ x: mod(index, 10) * 80px; y: floor(index / 10) * 80px + 10px; width: 76px; height: 3px; progress: 0.6; indeterminate: false; }}\n'
         body += f'for index in 50: {ring} {{ x: mod(index, 10) * 80px + 20px; y: floor(index / 10) * 80px + 20px; width: 32px; height: 32px; progress: 0.6; indeterminate: false; }}'
-    elif scene == 'lists-10000':
+    elif scene.startswith('lists-'):
+        count = int(scene.split('-')[1])
         imports += 'import { ListView } from "std-widgets.slint";\n'
         if kit:
             imports += 'import { FluentListView } from "@quadrant-kit";\n'
         control = 'FluentListView' if kit else 'ListView'
-        body = f'{control} {{ x: 20px; y: 20px; width: 780px; height: 400px; for index in 10000: Text {{ height: 24px; text: "Row " + index; color: #202020; }} }}'
+        body = f'{control} {{ x: 20px; y: 20px; width: 780px; height: 400px; for index in {count}: Text {{ height: 24px; text: "Row " + index; color: #202020; }} }}'
     elif scene == 'table-100':
         imports += 'import { StandardTableView } from "std-widgets.slint";\n'
         if kit:
@@ -76,15 +82,45 @@ def scene_source(scene, variant):
         control = 'FluentStandardTableView' if kit else 'StandardTableView'
         rows = ','.join('[' + '{text: "Row ' + str(i) + '"}, {text: "Value"}' + ']' for i in range(100))
         body = f'{control} {{ x: 20px; y: 20px; width: 780px; height: 400px; columns: [{{title: "Name", width: 300px}}, {{title: "Value", width: 300px}}]; rows: [{rows}]; }}'
-    elif scene == 'text-input':
+    elif scene in ('text-input', 'text-empty', 'text-long', 'text-group'):
         control = 'FluentTextField' if kit else 'LineEdit'
-        body = f'{control} {{ x: 16px; y: 16px; width: 320px; height: 32px; text: "Text 输入"; }}'
+        value = '' if scene == 'text-empty' else ('Long text 输入 ' * 200 if scene == 'text-long' else 'Text 输入')
+        count = 20 if scene == 'text-group' else 1
+        body = f'for index in {count}: {control} {{ x: 16px + mod(index, 2) * 390px; y: 16px + floor(index / 2) * 40px; width: 320px; height: 32px; text: {json.dumps(value, ensure_ascii=False)}; }}'
     elif scene == 'hidden-toast' and kit:
         body = 'ToastHost { shown: false; message: "Saved"; }'
+    elif scene == 'hidden-toast-composed':
+        # Hidden-state cost reference, not a new std Toast or a visible-motion baseline.
+        body = 'in-out property <bool> transient_shown: false;\n'
+        if kit:
+            body += 'ToastHost { width:360px; shown:root.transient_shown; auto_dismiss:false; message:"Saved"; }'
+        else:
+            info = (ROOT/'assets/icons/info-24-regular.svg').as_posix()
+            close = (ROOT/'assets/icons/dismiss-16-regular.svg').as_posix()
+            body += f'''Rectangle {{
+                width:360px;height:root.transient_shown ? 56px : 0px;
+                opacity:root.transient_shown ? 1 : 0;background:#ffffff;
+                border-width:root.transient_shown ? 1px : 0px;border-color:#005fb8;border-radius:6px;clip:true;
+                if root.transient_shown: Rectangle {{
+                    Rectangle {{width:4px;height:100%;background:#005fb8;}}
+                    TouchArea {{}}
+                    HorizontalLayout {{
+                        padding-left:16px;padding-right:8px;padding-top:8px;padding-bottom:8px;spacing:8px;
+                        Image {{source:@image-url("{info}");width:24px;height:24px;colorize:#005fb8;}}
+                        Text {{text:"Saved";horizontal-stretch:1;color:#202020;font-size:14px;vertical-alignment:center;wrap:word-wrap;max-height:40px;overflow:elide;}}
+                        Button {{icon:@image-url("{close}");icon-size:20px;colorize-icon:true;accessible-label:"Dismiss";
+                            clicked=>{{root.transient_shown=false;}}
+                            Tooltip {{Rectangle {{background:#ffffff;Text {{text:"Dismiss";}}}}}}
+                        }}
+                    }}
+                }}
+            }}'''
     # import-only intentionally does not initialize or instantiate any Kit symbol.
     init = 'Palette.color-scheme = ColorScheme.light;'
     if kit and scene != 'import-only':
         init += ' Theme.mode = ThemeMode.light; Theme.system-dark = false; Theme.ui-font-family = "Segoe UI Variable Text";'
+    # Large groups have 1,000 real objects, with 100 in the fixed viewport.
+    # This measures allocation growth, not 1,000 simultaneously visible controls.
     return imports + f'''export component PerfWindow inherits Window {{
     width: 820px; height: 440px; background: #f3f3f3;
     default-font-family: "Segoe UI Variable Text"; default-font-size: 14px;
@@ -181,6 +217,7 @@ def main(argv=None):
     parser.add_argument('--profile', choices=['debug', 'release'], default='release')
     parser.add_argument('--native-probe', action='store_true', help='Compile positive probe and verify three expected public-API rejections only')
     parser.add_argument('--generate-only', action='store_true')
+    parser.add_argument('--target-dir', type=Path, help='Exclusive shared build cache; generated consumers stay under target/')
     args = parser.parse_args(argv)
     if args.native_probe:
         args.profile = 'debug'
@@ -192,7 +229,8 @@ def main(argv=None):
     report = {'schema_version': 2, 'source': source_identity(ROOT), 'os': platform.platform(), 'machine': platform.machine(), 'profile': args.profile, 'backend': 'winit-software', 'scale': 1, 'font': 'Segoe UI Variable Text', 'size': [820, 440], 'theme': 'light', 'commands': [], 'samples': [], 'status': 'IN_PROGRESS', 'outlier_policy': 'keep all; nearest-rank percentiles', 'timing_origin': 'Rust main entry (not process spawn/present); software-frame is synchronous snapshot after show, not present; memory sampled 1s/2s after Popen; harness markers at 1.5s/2.5s', 'budgets': 'NOT_EVALUATED: explicit report review required'}
     report['rustc'] = subprocess.check_output(['rustc', '-Vv'], cwd=ROOT, text=True)
     print(f'Report: {output / "result.json"}', flush=True)
-    env = dict(os.environ, CARGO_TARGET_DIR=str(ROOT / 'target'), SLINT_BACKEND='winit-software', SLINT_SCALE_FACTOR='1')
+    build_target = (args.target_dir or ROOT / 'target').resolve()
+    env = dict(os.environ, CARGO_TARGET_DIR=str(build_target), SLINT_BACKEND='winit-software', SLINT_SCALE_FACTOR='1')
     for key in ('SLINT_STYLE', 'SLINT_DEFAULT_FONT', 'SLINT_FULLSCREEN', 'SLINT_DEBUG_PERFORMANCE'):
         env.pop(key, None)
     projects = []
@@ -230,7 +268,7 @@ def main(argv=None):
             elif built['exit_code']:
                 raise RuntimeError(f'{case}: build failed')
             if not args.native_probe:
-                binary = ROOT / 'target' / args.profile / (name + ('.exe' if os.name == 'nt' else ''))
+                binary = build_target / args.profile / (name + ('.exe' if os.name == 'nt' else ''))
                 shutil.copyfile(binary, project / binary.name)
         if not args.native_probe and not args.generate_only:
             for scene in args.scenes:

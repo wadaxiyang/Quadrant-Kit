@@ -36,12 +36,27 @@ def parse_measurement(text, count):
             'render_hook_supported': idle[6] == 'true',
             'idle_render_callbacks': int(idle[5]) if idle[6] == 'true' else None}
 
+def parse_memory(text):
+    observations=[]
+    for line in text.splitlines():
+        if line.startswith('MEMORY sample='):
+            match=re.fullmatch(r'MEMORY sample=(\d+) private_bytes=(\d+) working_set_bytes=(\d+)',line)
+            if not match:raise ValueError('Invalid memory observation')
+            observations.append(dict(sample=int(match[1]),private_bytes=int(match[2]),working_set_bytes=int(match[3])))
+    if [s['sample'] for s in observations]!=list(range(19,200,20)):
+        raise ValueError('Missing/duplicate lifecycle memory observations')
+    final=[line for line in text.splitlines() if line.startswith('MEMORY_FINAL ')]
+    match=re.fullmatch(r'MEMORY_FINAL private_bytes=(\d+) working_set_bytes=(\d+)',final[0]) if len(final)==1 else None
+    if not match:raise ValueError('Missing final memory observation')
+    return dict(cycles=observations,final=dict(private_bytes=int(match[1]),working_set_bytes=int(match[2])))
+
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--label',required=True);args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--label',required=True);p.add_argument('--counts',nargs='+',type=int,choices=[0,1,20],default=[1,20]);args=p.parse_args()
     output=ROOT/'target/motion-bench'/datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ');project=output/'consumer'
     source=source_identity(ROOT);report={'label':args.label,'source':source,'status':'IN_PROGRESS','runs':[]}
     generate(project,(ROOT/'scripts/motion_bench.slint').read_text(encoding='utf-8'),'kit-motion-bench',True)
     shutil.copyfile(ROOT/'scripts/motion_bench_host.rs',project/'src/main.rs')
+    shutil.copyfile(ROOT/'scripts/windows_observation.rs',project/'src/windows_observation.rs')
     env=dict(os.environ,CARGO_TARGET_DIR=str(ROOT/'target'),SLINT_BACKEND='winit-software',SLINT_SCALE_FACTOR='1')
     for name in ('SLINT_STYLE','SLINT_DEFAULT_FONT','SLINT_FULLSCREEN','SLINT_DEBUG_PERFORMANCE'):env.pop(name,None)
     print('Report:',output/'result.json',flush=True)
@@ -51,12 +66,13 @@ def main():
         report['build']=execute(['cargo','build','--locked','--offline','--release'],project,output/'build.log',env)
         if report['build']['exit_code']:raise RuntimeError('build failed')
         binary=output/'kit-motion-bench.exe';shutil.copyfile(ROOT/'target/release/kit-motion-bench.exe',binary);report['binary_bytes']=binary.stat().st_size
-        for count in (1,20):
+        for count in args.counts:
             log=output/f'count-{count}.log'
             with log.open('w',encoding='utf-8') as stream:result=subprocess.run([str(binary),str(count)],env=env,stdout=stream,stderr=subprocess.STDOUT,timeout=90)
             text=log.read_text(encoding='utf-8')
             if result.returncode or 'RESULT=PASS' not in text:raise RuntimeError('incomplete measurement')
             run=parse_measurement(text,count)
+            run['memory_observations']=parse_memory(text)
             run.update(exit_code=result.returncode,log=str(log))
             report['runs'].append(run);print({k:v for k,v in run.items() if k!='frames'},flush=True)
         if source!=source_identity(ROOT):raise RuntimeError('sources changed')

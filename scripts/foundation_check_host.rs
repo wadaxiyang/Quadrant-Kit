@@ -237,6 +237,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     shot("dark-toast");
                     pointer(w, 640., 677., true);
                     pointer(w, 640., 677., false);
+                    check("toast body is not a dismiss action", ui.get_dismissals() == 0);
+                    // P5A's corrected native tooltip sizing leaves the close
+                    // button at the right edge of this 400 + 336 px specimen.
+                    pointer(w, 706., 677., true);
+                    pointer(w, 706., 677., false);
                     check(
                         "toast native dismiss forwards once",
                         ui.get_dismissals() == 1,
