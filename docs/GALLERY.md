@@ -1,23 +1,21 @@
 # Gallery
 
-## FluentButton P2 verification
+## Current control verification
 
 The existing live specimen compares a visible std Button and FluentButton with
 matching label/enabled/primary state and separate action counters. Danger uses a
 neutral native surface with a passive red outline. FluentButton hover/pressed/focus
-are driven by input; its old preview properties are removed. IconButton static
-previews remain explicitly pending P3.
+are driven by input; its old preview properties are removed. IconButton and SegmentButton production preview APIs were also removed in P3.
 
 `python scripts/run_button_checks.py` builds an isolated current consumer under
 `target/button-checks/<run>/`, checks public WindowEvent input and writes raw logs,
 source identity and state PNGs. `--help` describes supported options; `--build-only`
 reports BUILT_NOT_RUN. Running the saved binary without arguments opens its manual
 Windows input/accessibility host. It never adds Gallery startup work or Kit runtime
-code. PageHeader and finite ModalManager actions are included; full modal focus
-containment and screen-reader behavior remain outside this evidence.
+code. PageHeader and finite ModalManager actions are included. The modal and motion suites verify the fixed action focus/restore protocol; arbitrary-content containment and screen-reader behavior remain outside this evidence.
 
 
-P1 keeps Gallery as a consumer of the current facade. New components become
+P1 established Gallery as a consumer of the current facade. New components become
 available through static exports, then get a real catalog/specimen entry; the
 catalog is not a runtime registration mechanism. Existing API/native probes are
 compile-only and do not add normal-startup instances. The current API probe now
@@ -25,8 +23,7 @@ checks slot content/explicit child enabled bindings, controlled selection and
 programmatic state, focus entry and narrow sizing. When an API changes, update
 these current use sites and assertions without preserving legacy pages/aliases.
 All input, rendering, IME, accessibility and performance results retain separate
-coverage in COMPONENT_STATUS.md and the phase reports. P1 changes no Gallery page
-behavior, production preview input or platform chrome.
+coverage in COMPONENT_STATUS.md and the phase reports. That historical P1 change did not alter Gallery page behavior or platform chrome; later control migrations are recorded in their own staged reports.
 
 The Gallery is a development, verification, and learning application with no Product dependencies. Build it with `cargo build --locked -p quadrant-kit-gallery`; run with `cargo run --locked -p quadrant-kit-gallery`. It opens DesignGalleryWindow. The compiled KitApiProbe is not shown during normal startup.
 
@@ -73,11 +70,9 @@ canonical string destinations, explicit snapshot aliases, titles and public
 visual component links in All components. The typed Slint dispatcher is checked
 against every metadata row by the route coverage test.
 
-There are 25 destinations under Home, All components, Design guidance, Controls,
+There are 32 destinations under Home, All components, Design guidance, Controls,
 Surfaces & data display, Feedback & overlays, Navigation, Page & layout and Window.
-All components lists exactly the 21 public visual components; globals, enums and
-NavigationEntry stay in conceptual guidance or their owning component's docs.
-The complete Kit facade remains 35 public names.
+All components lists exactly the 42 public visual components; the six globals, eight enums and three structs stay in conceptual guidance or their owning component's docs. The complete current facade has 59 public names.
 
 Home is the starting point. Controls overview retains the cross-component input
 and selection comparison and the page-4 CI smoke contract. SurfaceCard retains

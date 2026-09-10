@@ -12,11 +12,11 @@ Rust compilation; build-script-only generation cannot prove compiler-special chi
 lowering works. `run_perf.py --scenes selection-100 --samples 30` compares paired
 native/Kit CheckBoxes under the existing release measurement protocol.
 
-## Fluent evolution P2 — current checks
+## Retained Fluent evolution P2 checks
 
 P2 migrates FluentButton to a visible native Button. The explicitly reviewed current
 snapshot removes show_icon/accent/preview inputs and adds accessible_name plus
-read-only native state outputs. Other component declarations are unchanged. Run
+read-only native state outputs. Other component declarations were unchanged in that P2 phase; later contracts are described in PUBLIC_API. Run
 `python scripts/run_button_checks.py` for the isolated current event/geometry host;
 it saves source, build/runtime logs and light/dark state images. Windows indexed
 and physical input is separately recorded in the P2 report. Performance schema 2
@@ -72,13 +72,13 @@ below retain their original scope; publication is summarized at the end.
 - foundation → no higher layer; primitives → foundation; patterns/overlays → their own layer, primitives and foundation. Same-layer imports must be acyclic; patterns and overlays cannot import each other. Implementation cannot import the facade.
 - Gallery may import its own files, std-widgets and the exact named `@quadrant-kit` facade. Raw Kit paths, external imports and canonical path escapes fail.
 - Multiline declarations/imports, re-export aliases, comment/string delimiters, escaped strings, public property direction/type, callback arguments/returns, pure public functions, enum order/values, struct fields and explicit base types. Unknown public syntax fails explicitly.
-- All 35 currently reachable public names, extra/missing exports and duplicate definitions. Actual Product names/tokens are rejected; generic FocusScope, focus-ring, task text and copyright references remain legal.
+- All 59 currently reachable public names, extra/missing exports and duplicate definitions. Actual Product names/tokens are rejected; generic FocusScope, focus-ring, task text and copyright references remain legal.
 - Static image references share the same scanner with the distribution checker. Referenced files must stay in the package; all icon assets have a current hash/MIT record, and handwritten source retains GPL/copyright headers. MIT SVGs are never given GPL source headers.
 - Kit helper has no normal/runtime dependency edges. Gallery's same-repository Kit path build dependency is allowed. Product packages and source patches/replacements fail; resolved Slint stays at 1.17.1.
 
 This is deliberately not a complete Slint compiler. Expression typing, builtin inherited properties, event behavior and native accessibility require the pinned Slint compiler, Gallery probe and runtime evidence. String interpolation and new declaration syntax outside the supported subset currently fail and require an explicit scanner extension with fixtures. Literal Unicode escapes follow the installed Slint 1.17.1 literal implementation. Formatting/comments and underscore/hyphen spelling normalize; string contents retain semantic whitespace.
 
-The Cargo module also has fixtures for future Tasks Git+full-SHA, alias, workspace-inherited, target/build/dev, local-source and resolved-revision rules. These fixtures are not a claim that the final Tasks guard has been installed: config/build-source mapping, Agent/GUI target graphs and Product Rust/window API checks remain Phase 4 responsibilities.
+The Cargo module also retains fixtures for Tasks Git+full-SHA, alias, workspace-inherited, target/build/dev, local-source and resolved-revision rules. These test source-policy machinery and do not validate the current external Tasks checkout. Product configuration, Agent/GUI graphs and window contracts remain owned and verified by that repository; its historical cutover is recorded separately below.
 
 ## Reviewed baselines
 
@@ -97,10 +97,7 @@ incremental evidence are tracked in [NAVIGATION_REBUILD_PHASE8.md](NAVIGATION_RE
 The unchanged public API was reviewed in [Phase 3](NAVIGATION_REBUILD_PHASE3.md).
 
 Current repository tests compare every PUBLIC_API.md Slint declaration, including
-defaults, with the facade; reconcile the 35 probe imports and their uses; check
-240 properties, 20 callbacks, 21 components, six globals, seven enums and the
-ten-field NavigationEntry; and reject live legacy navigation/shell identifiers.
-The catalog test separately requires all 21 visual exports to have real typed
+defaults, with the facade; reconcile all 59 probe imports and their uses; check 290 explicit properties, 34 callbacks, nine public functions, 42 components, six globals, eight enums and three structs; and reject live legacy navigation/shell identifiers. Native inherited members additionally depend on the pinned compiler/probe. The catalog test separately requires all 42 visual exports to have real typed
 destinations. Probe compilation complements these declaration/token checks.
 
 `scripts/kit_api_v1.json` schema 1 records the exact current facade. The historical navigation baseline had 35 names; Fluent additions/removals are reviewed in the staged reports. Phase 1 added seven names, seven Theme aliases and four UiConstants properties; Phase 2 added NavigationView with 15 properties and six callbacks. Phase 3 removes SidebarItem and three legacy sidebar tokens, rebinding two navigation defaults to their identical resolved values; all other surviving contracts are preserved. Each export has separate `signature` and `defaults` sections. Declaration order and physical implementation paths are not signature keys. Inherited custom component contracts are protected by their own exported baseline plus the recorded base name; builtin inherited properties are covered by the fixed compiler version. Default expressions are token-normalized, not evaluated: an expression change is reported for review even when it may evaluate identically. Callback/function argument order and enum order are preserved. Function bodies and other interaction behavior require review/tests beyond this declaration baseline. The extraction's historical 28-name results below retain their original scope.
@@ -188,8 +185,7 @@ Tasks does not need to be present to run any Kit check. Documentation added afte
 the adopted source is validated at its own commit; it does not retarget consumers.
 
 Phase 7 also executed the reversible Badge exercise documented in GALLERY.md.
-Remaining P1 work includes complete native keyboard/IME/screen-reader coverage,
-modal Tab containment/restoration and the full state/size/backend matrix. These
+At that historical publication point, remaining work included complete native keyboard/IME/screen-reader coverage, modal Tab containment/restoration and the full state/size/backend matrix. Later Fluent P5B/P6 reports establish the finite modal action/restore contract; reader and broader platform limits remain separate. These
 are explicit coverage limits. Product's user-accepted tray/reminder/DPI scenarios
 do not certify every Kit component or operating-system theme transition.
 
@@ -294,3 +290,15 @@ from an empty runtime directory. The test reuses the registry/build cache; it do
 not certify remote retention/CI, a cold build, or any external Tasks dependency.
 Run `verify_incremental.py` in an exclusive clean test clone, using its documented
 `--target-dir` only when no other build is using that directory.
+
+### P8 current local candidate
+
+[P8.md](implementation/kit-fluent-v1/P8.md) records the final source, core checks,
+128 Windows Catalog captures, clean P7 package consumer/incremental/MSRV evidence,
+Linux checks and remaining limits. Reproduce directory coverage with
+`python scripts/capture_gallery_baseline.py --mode Catalog --output-directory target/verify-p8/visual`.
+The current Linux smoke uses the documented public backend and the host's existing
+validation sysroot; Chinese glyph coverage is incomplete, so a successful render
+process is not full visual acceptance. Hosts must provide appropriate font coverage;
+do not copy system fonts into the source package. Current remote publication/CI
+and retained Git+SHA consumer checks remain separately unauthorized/unperformed.

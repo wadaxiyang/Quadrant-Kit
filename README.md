@@ -2,7 +2,7 @@
 
 Reusable Fluent-oriented Slint source components, with a Gallery for development and learning. This is an independent Cargo workspace; Quadrant Tasks is not needed to build it.
 
-Version **0.1.0 is an extraction candidate**. Candidate publication is separate from stable release and consumer adoption. Require same-SHA CI, a retained reference and actual remote-consumer evidence before adoption; see [validation](docs/VALIDATION.md). The source was extracted from Quadrant at `5a2262cd480d639673fa4f5dd406a9c7196361b5`; see [provenance](docs/PROVENANCE.md).
+Version **0.1.0 is the local Fluent evolution working version**. The current facade has 59 names and 42 visual components; its API differs from the historically retained extraction candidate. See the [current stage ledger](docs/implementation/kit-fluent-v1/STATE.md) and [candidate assessment](docs/implementation/kit-fluent-v1/P8.md). Candidate publication is separate from stable release and consumer adoption. Require same-SHA CI, a retained reference and actual remote-consumer evidence before adoption; see [validation](docs/VALIDATION.md). The source was extracted from Quadrant at `5a2262cd480d639673fa4f5dd406a9c7196361b5`; see [provenance](docs/PROVENANCE.md).
 
 ## 架构与组件接入
 
@@ -80,7 +80,7 @@ The root `quadrant-kit` package is only a build-time source locator. It owns no 
 The current local facade exports the contracts listed in PUBLIC_API, including NavigationView and the navigation
 types, Back button, pane toggle and content surface. Gallery uses NavigationView
 with a hierarchical catalog, title/keyword search and Gallery-owned Back history;
-its 25 destinations share page scrolling and collapsible, selectable source/details.
+its 32 destinations share page scrolling and collapsible, selectable source/details.
 Gallery shares one application toolbar and keeps platform-native window controls:
 DWM caption buttons on Windows and AppKit traffic lights on macOS. The native
 adapters compose these with the toolbar; Mac runtime verification is still pending.
@@ -89,14 +89,14 @@ Home and All components use the same catalog as navigation/search, linking all c
 public visual components. Snapshot destinations are stable strings; 0–7 remain
 explicit Gallery-only aliases.
 The shell supports expanded/compact navigation, independent primary/footer
-scrolling and keyboard focus recovery. Phase 7 records Windows input checks and
+scrolling and keyboard focus recovery. The historical navigation rebuild Phase 7 records Windows input checks and
 184 render scenes at simulated 100/125/150/200/225% scale; real monitor transitions
 and full accessibility coverage remain unverified. Final local construction
-checks are recorded in [the Phase 8 report](docs/NAVIGATION_REBUILD_PHASE8.md).
-SidebarItem and its legacy tokens have been removed. These changes are unpublished; the retained
+checks from that rebuild are recorded in [its Phase 8 report](docs/NAVIGATION_REBUILD_PHASE8.md); current Fluent verification is in the stage ledger above.
+SidebarItem and its legacy tokens have been removed. The retained
 extraction source still has 28 names. Branding, task models, Inbox, task row
 composition, quadrant colors, product-specific timer/layout tokens, and product
-navigation aliases belong to Tasks. P2/P3 migrate command buttons to public native Button, with controlled selection, native tooltip service and current API/visual changes in PUBLIC_API.md. Navigation row and overlay lifecycle work retain their scoped P5 status.
+navigation aliases belong to Tasks. Command controls reuse public native Button, with controlled selection, native tooltip service and current API/visual changes in PUBLIC_API.md. Navigation uses the bounded P5C contract; Toast/Modal use the P6 motion policy. No full WinUI 3, arbitrary ContentDialog or unverified platform equivalence is claimed.
 
 Code is GPL-3.0-only; the Microsoft SVG assets retain their MIT license. See [LICENSE](LICENSE), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), and [assets/icons/LICENSE-MIT](assets/icons/LICENSE-MIT).
 

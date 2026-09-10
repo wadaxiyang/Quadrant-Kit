@@ -14,8 +14,8 @@ python scripts/run_perf.py --native-probe
 
 Each invocation creates fresh projects only in `target/perf-harness/<UTC run>/`.
 Native and Kit variants use the same template/features, Fluent, embedded resources,
-winit-software, system Segoe UI Variable Text, 100%, Light, 820×440. Scenarios are
-empty, import-only, one Button, 100 Buttons, text input, hidden Toast. Empty/hidden
+winit-software, system Segoe UI Variable Text, 100%, Light, 820×440. The original P0 scenarios were
+empty, import-only, one Button, 100 Buttons, text input and hidden Toast; the current 21-scene matrix is described in the P7 section. Empty/hidden
 native controls are empty-window references (there is no std Toast). The 100
 buttons are 100 real declarations in a for, all within the visible window; there
 is no Gallery catalog/page/platform adapter in the measurement binary.

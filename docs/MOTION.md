@@ -71,5 +71,4 @@ All raw samples and source identities remain under target and are summarized in
 [the P6 report](implementation/kit-fluent-v1/P6.md). No working-set trimming or
 accessibility removal is used. Software-buffer cost is not actual screen-present
 latency; an unsupported rendering hook is recorded as NOT_RUN, never zero redraw.
-Native reader behavior, physical monitor changes and complete P7 budgets remain
-separate. P6 does not certify a full ContentDialog or all-platform zero animation.
+Native reader behavior and physical monitor changes remain separate. Current P7 measurements and any unmet gates are recorded in [P7.md](implementation/kit-fluent-v1/P7.md). P6 does not certify a full ContentDialog or all-platform zero animation.

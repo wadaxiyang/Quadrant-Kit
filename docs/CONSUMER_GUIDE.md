@@ -28,11 +28,7 @@ Same-SHA CI and anonymous remote-consumer evidence are linked in
 change any consumer's adopted source. This is a retained candidate, not a stable
 release tag.
 
-The local NavigationView/Gallery rebuild is a different, unpublished API contract.
-The dependency below selects the historical extraction API, not the current
-current API described in PUBLIC_API.md. Phase 8 local packaging does
-not make the rebuild available for Tasks adoption; a separately authorized
-publication and same-SHA remote-consumer verification must precede that change.
+The current Fluent contract differs from that retained extraction API. The dependency below intentionally selects the historical extraction source, not the current API described in PUBLIC_API.md. Current Fluent P7/P8 local packaging does not authorize Tasks adoption; separately authorized publication and same-SHA remote-consumer verification must precede that change. See the current stage ledger for local candidate status.
 
 An executable build dependency for that verified source is:
 

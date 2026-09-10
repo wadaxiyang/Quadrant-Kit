@@ -23,8 +23,8 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P5D | PASS — scoped native popups | [P5D.md](P5D.md): three exports, 115 scaled runtime assertions, Windows menu input subset, 76 Python tests, Gallery/40 captures. |
 | P5E | PASS — scoped inline contract | [P5E.md](P5E.md): host-conditional Expander, InfoBar, 19 runtime + 23 popup regressions; full core and 40 captures. |
 | P6 | PASS — scoped motion lifecycle and measured gate | [P6.md](P6.md): 32 new + 31 preserved runtime assertions, 100 cycles / 20 transients, 800 before-after software frames, four 60s idle intervals, full core/79 Python and 40 captures. Actual presentation/reader NOT_RUN. |
-| P7 | PARTIAL — measured Windows gates PASS | [P7.md](P7.md): 1,260 startup samples, 7,200 interaction frames, 257 runtime assertions, UIA and idle/lifetime evidence. Presentation, long-term memory and broader platform gates remain limited. Post-commit integration follows. |
-| P8 | NOT_STARTED | Follows the P7 report; candidate status must preserve unmet gates. |
+| P7 | PARTIAL — measured Windows gates PASS | [P7.md](P7.md): 1,260 startup samples, 7,200 interaction frames, 257 runtime assertions, UIA and idle/lifetime evidence. Presentation, long-term memory and broader platform gates remain limited. Post-commit archive consumer, MSRV and exact-byte incremental restoration PASS; see P8. |
+| P8 | PARTIAL — scoped local delivery complete | [P8.md](P8.md): current docs/API/catalog/license closure, full Windows gate, 128 captures, Linux builds/WSLg subset and post-commit package evidence. Linux Chinese glyph check FAIL; reader/presentation/long-term memory and remote publication gates remain open. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
 and pushed as `f47933832376566d69f66fa430ff0e76e120253d`. Both package commands,
@@ -61,3 +61,7 @@ P5E was committed as `1fcb2365d54ff6c1b0527a0db0383d9508fbb782`; both package
 commands passed. P6 completes the authorized P4/P5/P6 sequence. Each unit has a
 separate commit/report. No P7/P8, push, tag, release or Tasks revision change was
 performed; original root SPEC addition/deletion remain untouched.
+
+P7 committed as `8bd293d4647be70489a08f812a532d6cccd4b73e`. Both package-list/distribution commands, actual Cargo archive verification, extracted-source current API consumer Light/Dark runs and Windows Rust 1.92 build PASS. P8 collects final incremental/platform results and the local candidate assessment.
+
+P7/P8 local work is complete with the limits above. The P8 commit contains its report and current ledger. No push, tag, release or Tasks SHA update is performed. Historical P0–P6 paragraphs retain their original point-in-time scope.

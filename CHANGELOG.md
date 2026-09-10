@@ -1,5 +1,12 @@
 # Changelog
 
+## Fluent evolution P7/P8 — local verification candidate
+
+- Add current scale, input, lifetime, Windows UIA and packaged-consumer verification.
+- Retain raw measurements, unchanged budgets and unresolved presentation/memory/platform gates.
+- Reconcile current 59-name facade, 42 visual components, documentation and candidate status.
+- No UI/API change, runtime dependency, publication or external Tasks revision update.
+
 ## Fluent evolution P6 — local, unpublished
 
 - Add per-window enable/reduced-motion policy for Kit-owned durations.

@@ -43,20 +43,20 @@ and the API snapshot checks current consistency; none is a runtime registry or a
 second source of public export truth. Public type re-exports are restricted to
 verified upstream contracts by the scanner; native capability probes complement it.
 
-P1 changes no public API or visual implementation. The old extraction freeze is
-superseded by the current-version policy. Planned controls and exact substage
+Historically, P1 changed no public API or visual implementation. The old extraction freeze is
+superseded by the current-version policy. Delivered controls, limitations and exact substage
 ownership are in COMPONENT_STATUS.md; current custom-input exceptions and their
 review scope are in NATIVE_REUSE.md.
 
 ## Component conventions
 
-Use Theme, Typography, and UiConstants for semantic styles and logical sizes. APIs may change for a concrete benefit with synchronized current callers, docs, probes and a reviewed snapshot. Each version contains only its current implementation, without old-name aliases, adapters or duplicate behavior branches. Reuse public std-widgets/builtins for native behavior; migrate existing command debt in its assigned phase and remove preview-only inputs at that time. Do not introduce production properties solely to force screenshot states.
+Use Theme, Typography, and UiConstants for semantic styles and logical sizes. APIs may change for a concrete benefit with synchronized current callers, docs, probes and a reviewed snapshot. Each version contains only its current implementation, without old-name aliases, adapters or duplicate behavior branches. Reuse public std-widgets/builtins for native behavior; retain one native input owner and no production preview-only inputs. Do not introduce production properties solely to force screenshot states.
 
 Theme.mode, Theme.system_dark, and Theme.ui_font_family are host inputs. dark_mode is derived. Different Slint component instances do not automatically share these globals. Consumers initialize every independent window before showing it, and also coordinate std-widgets Palette. Kit does not detect OS theme, select fonts, start a process, or access settings. Gallery's host owns its system-theme observation, with a light fallback for Unknown.
 
 Static SVG references resolve within the package and are embedded by the consumer build. Images supplied dynamically by consumers are not Kit-owned assets. Keep Microsoft MIT assets separate from GPL source attribution; see PROVENANCE.md.
 
-ModalManager currently has a single shown/title/message/action state and accepted/dismissed callbacks. Escape and Return handling exists. Complete Tab containment, focus restoration, nested modal stacks, and screen-reader behavior are not established. Its finite confirmation contract is addressed in P5B; P1 does not claim those missing capabilities.
+ModalManager has one host-controlled shown/title/message/action state. Native buttons own Return/Space; the fixed action set handles Tab/Shift+Tab and Escape. P5B/P6 verify initial action focus, bounded traversal and a host restore request on logical close. This finite confirmation contract does not establish arbitrary-content containment, nested modal stacks or actual screen-reader behavior.
 
 ## Read a token and a component
 

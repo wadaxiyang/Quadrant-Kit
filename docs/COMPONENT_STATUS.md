@@ -1,8 +1,8 @@
-# Component status — P3 current contract
+# Component status — current Fluent contracts
 
 IMPLEMENTED means current code exists; VERIFIED is reserved for a named check at
 an identified source/environment. PARTIAL names a limited contract or verification
-scope. NOT_RUN means that dimension was not executed in P3. BACKLOG is planned or
+scope. NOT_RUN means that dimension has no claimed execution in the cited evidence. BACKLOG is planned or
 explicitly excluded work. Static guard PASS never implies input, visual, performance
 or screen-reader acceptance. P0 historical evidence stays at its original source.
 
@@ -12,7 +12,7 @@ Contracts/defaults are in PUBLIC_API.md; per-component source/custom behavior an
 slots are in implementation/kit-fluent-v1/AUDIT.md. The table is reconciled with the
 facade, native manifest and real Gallery catalog, not used as a runtime registry.
 
-| Component | Implementation / native basis | Current contract and gap | Gallery scene | Input P3 | Visual P3 | Performance evidence | Accessibility P3 |
+| Component | Implementation / native basis | Current contract and gap | Gallery scene | Input evidence | Visual evidence | Performance evidence | Accessibility evidence |
 |---|---|---|---|---|---|---|---|
 | Badge | IMPLEMENTED / presenter; builtin presentation / composition | Retained minimal Rectangle/Text; semantic colors unchanged | badge | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
 | EmptyState | IMPLEMENTED / composed; builtin presentation / composition | Removed unused milestone; title/message wrap; passive card helpers conditional | empty-state | NOT_RUN: passive/composition scope | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | NOT_RUN: reader
@@ -35,7 +35,6 @@ facade, native manifest and real Gallery catalog, not used as a runtime registry
 | ToastHost | IMPLEMENTED / reviewed-exception; Button, Tooltip | Host state; one request; bounded opacity and immediate close input disable | toast-host | VERIFIED: P5A/P6 runtime | VERIFIED: P6 opacity pixels | VERIFIED: P6 1/20 frame + 60s idle scope | Reader NOT_RUN |
 | TooltipHost | IMPLEMENTED / presenter; builtin presentation / composition | Passive content; native Tooltip service; edge snapshot crop documented | tooltip-host | VERIFIED: P5A native hover/focus scope | VERIFIED: inside popup; edge crop P5A | NOT_RUN | NOT_RUN: reader
 | WindowControlButton | IMPLEMENTED / composed; Button, Tooltip | Composes IconButton; removed symbol; enabled and explicit 46x40 default; host owns OS action | window-control-button | VERIFIED: scoped P3 runtime | VERIFIED: catalog render; manual subset in P3.md | NOT_RUN | PARTIAL: native Windows actions; no reader
-
 | FluentCheckBox | IMPLEMENTED / native-wrapper; CheckBox | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
 | FluentSwitch | IMPLEMENTED / native-wrapper; Switch | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
 | FluentRadioGroup | IMPLEMENTED / native-wrapper; RadioGroup | Native inherited selection; P4A contract | native-selection | P4A report | P4A report | P4A report | NOT_RUN: reader |
@@ -107,3 +106,7 @@ P6 private TransientLifetime is separately guarded alongside NavigationItemRow.
 It owns no input or business state; see MOTION.md and the P6 report for effective
 policy, bounded cleanup, actual measurements and unrun native presentation/reader
 categories. P4/P5/P6 scoped implementation is complete; P7/P8 are not authorized.
+
+## Current P7/P8 evidence overlay
+
+The per-component rows retain their original measurement scopes. [P7](implementation/kit-fluent-v1/P7.md) adds current 1/100/1,000 Button and CheckBox scenes; empty/long/grouped fields; 100 icons/segments/progress/table; 100/1,000/10,000 native ListView models; hidden Toast cost attribution and 0/1/20 lifecycle observations. Native UIA focus/Invoke/disabled is verified for FluentButton, not every component or a screen-reader session. Navigation validation at 256 has current p95 8.4421 ms. [P8](implementation/kit-fluent-v1/P8.md) records final catalog rendering and platform/package evidence. No unmeasured component receives a blanket performance or accessibility VERIFIED label.

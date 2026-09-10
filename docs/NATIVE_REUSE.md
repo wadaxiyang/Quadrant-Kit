@@ -1,8 +1,6 @@
-# Native reuse — current P3 policy and pinned capability evidence
+# Native reuse — current policy and pinned capability evidence
 
-Applies to Slint/slint-build **1.17.1**, Fluent style, current Kit HEAD
-the pushed P0–P2 source `f479338` plus the current P3 changes
-identified in the phase reports.
+Applies to Slint/slint-build **1.17.1**, Fluent style and the current facade. Exact implementation and verification sources are identified in the Fluent stage ledger; older reports retain their original scope.
 This is a static audit, not a runtime compliance declaration. The P0 inventory is
 [AUDIT.md](implementation/kit-fluent-v1/AUDIT.md). P1 adds the current manifest and
 guard described below. P2 migrates FluentButton; P3 migrates IconButton, SegmentButton and window commands.
@@ -10,7 +8,7 @@ guard described below. P2 migrates FluentButton; P3 migrates IconButton, Segment
 ## Current manifest and guard
 
 `scripts/native_reuse_manifest.json` records every current visual implementation,
-including private NavigationItemRow. It is development/CI metadata and is not
+including private NavigationItemRow and TransientLifetime (44 records / 42 public visual components). It is development/CI metadata and is not
 loaded at runtime or added to Cargo's distribution include. Facade remains the
 public export authority. Component status and Gallery routes are reconciled in
 COMPONENT_STATUS.md; public/private mismatches, stale/missing/duplicate records fail.
@@ -24,12 +22,11 @@ must match the computed closure. Native wrappers require one direct imported std
 owner and no transitive duplicate TouchArea/FocusScope/TextInput/Flickable or
 keyboard/accessibility activation handlers. Literal hidden proxies fail.
 
-Statuses are `native-wrapper` (currently Button/LineEdit/TextEdit wrappers),
+Statuses are `native-wrapper` (public native inheritance or a visible native input owner),
 `presenter` (passive), `composed` (children own behavior), `reviewed-exception`
 (narrow custom behavior), and `custom/pending-migration` (existing ordinary input
 debt, never compliant). Component composition may contain pending children; this
-does not make the compound component native-compliant. Four exceptions record
-SurfaceCard, NavigationView, ToastHost and ModalManager with explicit scope.
+does not make the compound component native-compliant. Six exception records cover SurfaceCard, NavigationView, ToastHost, ModalManager and the private NavigationItemRow/TransientLifetime helpers with explicit scope.
 
 P5C removes the last pending-command allowance. New pending commands fail.
 Reviewed exceptions and pending implementations have canonical declaration/body
