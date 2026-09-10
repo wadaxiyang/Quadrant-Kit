@@ -1,0 +1,56 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { FluentComboBox, SettingRow, SurfaceCard, Theme, ThemeMode, Typography } from "@quadrant-kit";
+import { GalleryPage } from "../shared/gallery_page.slint";
+
+export component SettingsPage inherits GalleryPage {
+    in-out property <ThemeMode> gallery_theme;
+    in-out property <int> preview_mode;
+    stability: "";
+    documentation: "";
+    page_description: "Personalize the Gallery appearance and component previews.";
+    changed gallery_theme => {
+        theme_selector.current-index = root.gallery_theme == ThemeMode.system ? 0 : root.gallery_theme == ThemeMode.light ? 1 : 2;
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        Text { text: "Appearance"; color: Theme.text_primary; font-size: Typography.subtitle; font-weight: Typography.semibold; }
+        SurfaceCard {
+            VerticalLayout {
+                padding: 20px;
+                SettingRow {
+                    title: "App theme";
+                    description: "Choose a theme or follow your system setting.";
+                    theme_selector := FluentComboBox {
+                        width: 190px;
+                        accessible-label: "App theme";
+                        model: ["Use system setting", "Light", "Dark"];
+                        current-index: root.gallery_theme == ThemeMode.system ? 0 : root.gallery_theme == ThemeMode.light ? 1 : 2;
+                        selected(value) => { root.gallery_theme = value == "Light" ? ThemeMode.light : value == "Dark" ? ThemeMode.dark : ThemeMode.system; }
+                    }
+                }
+            }
+        }
+    }
+    VerticalLayout {
+        spacing: 12px;
+        Text { text: "Component previews"; color: Theme.text_primary; font-size: Typography.subtitle; font-weight: Typography.semibold; }
+        SurfaceCard {
+            VerticalLayout {
+                padding: 20px;
+                SettingRow {
+                    title: "Preview width";
+                    description: "Change specimen width without resizing the window.";
+                    FluentComboBox {
+                        width: 190px;
+                        accessible-label: "Preview width";
+                        model: ["Compact", "Medium", "Wide"];
+                        current-index <=> root.preview_mode;
+                        selected(value) => { root.preview_mode = value == "Compact" ? 0 : value == "Wide" ? 2 : 1; }
+                    }
+                }
+            }
+        }
+    }
+}

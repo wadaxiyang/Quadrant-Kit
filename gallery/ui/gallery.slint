@@ -3,6 +3,7 @@
 
 import { Palette } from "std-widgets.slint";
 import { ModalKind, ModalManager, NavigationView, NavigationPaneMode, Theme, ThemeMode, Typography, SegmentButton, UiConstants } from "@quadrant-kit";
+import { SettingsPage } from "pages/settings_page.slint";
 import { GalleryToolbar } from "shared/gallery_toolbar.slint";
 import { GalleryNavigation } from "shared/gallery_catalog.slint";
 import { HomePage } from "pages/home_page.slint";
@@ -65,12 +66,16 @@ export component DesignGalleryWindow inherits Window {
     callback caption_pressed();
     in property <length> toolbar_leading_inset;
     in property <length> toolbar_trailing_inset;
+    in property <length> caption_back_width: 46px;
+    in property <length> caption_back_height: 30px;
+    in property <length> caption_back_top: 1px;
     out property <bool> chrome_dark: Theme.dark_mode;
     out property <color> chrome_background: Theme.background;
     out property <length> chrome_min_width: root.min-width;
     out property <length> chrome_min_height: root.min-height;
     out property <length> title_drag_x: title_bar.drag_x;
     out property <length> title_drag_width: title_bar.drag_width;
+    out property <length> title_bar_height: title_bar.height;
     // Native decorations stay enabled on every platform.
     no-frame: false;
     preferred-width: 1040px;
@@ -80,8 +85,8 @@ export component DesignGalleryWindow inherits Window {
     background: root.native_caption_surface ? transparent : Theme.background;
     // Leave the native caption-button surface unpainted. DWM composites it
     // beneath the Slint surface; an opaque clear would cover the system buttons.
-    Rectangle { width: parent.width - root.toolbar_trailing_inset; height: 48px; background: Theme.background; }
-    Rectangle { y: 48px; width: parent.width; height: parent.height - 48px; background: Theme.background; }
+    Rectangle { width: parent.width - root.toolbar_trailing_inset; height: root.title_bar_height; background: Theme.background; }
+    Rectangle { y: root.title_bar_height; width: parent.width; height: parent.height - root.title_bar_height; background: Theme.background; }
     default-font-family: root.ui_font_family;
     default-font-size: Typography.body;
     default-font-weight: Typography.regular;
@@ -114,19 +119,23 @@ export component DesignGalleryWindow inherits Window {
             caption_pressed => { root.caption_pressed(); }
             leading_inset: root.toolbar_leading_inset;
             trailing_inset: root.toolbar_trailing_inset;
-            back_enabled: GalleryNavigation.can_go_back; pane_mode: root.pane_mode;
-            gallery_theme <=> root.gallery_theme; preview_mode <=> root.preview_mode;
+            back_enabled: GalleryNavigation.can_go_back;
+            back_width: root.caption_back_width;
+            back_height: root.caption_back_height;
+            back_top: root.caption_back_top;
             back_requested => { GalleryNavigation.back_requested(); }
-            pane_toggle_requested => { root.pane_mode = root.pane_mode == NavigationPaneMode.expanded ? NavigationPaneMode.compact : NavigationPaneMode.expanded; }
         }
         NavigationView {
             vertical-stretch: 1;
             pane_width: 304px;
+            pane_title: "Kit Gallery";
             pane_mode: root.pane_mode;
             items: GalleryNavigation.items;
+            footer_items: GalleryNavigation.footer_items;
+            show_footer_separator: false;
             selected_id: GalleryNavigation.selected_id;
             show_back_button: false;
-            show_pane_toggle: false;
+            show_pane_toggle: true;
             back_enabled: GalleryNavigation.can_go_back;
             show_search: true;
             search_placeholder: "Search pages and components";
@@ -160,6 +169,7 @@ export component DesignGalleryWindow inherits Window {
                     if root.gallery_destination == "native-inline": NativeInlinePage { width:100%;height:100%; }
                     if root.gallery_destination == "native-popups": NativePopupsPage { width:100%;height:100%; }
                     if root.gallery_destination == "native-pickers": NativePickersPage { width: 100%; height: 100%; }
+                    if root.gallery_destination == "settings": SettingsPage { width: 100%; height: 100%; gallery_theme <=> root.gallery_theme; preview_mode <=> root.preview_mode; }
                     if root.gallery_destination == "home": HomePage { width: 100%; height: 100%; }
                     if root.gallery_destination == "all-components": AllComponentsPage { width: 100%; height: 100%; }
                     if root.gallery_destination == "tokens": TokensPage { width: 100%; height: 100%; }

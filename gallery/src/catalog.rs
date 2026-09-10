@@ -76,7 +76,7 @@ fn parse(source: &'static str) -> Result<Vec<CatalogEntry>, String> {
         }
         ancestors.push(id);
         let icon = icon.parse::<usize>().map_err(|_| "Invalid icon")?;
-        if icon >= 8 {
+        if icon >= 9 {
             return Err("Invalid icon".into());
         }
         let alias = (!alias.is_empty())

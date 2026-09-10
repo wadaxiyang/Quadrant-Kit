@@ -4,9 +4,6 @@
 import { ScrollView } from "std-widgets.slint";
 import { Theme, Typography } from "../../foundation/theme.slint";
 import { UiConstants } from "../../foundation/constants.slint";
-import { FluentIcons } from "../../foundation/fluent_icons.slint";
-import { IconButton } from "../../primitives/icon_button.slint";
-import { TooltipHost } from "../../primitives/tooltip_host.slint";
 import { FluentTextField } from "../../primitives/text_field.slint";
 import { NavigationEntry, NavigationEntryKind, NavigationPaneMode, NavigationContentSurfaceMode } from "navigation_types.slint";
 import { NavigationBackButton } from "navigation_back_button.slint";
@@ -51,9 +48,7 @@ export component NavigationView inherits Rectangle {
     changed valid => { root.sync-models(); }
     private property <string> recovery_id;
     private property <int> recovery_epoch;
-    private property <bool> search_focus_requested: false;
-    changed show_search => { if (!root.show_search) { root.search_focus_requested = false; } }
-    private property <bool> has_header: root.show_back_button || root.show_pane_toggle || root.show_search || (!root.compact && root.pane_title != "");
+    private property <bool> has_header: root.show_back_button || root.show_pane_toggle || (root.show_search && !root.compact) || (!root.compact && root.pane_title != "");
     min-width: 0px;
     preferred-width: 600px;
     min-height: 0px;
@@ -70,42 +65,37 @@ export component NavigationView inherits Rectangle {
             pane_focus := FocusScope { width: 0px; focus-on-click: false; focus-on-tab-navigation: false; }
             VerticalLayout {
                 spacing: 0px;
-                if root.show_back_button || root.show_pane_toggle: Rectangle {
-                    height: root.compact ? (root.show_back_button && root.show_pane_toggle ? 80px : 40px) : 40px;
+                if root.show_back_button || root.show_pane_toggle || (!root.compact && root.pane_title != ""): Rectangle {
+                    height: root.compact && root.show_back_button && root.show_pane_toggle ? 88px : 44px;
                     if root.show_back_button: NavigationBackButton {
-                        x: 4px; y: 0px; enabled: root.back_enabled;
+                        x: root.compact ? (parent.width - self.width) / 2 : 4px; y: 6px; width: 44px; height: 32px;
+                        enabled: root.back_enabled;
                         clicked => { root.back_requested(); }
                     }
                     if root.show_pane_toggle: NavigationPaneToggleButton {
-                        x: root.compact || !root.show_back_button ? 4px : 44px;
-                        y: root.compact && root.show_back_button ? 40px : 0px;
+                        x: root.compact ? (parent.width - self.width) / 2 : !root.show_back_button ? 4px : 48px;
+                        y: root.compact && root.show_back_button ? 50px : 6px;
+                        width: 44px; height: 32px;
                         pane_mode: root.pane_mode;
                         clicked => { root.pane_toggle_requested(); }
                     }
+                    if !root.compact && root.pane_title != "": Text {
+                        x: root.show_back_button || root.show_pane_toggle ? 12px + (root.show_back_button ? 44px : 0px) + (root.show_pane_toggle ? 44px : 0px) : 16px;
+                        width: max(0px, parent.width - self.x - 16px); height: 100%;
+                        text: root.pane_title; vertical-alignment: center;
+                        color: Theme.text_primary; font-size: Typography.body_large;
+                        font-weight: Typography.semibold; overflow: elide;
+                    }
                 }
-                if !root.compact && root.pane_title != "": Text {
-                    height: 36px; text: root.pane_title;
-                    horizontal-alignment: center; vertical-alignment: center;
-                    color: Theme.text_primary; font-size: Typography.body; overflow: elide;
-                }
-                if root.show_search: Rectangle {
+                // Compact navigation has one pane toggle. Search returns with
+                // the expanded pane; its text remains owned by the host.
+                if root.show_search && !root.compact: Rectangle {
                     height: 40px;
-                    if !root.compact: search_input := FluentTextField {
-                        Timer {
-                            interval: 1ms;
-                            running: root.search_focus_requested;
-                            triggered => { search_input.focus(); root.search_focus_requested = false; }
-                        }
+                    FluentTextField {
                         x: 8px; width: max(0px, parent.width - 16px); text <=> root.search_text;
                         placeholder_text: root.search_placeholder;
                         edited(value) => { root.search_changed(value); }
                         accepted(value) => { root.search_submitted(value); }
-                    }
-                    if root.compact: IconButton {
-                        x: 7px; width: 40px; height: 40px; icon: FluentIcons.menu;
-                        accessible_name: "Expand navigation to search";
-                        Tooltip { TooltipHost { text: "Expand navigation to search"; shown: true; } }
-                        clicked => { self.focus(); root.search_focus_requested = true; root.pane_toggle_requested(); }
                     }
                 }
                 if root.show_top_separator && root.has_header && root.valid && (root.items.length > 0 || root.footer_items.length > 0): Rectangle {

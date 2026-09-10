@@ -8,7 +8,7 @@ guard described below. P2 migrates FluentButton; P3 migrates IconButton, Segment
 ## Current manifest and guard
 
 `scripts/native_reuse_manifest.json` records every current visual implementation,
-including private NavigationItemRow and TransientLifetime (44 records / 42 public visual components). It is development/CI metadata and is not
+including private NavigationItemRow, NavigationRowTarget and TransientLifetime (45 records / 42 public visual components). It is development/CI metadata and is not
 loaded at runtime or added to Cargo's distribution include. Facade remains the
 public export authority. Component status and Gallery routes are reconciled in
 COMPONENT_STATUS.md; public/private mismatches, stale/missing/duplicate records fail.
@@ -26,7 +26,7 @@ Statuses are `native-wrapper` (public native inheritance or a visible native inp
 `presenter` (passive), `composed` (children own behavior), `reviewed-exception`
 (narrow custom behavior), and `custom/pending-migration` (existing ordinary input
 debt, never compliant). Component composition may contain pending children; this
-does not make the compound component native-compliant. Six exception records cover SurfaceCard, NavigationView, ToastHost, ModalManager and the private NavigationItemRow/TransientLifetime helpers with explicit scope.
+does not make the compound component native-compliant. Eight exception records cover SurfaceCard, NavigationView, NavigationBackButton, ToastHost, ModalManager and the private NavigationItemRow/NavigationRowTarget/TransientLifetime helpers with explicit scope.
 
 P5C removes the last pending-command allowance. New pending commands fail.
 Reviewed exceptions and pending implementations have canonical declaration/body
@@ -94,7 +94,16 @@ P5D exercises native PopupWindow and Menu/ContextMenuArea; its finite input/focu
 
 ## Current exceptions and migration state
 
-NavigationItemRow now uses visible native label/arrow Buttons (P5C). IconButton and
+NavigationItemRow uses private flat NavigationRowTarget hit regions. Slint 1.17.1
+has no public NavigationViewItem or borderless Button styling. The user-requested
+navigation appearance is a narrowly reviewed exception: public TouchArea handles
+capture/outside-release cancellation, FocusScope handles keyboard focus and one
+release-based Enter/Space action with repeat/disable/focus-loss cancellation.
+The target has one accessibility action and is not exported or used for ordinary
+commands. It adds no timer, animation, router or selection owner. Header buttons,
+search, scrolling and tooltips continue to reuse public native controls. See the
+[follow-up report](implementation/kit-fluent-v1/NAVIGATION_SETTINGS_FOLLOWUP.md).
+IconButton and
 SegmentButton are native Button wrappers; WindowControlButton composes IconButton.
 PageHeader and ModalManager now use native Button through FluentButton. Text wrappers already use actual native editors. Badge, FluentIcon,
 TooltipHost content, surfaces, headings, metrics and empty state are presentation
@@ -131,9 +140,11 @@ is inferred from those scoped checks.
 IconButton has one visible Button and builtin Tooltip, with no duplicated keyboard,
 pointer or accessibility action. SegmentButton uses a non-toggling native Button
 with one-way checked binding and accessibility checked semantics. Window commands
-compose IconButton. Back retains a passive geometric arrow over the visible native
-surface; pane toggle uses native icon/expanded accessibility on its Button.
-Navigation search names now target the IconButton native owner. Gallery disclosure
+compose IconButton. P3 originally placed Back over that native surface; the current
+shared borderless Back exception is documented below. Pane toggle retains native
+icon/expanded accessibility on its Button.
+The P3 compact search IconButton was subsequently removed by the compact-navigation
+follow-up; search is now present only in the expanded pane. Gallery disclosure
 commands use std Button directly, keeping expandable semantics on the input node.
 
 SurfaceCard retains its explicitly reviewed optional content-slot action exception.
@@ -178,10 +189,10 @@ P5B removes Modal Return interception and ordinary activation duplication. Its
 reviewed exception is only the fixed action focus cycle, Escape, passive scrim,
 conditional lifetime and host restore callback. Each action remains a native Button.
 
-P5C replaces row TouchArea and Return/Space activation with visible native Button
-surfaces. Only missing compound direction-key focus/expansion, scroll-into-view
-and passive left-aligned/eliding content remain custom. Model validation observes
-row notifications; no Rust adapter, router or selection owner was added.
+P5C originally migrated row activation to visible native Button surfaces. The
+navigation follow-up supersedes only that row strategy with the private exception
+above. Compound direction-key focus/expansion, scroll-into-view and model row
+notification validation remain in place; no Rust adapter or selection owner was added.
 
 P5D FluentFlyout inherits public PopupWindow, including actual is-open, Escape,
 outside-click close and focus restoration. DropDown/Split compose visible native
@@ -201,3 +212,14 @@ Toast and Modal without a patterns/overlays dependency. It owns only cancelable
 opacity progress and a bounded cleanup Timer; no input or business callback.
 Native controls retain their animation ownership. The two overlay records include
 the exact reviewed lifetime/input-disable changes; the private helper is guarded.
+
+## Shared navigation Back exception
+
+NavigationBackButton owns the requested borderless appearance for all consumers,
+including Gallery. Public Slint Button has no flat style. Its reviewed manifest
+record permits only one navigation focus/pointer/default-action target, disabled
+and cancellation behavior, and a keyboard focus cue. Public Tooltip still supplies
+the service. No hidden native proxy or general Button replacement is permitted.
+GalleryToolbar imports the public control; there is no Gallery CaptionBack copy.
+OS geometry, native window controls and route history remain host-owned.
+See [verification](implementation/kit-fluent-v1/NAVIGATION_COMPACT.md).

@@ -115,8 +115,8 @@ fn screen_coordinates(value: isize) -> (i16, i16) {
 }
 
 #[cfg(any(target_os = "windows", test))]
-fn is_caption(x: f32, y: f32, start: f32, width: f32, top: f32) -> bool {
-    x >= start && x < start + width && y >= top && y < 48.0
+fn is_caption(x: f32, y: f32, start: f32, width: f32, top: f32, height: f32) -> bool {
+    x >= start && x < start + width && y >= top && y < height
 }
 
 #[cfg(target_os = "windows")]
@@ -142,10 +142,17 @@ mod tests {
 
     #[test]
     fn caption_excludes_buttons_content_and_resize_edge() {
-        assert!(is_caption(270.0, 24.0, 84.0, 506.0, 5.0));
-        for (x, y) in [(64.0, 24.0), (600.0, 24.0), (270.0, 48.0), (270.0, 4.0)] {
-            assert!(!is_caption(x, y, 84.0, 506.0, 5.0));
+        assert!(is_caption(270.0, 16.0, 84.0, 506.0, 5.0, 32.0));
+        for (x, y) in [
+            (64.0, 16.0),
+            (600.0, 16.0),
+            (270.0, 32.0),
+            (270.0, 40.0),
+            (270.0, 4.0),
+        ] {
+            assert!(!is_caption(x, y, 84.0, 506.0, 5.0, 32.0));
         }
-        assert!(is_caption(270.0, 0.0, 84.0, 506.0, 0.0));
+        assert!(is_caption(270.0, 0.0, 84.0, 506.0, 0.0, 32.0));
+        assert!(is_caption(270.0, 40.0, 84.0, 506.0, 0.0, 48.0));
     }
 }

@@ -1,0 +1,35 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette } from "std-widgets.slint";
+import { Theme, ThemeMode } from "@quadrant-kit";
+import { SettingsPage } from "__GALLERY_SETTINGS__";
+import { GalleryToolbar } from "__GALLERY_TOOLBAR__";
+export component GallerySettingsCheck inherits Window {
+    width: 760px; height: 520px;
+    default-font-family: "Segoe UI Variable Text";
+    background: Theme.background;
+    in-out property <ThemeMode> mode: ThemeMode.light;
+    in-out property <int> preview: 1;
+    in-out property <bool> mounted: true;
+    in-out property <bool> system_dark;
+    in-out property <bool> back_enabled;
+    out property <int> back_count;
+    out property <bool> dark: Theme.dark_mode;
+    out property <length> drag_width: toolbar.drag_width;
+    function theme() {
+        Theme.mode = root.mode; Theme.system_dark = root.system_dark;
+        Palette.color-scheme = Theme.dark_mode ? ColorScheme.dark : ColorScheme.light;
+    }
+    init => { root.theme(); }
+    changed mode => { root.theme(); }
+    changed system_dark => { root.theme(); }
+    toolbar := GalleryToolbar { x:0px; y:0px; width:100%; back_enabled:root.back_enabled; back_requested => { root.back_count += 1; } }
+    anchor := FocusScope { width:0px; height:0px; }
+    callback focus_anchor();
+    focus_anchor => { anchor.focus(); }
+    if root.mounted: SettingsPage {
+        y:toolbar.height; width:100%; height:parent.height - toolbar.height;
+        page_title: "Settings";
+        gallery_theme <=> root.mode; preview_mode <=> root.preview;
+    }
+}

@@ -243,6 +243,31 @@ WindowEvent keyboard/pointer sequences, and 30 cold validation timings per size.
 Raw BENCH lines retain every sample. `--profile` defaults to debug for other suites.
 This is bounded ScrollView composition, not a virtualized infinite tree.
 
+### Navigation appearance and Gallery settings follow-up
+
+The navigation suite also checks flat pointer selection, keyboard focus, held-key
+repeat, Escape/outside release/focus-loss/disable cancellation. Its existing model,
+hierarchy and footer traversal assertions remain intact. The updated compact
+contract checks centered painted icons, full-width destination activation without
+a chevron target, keyboard expansion and expanded-only search.
+`python scripts/run_button_checks.py --suite gallery-settings --profile release`
+mounts the actual Gallery toolbar and Settings page in a generated verification
+host. Native keyboard input checks theme/preview propagation, system-theme changes,
+page recreation and programmatic updates after user input. It also exercises
+caption Back pointer/keyboard activation, repeat suppression and cancellation. This is WindowEvent
+evidence, separate from OS UI Automation and a screen reader.
+After building Gallery, copy the executable into an ignored verification directory
+(e.g. `target/gallery-settings-uia/gallery.exe`), then run `powershell -NoProfile -File
+scripts/probe_gallery_settings.ps1 -Executable target/gallery-settings-uia/gallery.exe
+-OutputDirectory target/gallery-settings-uia` on one line. Never run the build output
+while a linker might replace it. The probe launches only its own Gallery process,
+verifies restored/maximized native caption geometry and hit regions, saves actual
+PrintWindow images, checks toggle/name placement, invokes Settings/Home/Back, and
+uses foreground-guarded Space to fold/unfold the pane. It does not claim reader
+certification or physical monitor DPI coverage. Capture the affected pages
+with `python scripts/capture_gallery_baseline.py --mode Matrix --destination settings`
+and the same command with `--destination home`.
+
 ### P5D popups and native menus
 
 `python scripts/run_button_checks.py --suite popup --profile release` exercises

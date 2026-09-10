@@ -432,6 +432,11 @@ parent links, nonempty unique IDs across primary/footer models, and explicit
 `enabled`/`expanded` values. Struct fields have no assumed `enabled = true` default.
 Selection and expansion belong to the host; these types create no route/history API.
 
+**Navigation follow-up behavior changes:** compact mode removes the separate
+search-expansion button and chevron hit targets; icons center across levels.
+Expand the pane for search/separate chevrons. NavigationBackButton supplies shared
+borderless styling. Public declarations and host-owned callbacks are unchanged.
+
 ### NavigationBackButton
 
 [Source](../ui/patterns/navigation/navigation_back_button.slint)
@@ -444,10 +449,12 @@ export component NavigationBackButton inherits Rectangle {
 }
 ```
 
-A 40 px button reusing IconButton input, with a popup tooltip and focus forwarded
-to the inner button on activation. Its geometric
-arrow is drawn in Slint source, with no new static asset or font glyph. The host
-handles `clicked`; there is no back stack. `accessible_name` also supplies the tooltip.
+A 40 px borderless navigation action with one focus/pointer target and a native
+popup tooltip. `accessible_name` labels the input target and tooltip. Pointer and
+Space/Return release activate once; disabled state, Escape and focus loss cancel
+pending activation. Keyboard focus keeps a visible cue. Its geometric arrow needs
+no asset or font glyph. The host handles `clicked`; there is no back stack or
+native window logic. Gallery uses this same public control in its title bar.
 
 ### NavigationPaneToggleButton
 
@@ -640,18 +647,24 @@ regions, depth 0–2, matching parent links and child flags. Each model supports
 to 256 entries. A malformed or oversized model rejects both menus, with no row
 selection or callbacks; optional controls and host content remain available.
 Selection and expansion never mutate locally. Group labels request expansion;
-destination-group labels invoke and their separate chevrons request expansion.
+destination-group labels invoke and, in expanded mode, separate chevrons request
+expansion. Compact mode removes chevrons and their hit regions: the whole centered
+icon row invokes its destination, while Left/Right still request tree expansion.
 Headers/separators cannot select. Empty selected icons fall back to regular icons;
 compact iconless entries use the generic About icon and ancestor-qualified labels.
 
-Optional controls are conditionally mounted. Compact mode hides pane title and
-replaces the search field with a labeled expansion-request button. After the host
-accepts expansion, focus transfers to the new editor. Edits update
+Optional controls are conditionally mounted. Compact mode hides the pane title,
+search row and hierarchy indentation; one pane toggle remains when requested.
+Expanding restores the search field with its retained host text. Edits update
 search_text and emit search_changed; Return submits once, while host assignments
 do not echo. Primary and footer menus scroll independently; content scrolling is
 host-owned. Pane geometry clamps to available width.
 
 Private implementation: [navigation_view.slint](../ui/patterns/navigation/navigation_view.slint).
+The optional expanded `pane_title` shares a 44px header with enabled optional
+Back/toggle controls on its left, using semibold body-large text and elision.
+Without actions the title is inset 16px. Compact mode hides the title and stacks
+two actions vertically when both are requested. Public properties are unchanged.
 Tab/Shift+Tab traverse labels and independent chevrons; Enter/Space activate them.
 Up/Down focus enabled visible rows, crossing primary/footer ends. Home/End focus
 the first/last eligible row in the current region. Focus scrolls into view without
@@ -661,10 +674,14 @@ a focused row recovers to a visible enabled ancestor or the pane focus scope.
 Back and pane-toggle buttons suppress commands and visible native focus when disabled; native logical focus may remain. Compact tooltips expose
 ancestor-qualified labels outside the pane clip.
 
-Current native row/model coverage: [P5C report](implementation/kit-fluent-v1/P5C.md).
-The visible native Button paints each label and separate arrow surface; passive
-left-aligned eliding labels/icons do not intercept input. Native checked/focus
-visuals replace the old custom row background. Models remain bounded to 256
+Current row/model coverage: [navigation follow-up](implementation/kit-fluent-v1/NAVIGATION_SETTINGS_FOLLOWUP.md).
+Rows use flat private navigation targets: transparent idle, subtle hover/selection
+and a left accent indicator. Keyboard focus has an explicit outline; pointer focus
+does not leave a permanent border. Public TouchArea owns pointer capture/cancellation;
+FocusScope owns one accessibility action and one release-based Enter/Space gesture.
+Held-key repeats do not repeat invocation; Escape, focus loss and disabling cancel it.
+This is a reviewed NavigationView-only exception, not native Button styling.
+Passive eliding labels/icons do not intercept input. Models remain bounded to 256
 combined entries, using ScrollView; this is not unbounded virtual navigation.
 
 ## Current-version change protocol (P1)

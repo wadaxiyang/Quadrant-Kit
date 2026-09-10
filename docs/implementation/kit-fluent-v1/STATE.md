@@ -1,10 +1,13 @@
 # Fluent evolution stage ledger
 
 Authority: [SPEC v1.1](../../specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md).
-Current request: continue with P7 then P8, retaining the user's ordered local
-commit workflow. P3/P4/P5/P6 are committed. This explicit multi-phase request
-supersedes the default single-phase stop. No push, tag, release or external
-consumer change is requested.
+Current request: repair compact navigation and keep reusable navigation behavior
+inside Kit, including the shared borderless Back control.
+See [NAVIGATION_COMPACT.md](NAVIGATION_COMPACT.md).
+See [TITLEBAR_ALIGNMENT.md](TITLEBAR_ALIGNMENT.md) and
+[NAVIGATION_SETTINGS_FOLLOWUP.md](NAVIGATION_SETTINGS_FOLLOWUP.md).
+No push, tag, release or external consumer change is requested. The earlier
+P0-P8 rows below retain their historical scope and results.
 P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 
 | Stage | Status | Evidence / next conditions |
@@ -25,6 +28,10 @@ P3 implementation commit: `1f288c93e7fd97fadf47cb84ef44b5f1f47a851a`.
 | P6 | PASS — scoped motion lifecycle and measured gate | [P6.md](P6.md): 32 new + 31 preserved runtime assertions, 100 cycles / 20 transients, 800 before-after software frames, four 60s idle intervals, full core/79 Python and 40 captures. Actual presentation/reader NOT_RUN. |
 | P7 | PARTIAL — measured Windows gates PASS | [P7.md](P7.md): 1,260 startup samples, 7,200 interaction frames, 257 runtime assertions, UIA and idle/lifetime evidence. Presentation, long-term memory and broader platform gates remain limited. Post-commit archive consumer, MSRV and exact-byte incremental restoration PASS; see P8. |
 | P8 | PARTIAL — scoped local delivery complete | [P8.md](P8.md): current docs/API/catalog/license closure, full Windows gate, 128 captures, Linux builds/WSLg subset and post-commit package evidence. Linux Chinese glyph check FAIL; reader/presentation/long-term memory and remote publication gates remain open. |
+| Navigation/Settings follow-up | PASS — scoped UI change; uncommitted | [Report](NAVIGATION_SETTINGS_FOLLOWUP.md): flat private navigation targets, fixed Settings footer, theme/preview migration; 169 input assertions, Windows UIA, 80 client captures and actual window captures. Full SPEC acceptance remains partial. |
+| Compact navigation / shared Back | PASS — scoped fix; uncommitted | [Report](NAVIGATION_COMPACT.md): one compact toggle, centered icons, expanded-only search/chevrons, public Back reused by Gallery; 217 runtime assertions, 88 Python tests, build and Windows geometry/UIA/captures. |
+| Navigation header / caption Back | PASS — scoped change; uncommitted | [Report](NAVIGATION_HEADER_BACK.md): inline native pane toggle/name; borderless Gallery Back with measured native dimensions; full core, 18 runtime assertions and actual Windows geometry/input/captures. |
+| Title-bar alignment | PASS — scoped layout; uncommitted | [Report](TITLEBAR_ALIGNMENT.md): 32px toolbar, native 44x32 left actions, navigation name, shared DWM/drag height; full core, nine runtime assertions, restored/maximized geometry, native hit testing and keyboard folding. |
 
 The user explicitly authorized pushing completed work before P3. P0–P2 was committed
 and pushed as `f47933832376566d69f66fa430ff0e76e120253d`. Both package commands,

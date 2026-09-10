@@ -29,11 +29,16 @@ The Gallery is a development, verification, and learning application with no Pro
 
 ## Native window chrome and shared toolbar
 
-The main Gallery shares application controls through `shared/gallery_toolbar.slint`:
-Back, pane toggle, title, theme and preview. It accepts native button exclusion
-insets and draws no minimize/maximize/close buttons. Kit's NavigationView API is
-unchanged: Gallery disables its internal operation row and composes the public
-standalone navigation controls above it. Search starts directly below this row.
+The 32 px Gallery toolbar contains only a borderless caption Back action on the
+left. Its Windows width, height and top offset mirror the OS minimize rectangle;
+minimize/maximize/close remain DWM-owned. The native pane toggle sits left of
+"Kit Gallery" in NavigationView's 44 px header, above search. Compact mode keeps
+the toggle and hides the name. Theme and preview width stay in Settings, reached
+from the fixed navigation footer. Public Kit declarations are unchanged.
+The caption uses the public Kit NavigationBackButton; Gallery supplies only
+measured native dimensions and the host back callback. Compact layout is owned by
+NavigationView: one toggle, no search/chevron placeholders and centered row icons.
+See [the follow-up](implementation/kit-fluent-v1/NAVIGATION_COMPACT.md).
 The WindowControlButton page remains a component demonstration with counters.
 
 The host's `src/window_chrome.rs` selects the pinned winit backend on Windows and
@@ -41,7 +46,9 @@ macOS; platform adapters live in `src/window_chrome/`. The configured renderer
 is retained. Native decorations stay enabled on every platform.
 
 - Windows extends the client into the native caption and keeps DWM-drawn window
-  controls. The 48 px application toolbar reserves their measured physical bounds.
+  controls. The 32 px application toolbar reserves their measured physical bounds.
+  DWM extension, background and caption hit testing read the same toolbar height;
+  content below that row is not a caption drag target.
   Only their area is left transparent for DWM composition; the application body
   remains opaque. DWM colors follow the Gallery theme. Windows owns button actions,
   title dragging, double-click and the system menu; the host supplies resize hit
@@ -70,8 +77,9 @@ canonical string destinations, explicit snapshot aliases, titles and public
 visual component links in All components. The typed Slint dispatcher is checked
 against every metadata row by the route coverage test.
 
-There are 32 destinations under Home, All components, Design guidance, Controls,
-Surfaces & data display, Feedback & overlays, Navigation, Page & layout and Window.
+There are 33 destinations under Home, All components, Design guidance, Controls,
+Surfaces & data display, Feedback & overlays, Navigation, Page & layout, Window
+and the fixed Settings footer. Settings remains reachable while filtering pages.
 All components lists exactly the 42 public visual components; the six globals, eight enums and three structs stay in conceptual guidance or their owning component's docs. The complete current facade has 59 public names.
 
 Home is the starting point. Controls overview retains the cross-component input
@@ -92,7 +100,8 @@ clearing search restores the hierarchy and its expansion state. Compact search
 expands the pane. These behaviors belong to Gallery, not Kit.
 
 All destinations fill the shared GalleryPage viewport. The page owns scrolling
-and padding; the shell owns Theme and C/M/W preview actions. Only public
+and padding; Settings edits window-owned theme and Compact/Medium/Wide preview
+state, retained across page changes. Only public
 `@quadrant-kit` imports supply Kit components.
 
 [Phase 6 evidence](NAVIGATION_REBUILD_PHASE6.md) records the catalog migration;
@@ -109,8 +118,8 @@ standard text editors retain their independent component-local scrolling.
 
 The common header includes title, description, optional stability, and local
 Documentation/Source actions. Documentation expands usage guidance in place;
-Source reveals the page's integration fragment. Theme and C/M/W remain in the
-shell toolbar. These actions do not open external pages or require named child
+Source reveals the page's integration fragment. Theme and preview width are in
+Settings. These actions do not open external pages or require named child
 slots. New pages supply page metadata and a single content children slot.
 
 The specimens share a live preview card and a separated Show source & details
@@ -387,7 +396,9 @@ pane mode; counters increment even when a valid request is declined.
 
 Back, Back enabled, Toggle, Search, Footer and Title switches exercise optional
 regions. Compact view hides text/indentation and preserves named icon actions.
-The separate Inputs/Settings chevrons expand; their labels invoke destinations.
+In expanded mode the separate Inputs/Settings chevrons expand; their labels invoke
+destinations. Compact mode centers all levels, hides search and separate chevrons,
+and keeps Left/Right expansion requests.
 Collapse Controls can hide a focused child without stealing pointer focus first.
 Host sets search assigns text without an edit callback. Select header deliberately
 sets a non-navigable ID and must leave all selection indicators absent.

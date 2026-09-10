@@ -12,7 +12,9 @@ creates no background observer and coordinates no independent windows.
 | Kit ToastHost | Host shown changes; whole toast opacity | Effective standard, 160 ms ease-out | Reversal starts from current opacity; zero duration/own hide settles immediately |
 | Kit ModalManager | Host shown changes; fixed surface/scrim opacity | Effective standard, 160 ms ease-out | Native input available during entry; disabled immediately on logical close; rapid reopen refocuses action |
 | Kit TransientLifetime (private) | Observed logical request and policy | One cleanup timer only while entering/exiting | Restart on reversal; stop at stable state; zero-duration cleanup needs no timer tick |
-| Native Button family | Hover/pressed/checked/disabled text/background/border | Fluent Button hardcodes 150 ms | Includes Kit buttons, navigation rows, Expander header, picker/dropdown/split actions; Kit policy does not override |
+| Native Button family | Hover/pressed/checked/disabled text/background/border | Fluent Button hardcodes 150 ms | Includes Kit buttons, navigation pane toggle, Expander header, picker/dropdown/split actions; Kit policy does not override |
+| Kit NavigationBackButton | Hover/pressed/focus decoration | Immediate | No animation or timer; one cancelable navigation action and native Tooltip |
+| Private navigation row targets | Hover/pressed/selection/focus decoration | Immediate | No animation or timer; selection remains host-owned |
 | Native CheckBox / RadioGroup | Foreground, state border/check visuals | 150/200 ms | Native-owned, no Kit global override |
 | Native ComboBox / SpinBox / Slider / Switch | Native state/hover/handle presentation | 150/200 ms as pinned Fluent implementation | Native-owned |
 | Native ScrollView / lists / table | Scroll affordance size/opacity, header/cell state | 150 ms native transitions and native scrolling | Native-owned; no duplicate scrolling animation |

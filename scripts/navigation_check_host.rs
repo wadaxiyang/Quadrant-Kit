@@ -123,17 +123,68 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     28 => { key(w,Key::DownArrow.into()); }
                     29 => { key(w,Key::Return.into());check("expanded grandchild is keyboard reachable",ui.get_last_id()=="c");key(w,Key::LeftArrow.into()); }
                     30 => { key(w,Key::Return.into());check("Left recovers enabled parent focus",ui.get_last_id()=="ig");key(w,Key::LeftArrow.into());check("Left on expanded branch requests collapse",ui.get_last_expansion()=="ig" && !ui.get_requested_expanded());expanded(&current.borrow(),4,false);key(w,Key::Home.into()); }
-                    31 => { key(w,Key::Tab.into());let before=ui.get_expansions();key(w,Key::Return.into());check("native Tab visits separate group arrow once",ui.get_expansions()==before+1 && ui.get_last_expansion()=="g");key(w,Key::Tab.into());key(w,Key::Space.into());check("native Tab and Space reach next child",ui.get_last_id()=="a");let mut disabled=current.borrow().data.row_data(2).unwrap();disabled.enabled=false;current.borrow().set_row_data(2,disabled); }
+                    31 => { key(w,Key::Tab.into());let before=ui.get_expansions();key(w,Key::Return.into());check("Tab visits separate group arrow once",ui.get_expansions()==before+1 && ui.get_last_expansion()=="g");key(w,Key::Tab.into());key(w,Key::Space.into());check("Tab and Space reach next child",ui.get_last_id()=="a");let mut disabled=current.borrow().data.row_data(2).unwrap();disabled.enabled=false;current.borrow().set_row_data(2,disabled); }
                     32 => { let before=ui.get_expansions();key(w,Key::Return.into());check("disabling focused child recovers enabled ancestor",ui.get_expansions()==before+1 && ui.get_last_expansion()=="g");let m=model(64);ui.set_entries(slint::ModelRc::from(m.clone()));*current.borrow_mut()=m;ui.invoke_focus_anchor(); }
                     33 => { key(w,Key::Tab.into());key(w,Key::End.into()); }
                     34 => { key(w,Key::Return.into());check("End focuses last primary row",ui.get_last_id()=="row-63");shot("scrolled-end");pointer(w,80.,420.,true);pointer(w,80.,420.,false);check("focused last row is inside the scrolled viewport",ui.get_last_id()=="row-63");key(w,Key::DownArrow.into()); }
                     35 => { key(w,Key::Return.into());check("Down crosses from primary end to enabled footer",ui.get_last_id()=="f1");key(w,Key::UpArrow.into()); }
                     36 => { key(w,Key::Return.into());check("Up crosses from footer to primary end",ui.get_last_id()=="row-63");let m=fixture();ui.set_entries(slint::ModelRc::from(m.clone()));*current.borrow_mut()=m;ui.set_compact(true);ui.set_dark(true); }
-                    37 => { shot("compact");pointer(w,14.,140.,true);pointer(w,14.,140.,false);check("compact label region invokes destination-group",ui.get_last_id()=="ig");let before=ui.get_commands();pointer(w,38.,140.,true);pointer(w,38.,140.,false);check("compact arrow region requests expansion only",ui.get_commands()==before && ui.get_last_expansion()=="ig");let before=ui.get_commands();pointer(w,14.,100.,true);pointer(w,14.,100.,false);check("disabled compact label emits no command",ui.get_commands()==before);ui.set_selected("ig".into()); }
+                    37 => { shot("compact");
+                        let pixels=w.take_snapshot().unwrap();
+                        for (name,cy) in [("group",20usize),("nested destination-group",140),("destination",180)] {
+                            let mut xs=Vec::new();
+                            for y in cy-10..cy+10 { for x in 8usize..46 {
+                                let offset=(y*pixels.width() as usize+x)*4;
+                                let rgba=&pixels.as_bytes()[offset..offset+4];
+                                if rgba[0]>140 && rgba[1]>140 && rgba[2]>140 { xs.push(x); }
+                            } }
+                            let center=xs.iter().min().zip(xs.iter().max()).map(|(l,r)|(*l+*r+1) as f32/2.);
+                            check(&format!("compact {name} painted icon centers on the 54px rail"),center.is_some_and(|x|(x-27.).abs()<=0.5));
+                        }
+                        pointer(w,14.,140.,true);pointer(w,14.,140.,false);check("compact label region invokes destination-group",ui.get_last_id()=="ig");let before=ui.get_commands();let expansions=ui.get_expansions();pointer(w,38.,140.,true);pointer(w,38.,140.,false);check("compact former chevron area belongs to the destination",ui.get_commands()==before+1 && ui.get_expansions()==expansions);key(w,Key::RightArrow.into());check("compact destination-group retains keyboard expansion",ui.get_last_expansion()=="ig" && ui.get_expansions()==expansions+1);let before=ui.get_commands();pointer(w,14.,100.,true);pointer(w,14.,100.,false);check("disabled compact label emits no command",ui.get_commands()==before);ui.set_selected("ig".into()); }
                     38 => { shot("compact-selected");let mut invalid=ui.get_footer().row_data(0).unwrap();invalid.id="ig".into();ui.get_footer().set_row_data(0,invalid); }
                     39 => { check("cross-region row change invalidates both models",!ui.get_model_valid());let before=ui.get_commands();pointer(w,14.,140.,true);pointer(w,14.,140.,false);check("invalid combined model emits no command",ui.get_commands()==before);ui.set_footer(slint::ModelRc::new(slint::VecModel::<NavigationEntry>::from(vec![])));ui.set_compact(false); }
-                    40 => { for n in [16usize,64,256,257] { for sample in 0..30 { let m=model(n);ui.set_entries(slint::ModelRc::from(m.clone()));let start=std::time::Instant::now();let valid=ui.get_model_valid();println!("BENCH n={n} sample={sample} valid={valid} ms={:.6} reads={}",start.elapsed().as_secs_f64()*1000.,m.reads.get());check(&format!("sample {sample} validates {n}"),valid==(n<=256)); } } }
-                    41 => { println!("RESULT={}",if failed.get(){"FAIL"}else{"PASS"});slint::quit_event_loop().unwrap(); }
+                    40 => { let m=model(6);ui.set_entries(slint::ModelRc::from(m.clone()));*current.borrow_mut()=m;ui.set_selected("row-0".into());ui.set_dark(false); }
+                    41 => {
+                        pointer(w,80.,20.,true);pointer(w,80.,20.,false);
+                        shot("flat-selected-pointer");
+                        let before=ui.get_commands();
+                        w.dispatch_event(WindowEvent::KeyPressed {text:Key::Space.into()});
+                        w.dispatch_event(WindowEvent::KeyPressed {text:Key::Space.into()});
+                        check("holding/repeating Space does not invoke before release",ui.get_commands()==before);
+                        w.dispatch_event(WindowEvent::KeyReleased {text:Key::Space.into()});
+                        check("Space release invokes exactly once",ui.get_commands()==before+1);
+                        let before=ui.get_commands();
+                        w.dispatch_event(WindowEvent::KeyPressed {text:Key::Space.into()});key(w,Key::Escape.into());
+                        w.dispatch_event(WindowEvent::KeyReleased {text:Key::Space.into()});
+                        check("Escape cancels pending navigation activation",ui.get_commands()==before);
+                        pointer(w,80.,20.,true);pointer(w,810.,300.,false);
+                        check("pointer release outside navigation target cancels",ui.get_commands()==before);
+                        w.dispatch_event(WindowEvent::KeyPressed {text:Key::Space.into()});ui.invoke_focus_anchor();
+                        w.dispatch_event(WindowEvent::KeyReleased {text:Key::Space.into()});
+                        check("focus loss cancels held navigation key",ui.get_commands()==before);
+                    }
+                    42 => { ui.invoke_focus_anchor();key(w,Key::Tab.into()); }
+                    43 => {
+                        shot("flat-keyboard-focus");let before=ui.get_commands();key(w,Key::Return.into());
+                        check("keyboard focus and Return invoke one current row",ui.get_commands()==before+1 && ui.get_last_id()=="row-0");
+                        check("selection remains host controlled",ui.get_selected()=="row-0");
+                        w.dispatch_event(WindowEvent::KeyPressed {text:Key::Space.into()});
+                        let mut row=current.borrow().data.row_data(0).unwrap();row.enabled=false;current.borrow().set_row_data(0,row);
+                    }
+                    44 => {let before=ui.get_commands();w.dispatch_event(WindowEvent::KeyReleased {text:Key::Space.into()});check("disable while held cancels navigation activation",ui.get_commands()==before);}
+                    45 => { for n in [16usize,64,256,257] { for sample in 0..30 { let m=model(n);ui.set_entries(slint::ModelRc::from(m.clone()));let start=std::time::Instant::now();let valid=ui.get_model_valid();println!("BENCH n={n} sample={sample} valid={valid} ms={:.6} reads={}",start.elapsed().as_secs_f64()*1000.,m.reads.get());check(&format!("sample {sample} validates {n}"),valid==(n<=256)); } } }
+                    46 => { let m=fixture();ui.set_entries(slint::ModelRc::from(m.clone()));*current.borrow_mut()=m;ui.set_compact(true);ui.set_show_header(true);ui.set_query("retained query".into()); }
+                    47 => {
+                        shot("compact-header");
+                        let before=ui.get_expansions();pointer(w,27.,64.,true);pointer(w,27.,64.,false);
+                        check("compact first row directly follows one header without search placeholder",ui.get_expansions()==before+1 && ui.get_last_expansion()=="g");
+                        check("compact group icon requests expansion once",ui.get_last_expansion()=="g");
+                        pointer(w,27.,22.,true);pointer(w,27.,22.,false);
+                        check("public NavigationView toggle expands through host",!ui.get_compact() && ui.get_pane_requests()==1);
+                    }
+                    48 => { shot("expanded-header");check("expansion restores retained search state",ui.get_query()=="retained query");pointer(w,27.,22.,true);pointer(w,27.,22.,false);check("same public toggle collapses through host",ui.get_compact() && ui.get_pane_requests()==2); }
+                    49 => { println!("RESULT={}",if failed.get(){"FAIL"}else{"PASS"});slint::quit_event_loop().unwrap(); }
                     _ => {}
                 }
             }

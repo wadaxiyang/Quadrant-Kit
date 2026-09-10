@@ -10,6 +10,9 @@ export component NavigationCheck inherits Window {
     in-out property <string> selected;
     in-out property <bool> dark: false;
     in-out property <bool> compact: false;
+    in-out property <bool> show_header: false;
+    in-out property <string> query;
+    out property <int> pane_requests;
     out property <bool> model_valid: nav.model_valid;
     out property <int> commands: 0;
     out property <string> last_id;
@@ -20,7 +23,10 @@ export component NavigationCheck inherits Window {
     public function focus_anchor() { anchor.focus(); }
     init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
     changed dark => { Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light; Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light; }
-    nav := NavigationView { width: 100%; height: 100%; show_pane_toggle: false;
+    nav := NavigationView { width: 100%; height: 100%; show_pane_toggle: root.show_header;
+        pane_title: root.show_header ? "Test navigation" : "";
+        show_search: root.show_header; search_text <=> root.query;
+        pane_toggle_requested => { root.pane_requests += 1; root.compact = !root.compact; }
         items: root.entries; footer_items: root.footer; selected_id: root.selected;
         pane_mode: root.compact ? NavigationPaneMode.compact : NavigationPaneMode.expanded;
         item_invoked(id) => { root.commands += 1; root.last_id = id; }

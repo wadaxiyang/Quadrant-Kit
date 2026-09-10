@@ -1,13 +1,82 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Button, Palette } from "std-widgets.slint";
 import { Theme, Typography } from "../../../foundation/theme.slint";
 import { UiConstants } from "../../../foundation/constants.slint";
 import { FluentIcons } from "../../../foundation/fluent_icons.slint";
 import { FluentIcon } from "../../../primitives/fluent_icon.slint";
 import { TooltipHost } from "../../../primitives/tooltip_host.slint";
 import { NavigationEntry, NavigationEntryKind } from "../navigation_types.slint";
+
+// A private navigation target, not a general replacement Button. Public Slint
+// has no NavigationViewItem or borderless Button style. TouchArea owns pointer
+// capture/cancellation; this focus target owns navigation keys and one a11y action.
+component NavigationRowTarget inherits FocusScope {
+    in property <bool> active;
+    in property <string> label;
+    in property <bool> selectable;
+    in property <bool> selected;
+    in property <bool> expandable;
+    in property <bool> expanded;
+    callback invoked();
+    callback directional(string) -> bool;
+    callback focus_changed(bool);
+    private property <string> held_key;
+    private property <bool> pointer_focus;
+    enabled: root.active;
+    accessible-role: button;
+    accessible-label: root.label;
+    accessible-enabled: root.active;
+    accessible-checkable: root.selectable;
+    accessible-checked: root.selected;
+    accessible-expandable: root.expandable;
+    accessible-expanded: root.expanded;
+    accessible-action-default => { if root.active { root.invoked(); } }
+    changed active => { if !root.active { root.held_key = ""; } }
+    changed has-focus => {
+        if !self.has-focus { root.held_key = ""; root.pointer_focus = false; }
+        root.focus_changed(self.has-focus);
+    }
+    key-pressed(event) => {
+        if !root.active { return reject; }
+        root.pointer_focus = false;
+        if root.directional(event.text) { root.held_key = ""; return accept; }
+        if event.text == Key.Space || event.text == Key.Return {
+            if root.held_key == "" { root.held_key = event.text; }
+            return accept;
+        }
+        if event.text == Key.Escape { root.held_key = ""; return accept; }
+        return reject;
+    }
+    key-released(event) => {
+        if event.text == Key.Space || event.text == Key.Return {
+            // Reset before requesting host state changes; repeated key-downs
+            // produce only one request, and loss of focus cancels the gesture.
+            if root.active && root.has-focus && root.held_key == event.text {
+                root.held_key = ""; root.invoked();
+            }
+            return accept;
+        }
+        return reject;
+    }
+    Rectangle {
+        y: 2px; width: 100%; height: max(0px, parent.height - 4px);
+        border-radius: 4px;
+        background: !root.active ? transparent : pointer.pressed || root.held_key != "" ? Theme.navigation_item_selected_bg : pointer.has-hover ? Theme.navigation_item_hover_bg : transparent;
+        border-width: root.active && root.has-focus && !root.pointer_focus ? 1px : 0px;
+        border-color: Theme.text_primary;
+        @children
+    }
+    pointer := TouchArea {
+        width: 100%; height: 100%; enabled: root.active;
+        pointer-event(event) => {
+            if event.button == PointerEventButton.left && event.kind == PointerEventKind.down {
+                root.focus(); root.pointer_focus = true;
+            }
+        }
+        clicked => { if root.active { root.invoked(); } }
+    }
+}
 
 export component NavigationItemRow inherits Rectangle {
     in property <NavigationEntry> entry;
@@ -25,8 +94,8 @@ export component NavigationItemRow inherits Rectangle {
     private property <bool> interactive: root.entry.kind != NavigationEntryKind.header && root.entry.kind != NavigationEntryKind.separator;
     private property <bool> active: root.presented && root.entry.enabled && root.interactive;
     private property <bool> focus_memory: false;
-    private property <length> inset: root.compact ? 2px : UiConstants.navigation_item_padding + root.entry.depth * UiConstants.navigation_item_indent;
-    private property <length> arrow_width: root.entry.has_children ? (root.compact ? 22px : 32px) : 0px;
+    private property <length> inset: UiConstants.navigation_item_padding + root.entry.depth * UiConstants.navigation_item_indent;
+    private property <length> arrow_width: !root.compact && root.entry.has_children ? 32px : 0px;
     visible: root.presented;
     height: !root.presented ? 0px : root.entry.kind == NavigationEntryKind.separator ? 9px : root.entry.kind == NavigationEntryKind.header ? (root.compact ? 0px : 28px) : UiConstants.navigation_item_height;
     vertical-stretch: 0;
@@ -40,63 +109,69 @@ export component NavigationItemRow inherits Rectangle {
         text: root.entry.text; color: Theme.text_secondary; font-size: Typography.caption;
         vertical-alignment: center; overflow: elide;
     }
-    if root.interactive: FocusScope {
-        width: 100%; height: 100%; enabled: root.active;
-        focus-on-tab-navigation: false;
+    if root.interactive: Rectangle {
+        width: 100%; height: 100%;
+        Rectangle {
+            y: 2px; width: 100%; height: max(0px, parent.height - 4px);
+            border-radius: 4px;
+            background: root.selected ? Theme.navigation_item_selected_bg : transparent;
+        }
         private property <int> epoch: root.recovery_epoch;
         changed epoch => { if root.recovery_id == root.entry.id && root.active { command.focus(); } }
-        capture-key-pressed(event) => { if root.active && root.direction(event.text) { return accept; } return reject; }
-        command := Button {
+        command := NavigationRowTarget {
             x: 0px; y: 0px;
             width: max(0px, parent.width - root.arrow_width); height: 100%;
-            enabled: root.active; checkable: false; checked: root.selected;
-            accessible-label: root.context_label;
-            accessible-checkable: root.entry.kind == NavigationEntryKind.destination || root.entry.kind == NavigationEntryKind.destination_group;
-            accessible-expandable: root.entry.kind == NavigationEntryKind.group && root.entry.has_children;
-            accessible-expanded: root.entry.expanded;
-            changed has-focus => {
-                if self.has-focus { root.focus_memory = true; root.focus_visible(root.y, root.height); }
+            active: root.active; label: root.context_label;
+            selectable: root.entry.kind == NavigationEntryKind.destination || root.entry.kind == NavigationEntryKind.destination_group;
+            selected: root.selected;
+            expandable: root.entry.kind == NavigationEntryKind.group && root.entry.has_children;
+            expanded: root.entry.expanded;
+            directional(key) => { return root.direction(key); }
+            focus_changed(focused) => {
+                if focused { root.focus_memory = true; root.focus_visible(root.y, root.height); }
                 else if root.active { root.focus_memory = false; }
             }
-            clicked => {
+            invoked => {
                 if root.active {
-                    self.focus();
                     if root.entry.kind == NavigationEntryKind.group { if root.entry.has_children { root.expand(); } }
                     else { root.invoked(); }
                 }
             }
-        }
-        FluentIcon {
-            x: root.inset; y: (parent.height - self.height) / 2;
-            size: UiConstants.navigation_icon_size;
-            source: root.selected && root.entry.selected_icon.width > 0 ? root.entry.selected_icon : root.entry.icon.width > 0 ? root.entry.icon : root.compact ? FluentIcons.about_regular : root.entry.icon;
-            icon_color: !root.entry.enabled ? Theme.text_disabled : root.selected ? Palette.accent-foreground : Palette.control-foreground;
-        }
-        if !root.compact: Text {
-            x: root.inset + UiConstants.navigation_icon_slot_width + 8px;
-            width: max(0px, parent.width - self.x - root.arrow_width - 4px); height: 100%;
-            text: root.entry.text == "" ? root.entry.id : root.entry.text;
-            color: !root.entry.enabled ? Theme.text_disabled : root.selected ? Palette.accent-foreground : Palette.control-foreground;
-            font-size: Typography.body; font-weight: root.selected ? Typography.semibold : Typography.regular;
-            vertical-alignment: center; overflow: elide; accessible-role: none;
-        }
-        if root.entry.has_children: Rectangle {
-            x: parent.width - root.arrow_width; width: root.arrow_width; height: 100%;
-            arrow := Button {
-                width: 100%; height: 100%; enabled: root.active;
-                accessible-label: (root.entry.expanded ? "Collapse " : "Expand ") + root.context_label;
-                accessible-expandable: true; accessible-expanded: root.entry.expanded;
-                changed has-focus => {
-                    if self.has-focus { root.focus_memory = true; root.focus_visible(root.y, root.height); }
-                    else if root.active { root.focus_memory = false; }
-                }
-                clicked => { if root.active { self.focus(); root.expand(); } }
+            FluentIcon {
+                x: root.compact ? (parent.width - self.width) / 2 : root.inset; y: (parent.height - self.height) / 2;
+                size: UiConstants.navigation_icon_size;
+                source: root.selected && root.entry.selected_icon.width > 0 ? root.entry.selected_icon : root.entry.icon.width > 0 ? root.entry.icon : root.compact ? FluentIcons.about_regular : root.entry.icon;
+                icon_color: !root.entry.enabled ? Theme.text_disabled : root.selected ? Theme.navigation_item_foreground_selected : Theme.navigation_item_foreground;
             }
+            if !root.compact: Text {
+                x: root.inset + UiConstants.navigation_icon_slot_width + 8px;
+                width: max(0px, parent.width - self.x - 4px); height: 100%;
+                text: root.entry.text == "" ? root.entry.id : root.entry.text;
+                color: !root.entry.enabled ? Theme.text_disabled : root.selected ? Theme.navigation_item_foreground_selected : Theme.navigation_item_foreground;
+                font-size: Typography.body; font-weight: root.selected ? Typography.semibold : Typography.regular;
+                vertical-alignment: center; overflow: elide; accessible-role: none;
+            }
+        }
+        if root.selected: Rectangle {
+            x: 0px; y: (parent.height - self.height) / 2; width: 3px; height: 16px;
+            border-radius: 1.5px; background: root.active ? Theme.accent : Theme.text_disabled;
+        }
+        if !root.compact && root.entry.has_children: NavigationRowTarget {
+            x: parent.width - root.arrow_width; width: root.arrow_width; height: 100%;
+            active: root.active;
+            label: (root.entry.expanded ? "Collapse " : "Expand ") + root.context_label;
+            expandable: true; expanded: root.entry.expanded;
+            directional(key) => { return root.direction(key); }
+            focus_changed(focused) => {
+                if focused { root.focus_memory = true; root.focus_visible(root.y, root.height); }
+                else if root.active { root.focus_memory = false; }
+            }
+            invoked => { if root.active { root.expand(); } }
             Path {
                 x: (parent.width - self.width) / 2; y: (parent.height - self.height) / 2;
                 width: 16px; height: 16px; viewbox-width: 16; viewbox-height: 16;
                 commands: root.entry.expanded ? "M 4 6 L 8 10 L 12 6" : "M 6 4 L 10 8 L 6 12";
-                fill: transparent; stroke: root.active ? Palette.control-foreground : Theme.text_disabled; stroke-width: 1px;
+                fill: transparent; stroke: root.active ? Theme.navigation_item_foreground : Theme.text_disabled; stroke-width: 1px;
                 stroke-line-cap: round; stroke-line-join: round; accessible-role: none;
             }
         }

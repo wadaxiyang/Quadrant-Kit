@@ -28,7 +28,7 @@ def load_catalog(path=ROOT/'gallery/catalog.tsv'):
         if depth > 2 or len(ancestors) != depth or (depth and ancestors[-1] != row['parent']):
             raise ValueError('Non-preorder catalog')
         ancestors.append(row['id'])
-        if int(row['icon']) not in range(8):
+        if int(row['icon']) not in range(9):
             raise ValueError('Invalid icon')
         if row['alias']:
             alias = int(row['alias'])

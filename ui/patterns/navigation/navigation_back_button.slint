@@ -1,42 +1,72 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
 // SPDX-License-Identifier: GPL-3.0-only
-
 import { Theme } from "../../foundation/theme.slint";
 import { UiConstants } from "../../foundation/constants.slint";
-import { IconButton } from "../../primitives/icon_button.slint";
+import { TooltipHost } from "../../primitives/tooltip_host.slint";
 
+// Borderless navigation action: public Button has no flat style. This narrow
+// exception has one focus/pointer owner, no native proxy and no host window logic.
 export component NavigationBackButton inherits Rectangle {
     in property <bool> enabled: true;
     in property <string> accessible_name: "Back";
     callback clicked();
-
     width: UiConstants.navigation_item_height;
     height: UiConstants.navigation_item_height;
     forward-focus: button;
     accessible-role: none;
-
-    button := IconButton {
-        width: 100%;
-        height: 100%;
+    button := FocusScope {
+        width: 100%; height: 100%;
+        private property <string> held_key;
+        private property <bool> pointer_focus;
         enabled: root.enabled;
-        accessible_name: root.accessible_name;
-        tooltip: root.accessible_name;
-        clicked => { if (root.enabled) { button.focus(); root.clicked(); } }
+        accessible-role: AccessibleRole.button;
+        accessible-label: root.accessible_name;
+        accessible-enabled: root.enabled;
+        accessible-action-default => { if root.enabled { root.clicked(); } }
+        changed enabled => { if !root.enabled { button.held_key = ""; } }
+        changed has-focus => { if !self.has-focus { button.held_key = ""; button.pointer_focus = false; } }
+        key-pressed(event) => {
+            if !root.enabled { return reject; }
+            button.pointer_focus = false;
+            if event.text == Key.Space || event.text == Key.Return {
+                if button.held_key == "" { button.held_key = event.text; }
+                return accept;
+            }
+            if event.text == Key.Escape { button.held_key = ""; return accept; }
+            return reject;
+        }
+        key-released(event) => {
+            if event.text == Key.Space || event.text == Key.Return {
+                if root.enabled && button.has-focus && button.held_key == event.text {
+                    button.held_key = ""; root.clicked();
+                }
+                return accept;
+            }
+            return reject;
+        }
+        Rectangle {
+            width: 100%; height: 100%;
+            background: !root.enabled ? transparent : pointer.pressed || button.held_key != "" ? Theme.navigation_item_selected_bg : pointer.has-hover ? Theme.navigation_item_hover_bg : transparent;
+            border-width: root.enabled && button.has-focus && !button.pointer_focus ? 1px : 0px;
+            border-color: Theme.text_primary;
+            Path {
+                width: 16px; height: 16px;
+                x: (parent.width - self.width) / 2; y: (parent.height - self.height) / 2;
+                viewbox-width: 20; viewbox-height: 20;
+                commands: "M9 4 L3 10 L9 16 M3 10 L17 10";
+                fill: transparent; stroke: root.enabled ? Theme.text_primary : Theme.text_disabled;
+                stroke-width: 1.25px;
+            }
+        }
+        pointer := TouchArea {
+            width: 100%; height: 100%; enabled: root.enabled;
+            pointer-event(event) => {
+                if event.button == PointerEventButton.left && event.kind == PointerEventKind.down {
+                    button.focus(); button.pointer_focus = true;
+                }
+            }
+            clicked => { if root.enabled { root.clicked(); } }
+        }
     }
-
-    // Original geometric arrow, drawn in source; no font glyph or new asset.
-    Path {
-        x: (parent.width - self.width) / 2;
-        y: (parent.height - self.height) / 2;
-        width: UiConstants.navigation_icon_size;
-        height: UiConstants.navigation_icon_size;
-        viewbox-width: 20;
-        viewbox-height: 20;
-        commands: "M 9 4 L 3 10 L 9 16 M 3 10 L 17 10";
-        fill: transparent;
-        stroke: root.enabled ? Theme.navigation_item_foreground : Theme.text_disabled;
-        stroke-width: 1.5px;
-        stroke-line-cap: round;
-        stroke-line-join: round;
-    }
+    Tooltip { TooltipHost { text: root.accessible_name; shown: true; } }
 }

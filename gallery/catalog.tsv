@@ -38,3 +38,4 @@ native-containers	Native containers & lists		5		NativeContainersPage	native_cont
 native-pickers	Native table & pickers		5		NativePickersPage	native_pickers_page.slint	FluentStandardTableView,FluentDatePicker,FluentTimePicker	table date time calendar sorting
 native-popups	Native flyout & menus		5		NativePopupsPage	native_popups_page.slint	FluentFlyout,FluentDropDownButton,FluentSplitButton	flyout popup menu context dropdown split
 native-inline	Expander & InfoBar		5		NativeInlinePage	native_inline_page.slint	FluentExpander,FluentInfoBar	expander inline infobar status lifecycle
+settings	Settings		8		SettingsPage	settings_page.slint		theme appearance system light dark preview size compact medium wide settings

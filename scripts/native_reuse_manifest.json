@@ -67,25 +67,25 @@
       "classification": "composed-missing-standard-control",
       "implementation": "ui/patterns/navigation/navigation_back_button.slint",
       "public": true,
-      "status": "composed",
+      "status": "reviewed-exception",
       "native_dependencies": [
-        "Button",
         "Tooltip"
       ],
-      "missing_capability": "No additional native-equivalent behavior is claimed; presentation/composition only.",
-      "permitted_custom_behavior": [],
+      "missing_capability": "Public Button has no flat/borderless style; explicitly requested reusable navigation Back appearance.",
+      "permitted_custom_behavior": [
+        "One borderless navigation Back pointer/key/accessibility action, disabled/cancel handling and keyboard focus cue"
+      ],
       "forbidden_custom_behavior": [
-        "new ordinary button activation",
-        "text editing",
-        "scrollbar implementation",
-        "hidden native proxies"
+        "General Button replacement",
+        "hidden native proxies",
+        "native window actions",
+        "host navigation history"
       ],
       "validation": [
-        "current-api-probe",
-        "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "Navigation compact follow-up: public consumer and actual Gallery Back input, tooltip, focus/disabled cancellation; no screen-reader claim"
       ],
-      "review_on_slint_upgrade": true
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "dd64599262e565c896ced02504d91ef139317f0d37f83be892d3acfb27d7634b"
     },
     {
       "component": "NavigationContentSurface",
@@ -146,7 +146,7 @@
         "ScrollView",
         "Tooltip"
       ],
-      "missing_capability": "No public std hierarchical NavigationView.",
+      "missing_capability": "No public hierarchical NavigationView; pane toggle, search and scrolling remain native; private targets supply flat navigation rows.",
       "permitted_custom_behavior": [
         "hierarchy projection",
         "host-controlled navigation/expansion requests",
@@ -163,7 +163,7 @@
         "Current API/probe/native guard"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "6f904d4e4d4b9ff194367f53501fbfbf44e9f34e1e5f6dbc035cf74623217bdf"
+      "reviewed_implementation_sha256": "05bff00c6e354be4b4c6cc37075c87c062d45e6ad1ec8c3c0e7e40f52409a4c7"
     },
     {
       "component": "NavigationItemRow",
@@ -172,25 +172,22 @@
       "public": false,
       "status": "reviewed-exception",
       "native_dependencies": [
-        "Button",
         "Tooltip"
       ],
-      "missing_capability": "No public native compound navigation row with separate expansion, left-aligned eliding content and inter-row keyboard focus",
+      "missing_capability": "No public NavigationViewItem or flat/borderless styling of Slint 1.17.1 Button; the requested flat navigation uses a dedicated private target.",
       "permitted_custom_behavior": [
-        "Visible native Button surface/focus/activation; passive eliding row content and chevron",
-        "Only compound direction-key focus/expansion requests and visibility recovery"
+        "Private navigation targets, passive row/selection visuals, hierarchical directional navigation and focus recovery; public Tooltip service remains reused."
       ],
       "forbidden_custom_behavior": [
-        "Custom Return/Space/pointer/accessibility activation",
-        "Hidden native proxy or duplicate active input",
-        "Host selection/model mutation"
+        "Host routing/selection mutation",
+        "Ordinary command replacements outside navigation",
+        "Hidden native proxy or copied Slint internals"
       ],
       "validation": [
-        "P5C release model/keyboard/current UI evidence",
-        "Current API/probe/native guard"
+        "Navigation/settings follow-up: current navigation input and Gallery visual checks"
       ],
       "review_on_slint_upgrade": true,
-      "reviewed_implementation_sha256": "95405b9d77e8f9e20d56ef7ba59e846ac17f81c12e5e4474f4982ab88e65e1aa"
+      "reviewed_implementation_sha256": "66ae59329933479075ff3aac6ae1cbf8f253456b55a22b29748e1862c589a15e"
     },
     {
       "component": "EmptyState",
@@ -1007,6 +1004,30 @@
       ],
       "review_on_slint_upgrade": true,
       "reviewed_implementation_sha256": "6b9c69a821386fe2bc8ffef5a7362486910d3ed30da8f9e3fecaec42ff4d4ef2"
+    },
+    {
+      "component": "NavigationRowTarget",
+      "classification": "composed-missing-standard-control",
+      "implementation": "ui/patterns/navigation/private/navigation_item_row.slint",
+      "public": false,
+      "status": "reviewed-exception",
+      "native_dependencies": [],
+      "missing_capability": "No public NavigationViewItem or flat Button styling; private navigation-only pointer/key/a11y target for the requested row redesign.",
+      "permitted_custom_behavior": [
+        "Public TouchArea owns pointer capture/cancellation. One FocusScope owns focus, directional keys, canceled/repeat-suppressed key activation and one accessible default action."
+      ],
+      "forbidden_custom_behavior": [
+        "Use as a general Button replacement",
+        "Duplicate pointer or accessible action owners",
+        "Hidden native proxy",
+        "Host state/routing ownership",
+        "Timers or animation loops"
+      ],
+      "validation": [
+        "Navigation/settings follow-up: current navigation input and Gallery visual checks"
+      ],
+      "review_on_slint_upgrade": true,
+      "reviewed_implementation_sha256": "d299d2d670d2935ab6b021548b79ba751bbe64f50ce5be118686afa7722baf37"
     }
   ]
 }

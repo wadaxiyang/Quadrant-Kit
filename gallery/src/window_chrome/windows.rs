@@ -102,7 +102,7 @@ pub async fn install(
     Ok(guard)
 }
 
-type Style = (u32, u32, bool, u32);
+type Style = (u32, u32, bool, u32, u32);
 
 #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
 fn update_metrics(
@@ -116,16 +116,25 @@ fn update_metrics(
     }
     let dpi = unsafe { GetDpiForWindow(hwnd) };
     let scale = gallery.window().scale_factor();
+    let caption_height = gallery.get_title_bar_height();
     let dark = gallery.get_chrome_dark();
     let color = gallery.get_chrome_background();
     let color_ref =
         u32::from(color.red()) | (u32::from(color.green()) << 8) | (u32::from(color.blue()) << 16);
-    if *last_style != Some((dpi, scale.to_bits(), dark, color_ref)) {
+    if *last_style
+        != Some((
+            dpi,
+            scale.to_bits(),
+            dark,
+            color_ref,
+            caption_height.to_bits(),
+        ))
+    {
         let margins = MARGINS {
             cxLeftWidth: 0,
             cxRightWidth: 0,
             cyBottomHeight: 0,
-            cyTopHeight: (48.0 * scale).ceil() as i32,
+            cyTopHeight: (caption_height * scale).ceil() as i32,
         };
         set_attribute(hwnd, DWMWA_NCRENDERING_POLICY, DWMNCRP_ENABLED);
         set_attribute(hwnd, DWMWA_ALLOW_NCPAINT, 1);
@@ -142,7 +151,33 @@ fn update_metrics(
             DWMWA_CAPTION_COLOR,
             i32::try_from(color_ref).unwrap_or_default(),
         );
-        *last_style = Some((dpi, scale.to_bits(), dark, color_ref));
+        *last_style = Some((
+            dpi,
+            scale.to_bits(),
+            dark,
+            color_ref,
+            caption_height.to_bits(),
+        ));
+    }
+    // Match the individual native button, including restored/maximized clipping.
+    let mut caption = TITLEBARINFOEX {
+        cbSize: u32::try_from(std::mem::size_of::<TITLEBARINFOEX>()).unwrap(),
+        ..Default::default()
+    };
+    // SAFETY: synchronous query on this UI thread with a correctly sized buffer.
+    unsafe { SendMessageW(hwnd, WM_GETTITLEBARINFOEX, 0, (&raw mut caption) as isize) };
+    let minimize = caption.rgrect[2];
+    let mut origin = POINT {
+        x: minimize.left,
+        y: minimize.top,
+    };
+    if minimize.right > minimize.left
+        && minimize.bottom > minimize.top
+        && unsafe { ScreenToClient(hwnd, &raw mut origin) } != 0
+    {
+        gallery.set_caption_back_width((minimize.right - minimize.left) as f32 / scale);
+        gallery.set_caption_back_height((minimize.bottom - minimize.top) as f32 / scale);
+        gallery.set_caption_back_top(origin.y as f32 / scale);
     }
     let mut bounds = RECT::default();
     let mut window_rect = RECT::default();
@@ -311,6 +346,7 @@ fn hit_test(hwnd: HWND, lparam: LPARAM, gallery: &DesignGalleryWindow) -> LRESUL
         gallery.get_title_drag_x(),
         gallery.get_title_drag_width(),
         0.0,
+        gallery.get_title_bar_height(),
     ) {
         HTCAPTION
     } else {

@@ -164,6 +164,18 @@ fn sync(window: &DesignGalleryWindow, state: &NavigationState) {
             row.selected_icon = selected_icons.row_data(entry.icon).unwrap_or_default();
         }
     }
+    // Settings stays reachable in the fixed footer even while filtering pages.
+    rows.retain(|row| row.id != "settings");
+    let settings = destination("settings").expect("Gallery settings destination");
+    ui.set_footer_items(ModelRc::new(VecModel::from(vec![NavigationEntry {
+        id: settings.id.into(),
+        text: settings.title.into(),
+        kind: NavigationEntryKind::Destination,
+        enabled: true,
+        icon: icons.row_data(settings.icon).unwrap_or_default(),
+        selected_icon: selected_icons.row_data(settings.icon).unwrap_or_default(),
+        ..NavigationEntry::default()
+    }])));
     ui.set_items(ModelRc::new(VecModel::from(rows)));
     ui.set_selected_id(state.selected.into());
     ui.set_page_title(
@@ -255,6 +267,23 @@ mod tests {
         }
         assert!(NavigationState::new("missing").is_err());
         assert!(NavigationState::new("design-guidance").is_err());
+    }
+
+    #[test]
+    fn settings_is_searchable_and_returns_to_previous_page() {
+        let mut state = NavigationState::new("home").unwrap();
+        state.query = "settings".into();
+        assert!(state.results().iter().any(|entry| entry.id == "settings"));
+        // Enter opens the first catalog match; "settings" also matches component
+        // examples, while "appearance" specifically finds the Gallery settings.
+        state.submit("appearance".into());
+        assert_eq!(state.selected, "settings");
+        assert_eq!(state.history, ["home"]);
+        state.navigate("settings");
+        assert_eq!(state.history, ["home"]);
+        state.back();
+        assert_eq!(state.selected, "home");
+        assert!(state.query.is_empty());
     }
 
     #[test]

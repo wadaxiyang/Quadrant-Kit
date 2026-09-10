@@ -8,6 +8,7 @@ export struct GalleryComponentLink { destination: string, name: string, category
 
 export global GalleryNavigation {
     in-out property <[NavigationEntry]> items;
+    in-out property <[NavigationEntry]> footer_items;
     in-out property <string> selected_id: "home";
     in-out property <string> page_title: "Home";
     in-out property <[GalleryComponentLink]> components;
@@ -15,8 +16,8 @@ export global GalleryNavigation {
     in-out property <string> query;
     in-out property <string> search_status;
     // Icons remain facade-supplied assets in the consumer's Slint compilation.
-    out property <[image]> icons: [FluentIcons.about_regular, FluentIcons.theme_system, FluentIcons.edit, FluentIcons.info, FluentIcons.add, FluentIcons.menu, FluentIcons.status_info, FluentIcons.menu];
-    out property <[image]> selected_icons: [FluentIcons.about_filled, FluentIcons.theme_system, FluentIcons.edit, FluentIcons.info, FluentIcons.add, FluentIcons.menu, FluentIcons.status_success, FluentIcons.menu];
+    out property <[image]> icons: [FluentIcons.about_regular, FluentIcons.theme_system, FluentIcons.edit, FluentIcons.info, FluentIcons.add, FluentIcons.menu, FluentIcons.status_info, FluentIcons.menu, FluentIcons.settings_regular];
+    out property <[image]> selected_icons: [FluentIcons.about_filled, FluentIcons.theme_system, FluentIcons.edit, FluentIcons.info, FluentIcons.add, FluentIcons.menu, FluentIcons.status_success, FluentIcons.menu, FluentIcons.settings_filled];
     callback navigate(string);
     callback back_requested();
     callback query_edited(string);

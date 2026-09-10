@@ -80,7 +80,8 @@ The root `quadrant-kit` package is only a build-time source locator. It owns no 
 The current local facade exports the contracts listed in PUBLIC_API, including NavigationView and the navigation
 types, Back button, pane toggle and content surface. Gallery uses NavigationView
 with a hierarchical catalog, title/keyword search and Gallery-owned Back history;
-its 32 destinations share page scrolling and collapsible, selectable source/details.
+its 33 destinations share page scrolling. Component examples expose collapsible,
+selectable source/details; Settings holds theme and preview-width controls.
 Gallery shares one application toolbar and keeps platform-native window controls:
 DWM caption buttons on Windows and AppKit traffic lights on macOS. The native
 adapters compose these with the toolbar; Mac runtime verification is still pending.
@@ -96,7 +97,7 @@ checks from that rebuild are recorded in [its Phase 8 report](docs/NAVIGATION_RE
 SidebarItem and its legacy tokens have been removed. The retained
 extraction source still has 28 names. Branding, task models, Inbox, task row
 composition, quadrant colors, product-specific timer/layout tokens, and product
-navigation aliases belong to Tasks. Command controls reuse public native Button, with controlled selection, native tooltip service and current API/visual changes in PUBLIC_API.md. Navigation uses the bounded P5C contract; Toast/Modal use the P6 motion policy. No full WinUI 3, arbitrary ContentDialog or unverified platform equivalence is claimed.
+navigation aliases belong to Tasks. Command controls reuse public native Button, with controlled selection, native tooltip service and current API/visual changes in PUBLIC_API.md. Navigation retains bounded models and native header/search/scroll controls, with private flat row targets documented in [NATIVE_REUSE.md](docs/NATIVE_REUSE.md); Toast/Modal use the P6 motion policy. No full WinUI 3, arbitrary ContentDialog or unverified platform equivalence is claimed.
 
 Code is GPL-3.0-only; the Microsoft SVG assets retain their MIT license. See [LICENSE](LICENSE), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), and [assets/icons/LICENSE-MIT](assets/icons/LICENSE-MIT).
 
