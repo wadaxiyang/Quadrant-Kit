@@ -11,7 +11,7 @@ controls	Controls overview	controls-group	4	4	ControlsPage	controls_page.slint		
 fluent-button	FluentButton	controls-group	4		FluentButtonPage	fluent_button_page.slint	FluentButton	controls button input text editing command selection
 icon-button	IconButton	controls-group	4		IconButtonPage	icon_button_page.slint	IconButton	controls button input text editing command selection
 segment-button	SegmentButton	controls-group	4		SegmentButtonPage	segment_button_page.slint	SegmentButton	controls button input text editing command selection
-fluent-text-field	FluentTextField	controls-group	4		FluentTextFieldPage	fluent_text_field_page.slint	FluentTextField	controls button input text editing command selection
+fluent-text-field	FluentTextField	controls-group	4		FluentTextFieldPage	fluent_text_field_page.slint	FluentTextField	controls button input text editing command selection password masking
 fluent-text-area	FluentTextArea	controls-group	4		FluentTextAreaPage	fluent_text_area_page.slint	FluentTextArea	controls button input text editing command selection
 display-group	Surfaces & data display		5					
 surfaces	SurfaceCard	display-group	5	5	SurfacesPage	surfaces_page.slint	SurfaceCard	surface card overview elevation comparison

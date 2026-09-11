@@ -1437,6 +1437,11 @@
             "direction": "in-out",
             "type": "string"
           },
+          "input-type": {
+            "kind": "property",
+            "direction": "in",
+            "type": "InputType"
+          },
           "placeholder-text": {
             "kind": "property",
             "direction": "in",
@@ -1474,6 +1479,10 @@
         "text": {
           "binding": null,
           "expression": ""
+        },
+        "input-type": {
+          "binding": ":",
+          "expression": "InputType . text"
         },
         "placeholder-text": {
           "binding": null,

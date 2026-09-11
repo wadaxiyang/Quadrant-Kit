@@ -28,6 +28,12 @@ invalid models, optional regions and request counters. The foundations specimen
 uses the same public Back, toggle and content surface. Other command specimens
 also use counters; WindowControlButton examples do not close the real Gallery.
 
+FluentTextField includes a password specimen using `InputType.password`, fictional
+credentials, enabled/focus/clear actions and event counters. Password values are
+never echoed in status text or logs; the ordinary text example remains separate.
+Focus the nonempty password field to reveal the trailing native eye button; click
+to show/hide. Native layout keeps long scrolling text beside the eye.
+
 ## Native window chrome and shared toolbar
 
 The 32px toolbar uses public NavigationBackButton on the left. Windows supplies

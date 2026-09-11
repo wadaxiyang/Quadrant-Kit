@@ -15,7 +15,7 @@ performance and accessibility results live in [HISTORY](HISTORY.md).
 | FluentButton | IMPLEMENTED / native-wrapper; Button | Visible native Button owns activation, focus and disabled behavior | fluent-button |
 | FluentIcon | IMPLEMENTED / presenter; builtin presentation / composition | Retained Image and optical-offset container; no resource scan | icons |
 | FluentTextArea | IMPLEMENTED / native-wrapper; TextEdit | Native TextEdit retained; actual multiline Unicode/disabled edits checked | fluent-text-area |
-| FluentTextField | IMPLEMENTED / native-wrapper; LineEdit | Removed preview; top-aligned native editor; error caption reserves wrapping height | fluent-text-field |
+| FluentTextField | IMPLEMENTED / native-wrapper; LineEdit | Native input-type (text/password), actual-value binding/callbacks; wrapping error caption | fluent-text-field |
 | IconButton | IMPLEMENTED / native-wrapper; Button, Tooltip | Native Button and Tooltip; native icon sizing; named action; passive danger outline | icon-button |
 | MetricCard | IMPLEMENTED / composed; builtin presentation / composition | Label/value/hint wrap; passive SurfaceCard helper reduction | metric-card |
 | ModalManager | IMPLEMENTED / reviewed-exception; Button | Fixed native actions; host restore; bounded opacity with immediate input release | modal-manager |

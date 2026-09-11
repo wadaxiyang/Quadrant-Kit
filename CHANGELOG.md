@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Add `FluentTextField.input-type: InputType = InputType.text`, forwarded to native
+  LineEdit, including password masking with actual-value binding and callbacks.
+  Existing editing, placeholder, enabled, error and focus behavior is unchanged.
+- Add a fictional-password Gallery example and focused native rendering/input checks.
+- Verify native eye reveal/hide, focus-loss masking and long-text clipping at
+  160/320px; keep the original native layout and input owner.
+- Publish searchable GitHub Pages documentation directly from docs/, with strict
+  link validation and automatic deployment from main.
+
 ## 0.1.0 — 2026-09-11
 
 - Publish the first current Fluent-oriented source-only Kit release as `v0.1.0`.

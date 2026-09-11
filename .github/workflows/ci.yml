@@ -48,6 +48,8 @@ jobs:
       - if: runner.os == 'Windows'
         run: cargo build --locked -p quadrant-kit-gallery
       - if: runner.os == 'Windows'
+        run: python scripts/run_button_checks.py --suite text-field --profile release
+      - if: runner.os == 'Windows'
         run: |
           python scripts/capture_gallery_baseline.py --mode Smoke --destination home
           python scripts/capture_gallery_baseline.py --mode Smoke --destination all-components
@@ -58,6 +60,12 @@ jobs:
         with:
           name: windows-gallery-smoke
           path: target/visual-baselines/
+          if-no-files-found: warn
+      - if: runner.os == 'Windows' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-text-field-check
+          path: target/button-checks/
           if-no-files-found: warn
 
   msrv:

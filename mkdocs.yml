@@ -1,0 +1,73 @@
+site_name: Quadrant Kit
+site_description: Reusable Slint components — public API, examples and integration guides.
+site_url: https://wadaxiyang.github.io/Quadrant-Kit/
+repo_url: https://github.com/wadaxiyang/Quadrant-Kit
+repo_name: wadaxiyang/Quadrant-Kit
+edit_uri: edit/main/docs/
+docs_dir: docs
+site_dir: target/docs-site
+strict: true
+theme:
+  name: material
+  language: zh
+  font: false
+  features:
+    - navigation.tabs
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色
+plugins:
+  - search:
+      lang: en
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+      slugify: !!python/name:markdown.extensions.toc.slugify_unicode
+hooks:
+  - docs-site/hooks.py
+nav:
+  - 开始:
+      - 文档导航: README.md
+      - 接入指南: CONSUMER_GUIDE.md
+      - Gallery: GALLERY.md
+  - API:
+      - 公开 API: PUBLIC_API.md
+      - 组件状态: COMPONENT_STATUS.md
+  - 开发:
+      - 架构: ARCHITECTURE.md
+      - 原生复用: NATIVE_REUSE.md
+      - 设计系统: DESIGN_SYSTEM.md
+      - 动效: MOTION.md
+      - 验证: VALIDATION.md
+      - 性能: PERFORMANCE.md
+  - 项目:
+      - 当前状态: STATUS.md
+      - 历史证据: HISTORY.md
+      - 来源与许可: PROVENANCE.md
+      - 演进范围: specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md
+      - 阶段路线: specs/ROADMAP.md
+      - 验收标准: specs/ACCEPTANCE.md
+validation:
+  links:
+    anchors: warn
+    unrecognized_links: warn
+    absolute_links: warn

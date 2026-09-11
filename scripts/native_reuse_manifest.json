@@ -524,7 +524,7 @@
       "validation": [
         "current-api-probe",
         "native-reuse-guard",
-        "component-specific runtime: NOT_RUN in P1"
+        "run_button_checks.py --suite text-field: native masking, actual-value callbacks, disabled, clear and focus; execution evidence in docs/HISTORY.md"
       ],
       "review_on_slint_upgrade": true,
       "native_owner": "LineEdit"

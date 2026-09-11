@@ -1,5 +1,8 @@
 # 文档导航
 
+[在线文档](https://wadaxiyang.github.io/Quadrant-Kit/) ·
+[公开 API](https://wadaxiyang.github.io/Quadrant-Kit/PUBLIC_API/)
+
 当前版本的使用方法与验收结果分别维护；历史报告不再混入操作指南。
 
 | 要做什么 | 阅读 |

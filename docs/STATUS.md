@@ -16,6 +16,12 @@
 
 ## 验收缺口
 
+未发布增量：FluentTextField 新增原生 `input-type` 透传（默认 text，可设 password），
+实际绑定值/回调不变；专项结果见 [HISTORY](HISTORY.md#fluenttextfield-password2026-09-11)。
+该能力不包含在已有 `v0.1.0` 标签中。
+在线 [API 文档](https://wadaxiyang.github.io/Quadrant-Kit/PUBLIC_API/) 与 `docs/` 使用同一份
+源文档，通过 GitHub Actions 随 main 更新；网站部署不代表新增组件版本标签。
+
 | 项目 | 状态 | 尚需证据 |
 |---|---|---|
 | 当前源码 Windows 编译与组件运行 | 已有 scoped PASS | 历史结果只覆盖对应源码；改动后按风险重跑 |

@@ -81,7 +81,7 @@ export component KitApiProbe inherits Window {
         command := FluentButton { text: "Apply"; icon: FluentIcons.add; enabled: root.controls_enabled; primary: true; clicked => { root.activated = true; } }
         IconButton { icon: FluentIcons.add; tooltip: "Add"; accessible_name: "Create item"; enabled: root.controls_enabled; clicked => { root.activated = true; } }
         SegmentButton { text: "Select"; accessible_name: "Select preference"; enabled: root.controls_enabled; selected: root.activated; clicked => { root.activated = !root.activated; } }
-        editor := FluentTextField { width: 160px; enabled: root.controls_enabled; text <=> root.sample_text; accepted(value) => { root.sample_text = value; } edited(value) => { root.sample_text = value; } }
+        editor := FluentTextField { width: 160px; input-type: InputType.password; enabled: root.controls_enabled; text <=> root.sample_text; accepted(value) => { root.sample_text = value; } edited(value) => { root.sample_text = value; } }
         FluentTextArea { text <=> root.sample_text; edited(value) => { root.sample_text = value; } }
         SettingRow { title: "Preference"; description: "Sample"; enabled: root.controls_enabled;
             FluentButton { text: "Slot command"; enabled: root.controls_enabled; }

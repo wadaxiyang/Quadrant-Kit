@@ -11,6 +11,10 @@ The [manifest](../scripts/native_reuse_manifest.json) is the exact current inven
 exceptions, no pending migration. It is development metadata, not a runtime registry.
 The facade remains the sole public export entry.
 
+FluentTextField forwards `input-type` (default `InputType.text`) directly to its
+visible LineEdit. Password masking/reveal, editing, selection, paste, IME and focus
+remain native-owned, with no mask renderer or additional input layer.
+
 `python scripts/check_native_reuse.py` shares the fail-closed Slint parser with the
 boundary checker. It reconciles coverage, public/private ownership, native reference
 closure, direct input owners and literal hidden proxies. Exceptions require a

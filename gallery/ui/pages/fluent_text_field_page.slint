@@ -3,10 +3,14 @@
 
 import { GalleryPage } from "../shared/gallery_page.slint";
 import { Specimen } from "../shared/specimen.slint";
-import { FluentTextField, Theme } from "@quadrant-kit";
+import { FluentTextField, FluentButton, FluentSwitch, Theme } from "@quadrant-kit";
 export component FluentTextFieldPage inherits GalleryPage {
     in-out property <string> sample_text: "Editable value";
     private property <int> accepts: 0;
+    private property <string> demo_password: "Demo-only-123!";
+    private property <int> password_edits: 0;
+    private property <int> password_accepts: 0;
+    private property <bool> password_enabled: true;
     page_description: "The standard editor owns text selection, focus and scrolling; the host owns its value.";
     Specimen {
         specimen_title: "Editing and state";
@@ -18,5 +22,26 @@ export component FluentTextFieldPage inherits GalleryPage {
         FluentTextField {  text: "Disabled value"; enabled: false; }
         Text { text: "Current text: " + root.sample_text; color: Theme.text_secondary; wrap: word-wrap; }
         Text { text: "Accept actions: " + root.accepts; color: Theme.text_secondary; }
+    }
+    Specimen {
+        specimen_title: "Password input";
+        specimen_description: "Use fictional credentials only. Focus a nonempty password to show the native eye; click to reveal or hide. Long text scrolls beside the eye. Status text and logs never echo the password.";
+        source_code: "import { FluentTextField } from \"@quadrant-kit\";\n\n// Host: in-out property <string> demo-password: \"Demo-only-123!\";\nFluentTextField {\n    input-type: InputType.password;\n    text <=> demo-password;\n    placeholder_text: \"Fictional password\";\n    // accepted(value) receives the actual text; do not log it.\n}";
+        keyboard_info: "Use native selection, paste and editing keys; Enter submits. Clear demo is a programmatic assignment and does not increment edit counts.";
+        accessibility_info: "Native password and focus behavior is retained. Full reader and OS IME verification remains separate.";
+        password := FluentTextField {
+            input-type: InputType.password;
+            text <=> root.demo_password;
+            placeholder_text: "Fictional password";
+            enabled: root.password_enabled;
+            edited(value) => { root.password_edits += 1; }
+            accepted(value) => { root.password_accepts += 1; }
+        }
+        FluentSwitch { text: "Enable password input"; checked <=> root.password_enabled; }
+        HorizontalLayout {
+            FluentButton { text: "Clear demo"; clicked => { root.demo_password = ""; } }
+            FluentButton { text: "Focus password"; enabled: root.password_enabled; clicked => { password.focus(); } }
+        }
+        Text { text: "Edit actions: " + root.password_edits + " · Accept actions: " + root.password_accepts; color: Theme.text_secondary; }
     }
 }

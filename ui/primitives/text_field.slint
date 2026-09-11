@@ -11,6 +11,7 @@ import { LineEdit } from "std-widgets.slint";
 
 export component FluentTextField inherits Rectangle {
     in-out property <string> text;
+    in property <InputType> input-type: InputType.text;
     in property <string> placeholder_text;
     in property <bool> enabled: true;
     in property <string> error_text;
@@ -27,6 +28,7 @@ export component FluentTextField inherits Rectangle {
         width: 100%;
         height: UiConstants.input_height;
         text <=> root.text;
+        input-type: root.input-type;
         placeholder-text: root.placeholder_text;
         font-size: Typography.body;
         enabled: root.enabled;

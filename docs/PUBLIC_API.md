@@ -370,6 +370,7 @@ export component SegmentButton inherits Rectangle {
 ```slint
 export component FluentTextField inherits Rectangle {
     in-out property <string> text;
+    in property <InputType> input-type: InputType.text;
     in property <string> placeholder_text;
     in property <bool> enabled: true;
     in property <string> error_text;
@@ -377,6 +378,25 @@ export component FluentTextField inherits Rectangle {
     callback edited(string);
 }
 ```
+
+`input-type` forwards directly to the native LineEdit. Slint's builtin `InputType`
+needs no extra Kit import: set `input-type: InputType.password` for native password
+masking (including the native reveal interaction). The default remains ordinary text.
+The trailing eye appears while the nonempty password editor has focus. Click once
+to reveal, again to hide; losing focus resets reveal. Native layout reserves the
+eye's width and clips/horizontally scrolls the editor, including long passwords.
+Honor the native minimum width (160 logical px); forcing smaller widths is not a
+supported layout contract. No separate overlay button or custom mask is added.
+`text` stays two-way and holds the actual input in both modes; `edited(string)` and
+`accepted(string)` receive that actual value, never a synthesized mask. Host assignment,
+including clearing, does not emit a user edit or submit callback.
+
+Native LineEdit owns editing, selection, paste, IME, keyboard, focus and disabled
+behavior. `focus()` still forwards to it. `placeholder_text`, `enabled` and
+`error_text` retain their existing semantics. Masking protects the display, not the
+bound string; hosts must avoid logging credentials. The Gallery uses fictional
+values and displays only event counts. OS IME and reader verification are separate
+from the WindowEvent and software-render checks in [VALIDATION](VALIDATION.md).
 
 ### FluentTextArea
 

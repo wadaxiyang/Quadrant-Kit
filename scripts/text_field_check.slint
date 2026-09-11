@@ -1,0 +1,49 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Quadrant contributors
+// SPDX-License-Identifier: GPL-3.0-only
+import { Palette, LineEdit, Button } from "std-widgets.slint";
+import { FluentTextField, Theme, ThemeMode, Typography, UiConstants } from "@quadrant-kit";
+
+export component TextFieldCheck inherits Window {
+    title: "Kit fictional password verification";
+    width: 400px; height: 240px;
+    default-font-family: "Segoe UI Variable Text";
+    background: Theme.background;
+    in-out property <string> value: "Demo-only-123!";
+    in property <bool> editable: true;
+    in property <bool> dark: false;
+    in property <length> editor-width: 320px;
+    out property <bool> text-mode: field.input-type == InputType.text;
+    out property <bool> password-active: field.input-type == InputType.password;
+    out property <int> edits;
+    out property <int> accepts;
+    out property <string> last-edited;
+    out property <string> last-accepted;
+    out property <bool> parked: park.has-focus;
+    public function password-mode() { field.input-type = InputType.password; }
+    public function focus-field() { field.focus(); }
+    public function park-focus() { park.focus(); }
+    init => { Theme.mode = ThemeMode.light; Palette.color-scheme = ColorScheme.light; }
+    changed dark => {
+        Theme.mode = root.dark ? ThemeMode.dark : ThemeMode.light;
+        Palette.color-scheme = root.dark ? ColorScheme.dark : ColorScheme.light;
+    }
+    Text { x: 24px; y: 12px; text: "Kit / native reference — fictional values only"; color: Theme.text_primary; }
+    field := FluentTextField {
+        x: 24px; y: 50px; width: root.editor-width; height: UiConstants.input_height;
+        // Deliberately omit input-type to exercise the public default first.
+        text <=> root.value;
+        placeholder_text: "Fictional password";
+        enabled: root.editable;
+        edited(value) => { root.edits += 1; root.last-edited = value; }
+        accepted(value) => { root.accepts += 1; root.last-accepted = value; }
+    }
+    LineEdit {
+        x: 24px; y: 110px; width: root.editor-width; height: UiConstants.input_height;
+        text: root.value;
+        input-type: field.input-type;
+        font-size: Typography.body;
+        placeholder-text: "Fictional password";
+        enabled: root.editable;
+    }
+    park := Button { x: 24px; y: 180px; text: "Focus target"; }
+}

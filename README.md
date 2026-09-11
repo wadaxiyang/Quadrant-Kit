@@ -68,6 +68,9 @@ API 可以随版本调整，当前版本不保留旧实现或兼容层；旧接�
 
 ## 文档与验证
 
+[在线文档](https://wadaxiyang.github.io/Quadrant-Kit/) ·
+[API 参考](https://wadaxiyang.github.io/Quadrant-Kit/PUBLIC_API/)
+
 - [文档导航](docs/README.md)：接入、API、Gallery、设计和验证入口。
 - [验证命令](docs/VALIDATION.md)：编译、边界、运行时、打包与平台检查。
 - [演进 SPEC](docs/specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md)：范围、路线与验收。

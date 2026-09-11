@@ -17,7 +17,7 @@ from run_perf import ROOT, execute, generate, resolved_fingerprint, source_ident
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-only', action='store_true', help='Build an interactive host without claiming input PASS')
-    parser.add_argument('--suite', choices=['button', 'foundation', 'selection', 'numeric', 'containers', 'pickers', 'toast', 'modal', 'navigation', 'popup', 'inline', 'motion', 'gallery-settings'], default='button')
+    parser.add_argument('--suite', choices=['button', 'foundation', 'text-field', 'selection', 'numeric', 'containers', 'pickers', 'toast', 'modal', 'navigation', 'popup', 'inline', 'motion', 'gallery-settings'], default='button')
     parser.add_argument('--timeout-seconds', type=int, default=30, help='Bounded runtime allowance for lifecycle/idle suites (1..300)')
     parser.add_argument('--profile', choices=['debug', 'release'], default='debug')
     args = parser.parse_args(argv)
@@ -25,6 +25,8 @@ def main(argv=None):
         parser.error('timeout-seconds must be 1..300')
     stem = 'foundation_check' if args.suite == 'foundation' else 'button_check'
     executable_name = 'kit-p3-foundation-check' if args.suite == 'foundation' else 'kit-p2-button-check'
+    if args.suite == 'text-field':
+        stem, executable_name = 'text_field_check', 'kit-text-field-check'
     if args.suite == 'selection':
         stem, executable_name = 'selection_check', 'kit-p4a-selection-check'
     if args.suite == 'numeric':

@@ -45,6 +45,7 @@ python scripts/run_button_checks.py --suite navigation --profile release
 | Suite | 重点 |
 |---|---|
 | button / foundation | 按钮、焦点、禁用、文本、基础组合 |
+| text-field | 默认普通输入、Light/Dark 原生遮蔽对照、实际值编辑/提交、程序赋值静默、选择/清空、禁用和焦点；仅虚构凭据 |
 | selection | 原生 checked、RadioGroup 静态 child 语法、模型/程序更新 |
 | numeric | Slider/SpinBox 边界、只读与 progress 停止/隐藏 |
 | containers | 原生滚动、列表选择、虚拟化、GroupBox/TabWidget |
@@ -78,6 +79,23 @@ powershell -NoProfile -File scripts/probe_gallery_settings.ps1 -Executable targe
 该脚本只操作自己的 Gallery，记录 PrintWindow、普通/最大化几何、Back/Settings、
 收起态唯一 Toggle、无搜索/箭头、主/页脚居中和展开恢复。构建时不要运行输出目录里的
 exe，以免 Windows 链接器无法替换它。
+
+## Documentation website
+
+GitHub Pages 从 `docs/` 的同一份 Markdown 构建，不另存 API 副本。根目录 `mkdocs.yml`
+维护导航/主题，`docs-site/hooks.py` 将站点外源码链接转为对应 Git SHA 的 GitHub 链接。
+
+```console
+python -m venv target/docs-venv
+# Windows: target/docs-venv/Scripts/python.exe；Linux/macOS: target/docs-venv/bin/python
+target/docs-venv/Scripts/python.exe -m pip install -r docs-site/requirements.txt
+target/docs-venv/Scripts/python.exe -m mkdocs build --strict
+target/docs-venv/Scripts/python.exe -m mkdocs serve -a 127.0.0.1:8000
+```
+
+严格构建检查失效链接/锚点；浏览器另验 API 章节、搜索、主题与窄屏。`.github/workflows/docs.yml`
+在文档 PR 中只构建；合并/推送 main 后部署到 GitHub Pages，使用 `github-pages` environment。
+站点产物位于忽略的 `target/docs-site/`，依赖只用于文档工具，不进入 Kit runtime。
 
 ## Distribution
 
