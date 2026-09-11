@@ -5,6 +5,18 @@
 根目录与正式 SPEC 完全重复的副本也已删除，当前唯一入口在 `docs/specs/`。
 本地 `target/` 路径是原始记录位置，可能不随新克隆存在；不可据此假称重新执行成功。
 
+## v0.1.0
+
+- 发布时间：2026-09-11；保留引用：`refs/tags/v0.1.0`。
+- 范围：当前 59 个公开名称、42 个视觉组件、Gallery、API/边界/原生复用检查及
+  源码包；根包仍无正常/runtime 依赖。
+- 发布前在标签源码上执行 core、Gallery build、distribution/package 和 Rust 1.92
+  构建；精确结果以本次发布任务输出和 tag 对应 Actions 为准。
+- 按发布授权省略全新目录中的匿名 Git+完整 SHA 消费者获取/运行，状态为 NOT_RUN；
+  不据此宣称外部首次获取已经实际验证。
+- 完整 WinUI 对照、真实 present/GPU、长期内存归因、完整读屏/IME/跨屏 DPI 与本轮
+  macOS 原生运行仍不属于 PASS，详见 [STATUS](STATUS.md)。
+
 ## 找回完整报告
 
 文档整理前的完整快照为 `823c87216bf1843058b41a3cb30bdfc985d196b3`：

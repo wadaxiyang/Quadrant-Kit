@@ -1,6 +1,16 @@
 # Changelog
 
-## Fluent evolution P7/P8 — local verification candidate
+## 0.1.0 — 2026-09-11
+
+- Publish the first current Fluent-oriented source-only Kit release as `v0.1.0`.
+- Expose 59 public names, including 42 visual components, through the single
+  `@quadrant-kit` facade; keep the root package runtime dependency graph empty.
+- Include the Gallery, current API/native-reuse guards, runtime probes and local
+  source-package verification while retaining all documented platform limitations.
+- The separately cloned Git+SHA consumer check is intentionally NOT_RUN for this
+  release scope; this is not evidence that a fresh external checkout was exercised.
+
+## Fluent evolution P7/P8 — release implementation
 
 - Add current scale, input, lifetime, Windows UIA and packaged-consumer verification.
 - Retain raw measurements, unchanged budgets and unresolved presentation/memory/platform gates.
@@ -186,7 +196,7 @@ does not refresh it, change versions or publish a release.
   Keep SidebarItem and the old main Gallery shell until the later cutover phases.
 - This does not change the retained extraction source or authorize publication.
 
-## 0.1.0 — unreleased extraction candidate
+## Initial extraction candidate — 2026-09-06
 
 - Extract generic Slint source and Gallery into an independent workspace. Root Rust helper exposes only the facade library name and build-time file location.
 - Public facade deliberately changes from 32 embedded names to 28: Branding, TaskRowShell, InboxItem, and InboxPane remain with Tasks.

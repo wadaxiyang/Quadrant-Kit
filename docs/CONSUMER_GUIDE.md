@@ -7,10 +7,10 @@ event loops and business state belong to the application.
 ## Select a source
 
 Use the public Git URL `https://github.com/wadaxiyang/Quadrant-Kit.git` and a verified
-full 40-character SHA with a retained reference. The current Fluent API differs
-from the historically published extraction candidate. [Status](STATUS.md) records
-the current release gaps; [History](HISTORY.md#published-extraction) records the
-old adopted SHA. Do not copy that old revision while expecting the current API.
+full 40-character SHA resolved from the retained `v0.1.0` tag. The current Fluent
+API differs from the historically published extraction candidate. [Status](STATUS.md)
+records the current release gaps; [History](HISTORY.md#published-extraction) records
+the old adopted SHA. Do not copy that old revision while expecting the current API.
 
 Add `quadrant-kit` as a build dependency only after selecting that verified source.
 Pin consumer `slint` and `slint-build` to `=1.17.1`; use edition 2024 and Rust >=1.92.
@@ -64,11 +64,12 @@ when Kit is a build dependency.
 
 ## Adoption checks
 
-Before adoption require same-SHA CI, a retained remote reference, an independent
-Git+SHA consumer and actual runtime evidence. [VALIDATION](VALIDATION.md#distribution)
-documents archive and anonymous remote checks. Build-only results mean runtime
-NOT_RUN. Candidate tags are retention references, not stable releases; never move
-an adopted tag or update Tasks' revision as part of a Kit-only change.
+Before adoption, review same-SHA CI, the retained remote reference and actual runtime
+evidence. [VALIDATION](VALIDATION.md#distribution) documents archive and optional
+anonymous remote checks. The independent fresh Git+SHA consumer was explicitly
+NOT_RUN for `v0.1.0`; users needing that assurance should run it before adoption.
+Build-only results mean runtime NOT_RUN. Never move an adopted tag or update Tasks'
+revision as part of a Kit-only change.
 
 When upgrading, reconcile the current [API](PUBLIC_API.md) and [changelog](../CHANGELOG.md).
 There are no old-name adapters, frozen consumer fixtures or cross-version signature guarantees.

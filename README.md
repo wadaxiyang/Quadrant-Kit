@@ -1,8 +1,8 @@
 # Quadrant Kit
 
-可复用的 Slint 源码组件库，附带用于开发与验证的 Gallery。当前 0.1.0 工作版本有
-59 个公开名称、42 个视觉组件；本地实现已交付，完整发布验收仍为 PARTIAL，见
-[当前状态](docs/STATUS.md)。构建本仓库不需要 Quadrant Tasks。
+可复用的 Slint 源码组件库，附带用于开发与验证的 Gallery。首个版本 0.1.0 有
+59 个公开名称、42 个视觉组件，通过 `v0.1.0` 保留源码。完整平台验收仍为 PARTIAL，
+已知限制见 [当前状态](docs/STATUS.md)。构建本仓库不需要 Quadrant Tasks。
 
 ## 运行
 
