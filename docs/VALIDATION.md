@@ -118,6 +118,24 @@ cargo +1.92.0 build --locked -p quadrant-kit -p quadrant-kit-gallery --target-di
 引用，隔离 Cargo/Git 源码与凭证覆盖，生成全新 Git+SHA 消费者。Build-only 的运行状态
 是 NOT_RUN；本地包消费者不等于新远程消费者。
 
+## Release publishing
+
+`.github/workflows/release.yml` 在推送 `vMAJOR.MINOR.PATCH` 标签后发布源码包。
+标签必须与该提交的 Cargo workspace 版本一致，CHANGELOG 必须有对应版本章节。
+工作流等待同标签、同 SHA 的最新 push CI 成功（最多 45 分钟），再打包并检查静态资源
+闭包及归档字节，上传 `.crate` 和 `SHA256SUMS`，最后将 Release 草稿公开。
+版本号从标签源码读取；不自动创建或移动标签，不发布 Gallery 二进制或 crates.io 包。
+
+对已存在但尚未发布 Release 的标签，从 main 上的工作流补发：
+
+```console
+gh workflow run release.yml --ref main -f tag=v0.1.1
+```
+
+main 必须先包含此工作流，目标标签必须已有成功的 push CI。失败或超时会阻止发布；
+修复后可重跑。已有 Release（包括上传失败留下的草稿）会阻止覆盖，应先检查远端状态。
+源码包发布不替代独立匿名消费者、输入/读屏、跨平台运行和性能验收。
+
 ## Exclusive and performance checks
 
 `python scripts/verify_incremental.py` 需要独占 checkout/build：它修改再精确恢复深层
