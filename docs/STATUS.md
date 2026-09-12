@@ -32,7 +32,7 @@
 | 完整读屏、OS IME、真实跨显示器 DPI | NOT_RUN / 覆盖不足 | 各平台原生操作；UIA、Unicode 输入和模拟缩放不足以代替 |
 | Linux 中文字体 | FAIL（已记录环境） | WSLg 缺中文字体，需正确配置宿主字体后复验；不打包系统字体 |
 | 本轮 macOS 原生运行、输入和读屏 | NOT_RUN | 原生宿主验证；历史编译/交叉检查不能代替 |
-| `v0.1.1` 发布 | 已授权 | 固定版本标签；同 SHA CI 以 Actions 为准 |
+| `v0.1.1` 发布 | PASS | [Release](https://github.com/wadaxiyang/Quadrant-Kit/releases/tag/v0.1.1)、同标签 CI、源码包与下载校验已通过；记录见 [HISTORY](HISTORY.md#v011) |
 | 全新匿名 Git+SHA 消费者 | NOT_RUN | 未独立验证新环境获取与运行，不把“应当可访问”记为 PASS |
 
 一般 TreeView、任意内容 ContentDialog、完整 DataGrid、富文本和平台服务不属于已交付

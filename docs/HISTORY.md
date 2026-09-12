@@ -5,6 +5,17 @@
 根目录与正式 SPEC 完全重复的副本也已删除，当前唯一入口在 `docs/specs/`。
 本地 `target/` 路径是原始记录位置，可能不随新克隆存在；不可据此假称重新执行成功。
 
+## v0.1.1
+
+- 2026-09-12 发布；标签仍指向 `20cc9d77b737d1326d4320a42f7d26f9a799298f`，未移动。
+- 增量为原生密码输入、Gallery/专项测试及 GitHub Pages；[同标签 CI](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34677281321) PASS。
+- Release 工作流在 `2f5e5bf` 加入 main，通过手动触发补发旧标签；[实际发布运行](https://github.com/wadaxiyang/Quadrant-Kit/actions/runs/34679731736) PASS。
+- [Release](https://github.com/wadaxiyang/Quadrant-Kit/releases/tag/v0.1.1) 包含 `.crate` 与 `SHA256SUMS`。
+  下载后的包校验 PASS，SHA-256 为 `30e61b68a2bf14c0ce4fce72dcf54304225d8116d5d6529c0c52debe8674ff38`。
+- 工作流 actionlint 检查、版本不匹配/缺少 changelog 拦截及严格文档构建 PASS。
+  新工作流的 tag push 自动入口尚未由新版本标签实际触发；本次验证的是手动补发入口。
+  全新匿名 Git+SHA 消费者仍 NOT_RUN，平台与性能缺口仍见 [STATUS](STATUS.md)。
+
 ## v0.1.0
 
 - 发布时间：2026-09-11；保留引用：`refs/tags/v0.1.0`。
