@@ -43,11 +43,11 @@ def main():
         result = execute(['cargo','package','--locked','-p','quadrant-kit'],ROOT,output/'package.log',env)
         if result['exit_code']:
             raise RuntimeError('Cargo package verification failed')
-        archive = ROOT/'target/package/quadrant-kit-0.1.0.crate'
+        archive = ROOT/'target/package/quadrant-kit-0.1.1.crate'
         report['archive'] = verify_archive(archive)
         report['archive_sha256'] = hashlib.sha256(archive.read_bytes()).hexdigest()
         extract_files(archive,output/'source')
-        package = output/'source/quadrant-kit-0.1.0'
+        package = output/'source/quadrant-kit-0.1.1'
         consumer = output/'consumer'
         generate(consumer,'','packaged-kit-consumer',True)
         manifest = consumer/'Cargo.toml'

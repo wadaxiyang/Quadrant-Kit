@@ -105,7 +105,7 @@ target/docs-venv/Scripts/python.exe -m mkdocs serve -a 127.0.0.1:8000
 python scripts/verify_distribution.py --package
 cargo package --locked -p quadrant-kit --list
 cargo package --locked -p quadrant-kit
-python scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.0.crate
+python scripts/verify_distribution.py --package --archive target/package/quadrant-kit-0.1.1.crate
 python scripts/verify_package_consumer.py --help
 cargo +1.92.0 build --locked -p quadrant-kit -p quadrant-kit-gallery --target-dir target/msrv-1.92
 ```

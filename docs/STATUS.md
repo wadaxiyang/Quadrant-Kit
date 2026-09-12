@@ -1,7 +1,7 @@
 # 当前状态与待办
 
 文档整理基线：`823c87216bf1843058b41a3cb30bdfc985d196b3`。
-当前 Fluent 演进实现及后续导航修正作为首个版本 `v0.1.0` 发布；由于平台与长期性能
+当前版本 `v0.1.1` 包含 Fluent 演进、导航修正、密码输入和在线 API 文档；由于平台与长期性能
 证据仍有缺口，**完整验收仍为 PARTIAL**。本次发布不更新 Tasks 依赖。历史结果和精确
 来源见 [HISTORY](HISTORY.md)，组件职责与限制见 [COMPONENT_STATUS](COMPONENT_STATUS.md)。
 
@@ -16,7 +16,7 @@
 
 ## 验收缺口
 
-未发布增量：FluentTextField 新增原生 `input-type` 透传（默认 text，可设 password），
+`v0.1.1` 增量：FluentTextField 新增原生 `input-type` 透传（默认 text，可设 password），
 实际绑定值/回调不变；专项结果见 [HISTORY](HISTORY.md#fluenttextfield-password2026-09-11)。
 该能力不包含在已有 `v0.1.0` 标签中。
 在线 [API 文档](https://wadaxiyang.github.io/Quadrant-Kit/PUBLIC_API/) 与 `docs/` 使用同一份
@@ -32,8 +32,8 @@
 | 完整读屏、OS IME、真实跨显示器 DPI | NOT_RUN / 覆盖不足 | 各平台原生操作；UIA、Unicode 输入和模拟缩放不足以代替 |
 | Linux 中文字体 | FAIL（已记录环境） | WSLg 缺中文字体，需正确配置宿主字体后复验；不打包系统字体 |
 | 本轮 macOS 原生运行、输入和读屏 | NOT_RUN | 原生宿主验证；历史编译/交叉检查不能代替 |
-| `v0.1.0` 发布 | 已授权 | 固定标签与 GitHub Release；同 SHA CI 以 Actions 为准 |
-| 全新匿名 Git+SHA 消费者 | NOT_RUN（按本次授权省略） | 未独立验证新环境获取与运行，不把“应当可访问”记为 PASS |
+| `v0.1.1` 发布 | 已授权 | 固定版本标签；同 SHA CI 以 Actions 为准 |
+| 全新匿名 Git+SHA 消费者 | NOT_RUN | 未独立验证新环境获取与运行，不把“应当可访问”记为 PASS |
 
 一般 TreeView、任意内容 ContentDialog、完整 DataGrid、富文本和平台服务不属于已交付
 范围，见 [SPEC](specs/QUADRANT_KIT_FLUENT_EVOLUTION_SPEC.md)。ModalManager 仅是固定确认层。

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-09-12
 
 - Add `FluentTextField.input-type: InputType = InputType.text`, forwarded to native
   LineEdit, including password masking with actual-value binding and callbacks.

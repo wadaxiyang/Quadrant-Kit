@@ -3754,11 +3754,11 @@ dependencies = [
 
 [[package]]
 name = "quadrant-kit"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "quadrant-kit-gallery"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "objc2 0.6.4",
  "objc2-app-kit 0.3.2",
